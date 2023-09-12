@@ -478,4 +478,5 @@ $RECYCLE.BIN/
 *.lnk
 
 #Jetbrains IDE
+.idea
 PPI-projektas/.idea
