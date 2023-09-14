@@ -9,7 +9,7 @@ public class Note
 	const User author = null;
 	#pragma warning restore CS0246
 
-	public List<string> tags { get; private set; }
+	public List<string> tags { get; set; }
 	string location;
 
 	#pragma warning disable CS0246
@@ -23,11 +23,6 @@ public class Note
 	}
 	#pragma warning restore CS0246
 	#pragma warning restore CS0176
-	
-
-	public void addTag(string tag) => tags.Add(tag);
-
-	public void removeTag(string tag) => tags.Remove(tag);
 
 	public void updateNote(string text) => File.WriteAllText(location, text);
 }
