@@ -31,11 +31,12 @@ public class Group
         Note newNote = new Note(author);
         notes.Add(newNote);
     }
-    /*
+    */
 
     public void AddNote(Note note) => notes.Add(note);
 
     public void RemoveNote(Note note) => notes.Remove(note);
+    
     /*
     public void AddUser(Note note) => members.Add(note);
 
