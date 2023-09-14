@@ -56,10 +56,15 @@ namespace PPI_projektas.Utils
 
             return new List<T>();
         }
-        /*
-        public static T SaveObject<T>()
+        
+        public static void SaveObject<T>(T obj)
         {
-            
-        }*/
+            List<T> list = LoadList<T>();
+            /*if (list == null)
+                return;
+
+            list.Find(inst => inst.Id == obj.Id)*/ //shit
+
+        }
     }
 }
