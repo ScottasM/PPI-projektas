@@ -12,8 +12,7 @@ public class Note
 	public List<string> tags { get; set; }
 	string location;
 
-	#pragma warning disable CS0246
-	#pragma warning disable CS0176
+	#pragma warning disable CS0246, CS0176
 	public Note(User author)
 	{
 		this.author = author;
@@ -21,8 +20,7 @@ public class Note
 		location = "";	//Temporary, will be updated when database becomes available
 		//File will be created here
 	}
-	#pragma warning restore CS0246
-	#pragma warning restore CS0176
+	#pragma warning restore CS0246, CS0176
 
 	public void updateNote(string text) => File.WriteAllText(location, text);
 }
