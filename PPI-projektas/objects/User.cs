@@ -1,4 +1,6 @@
-﻿public class User
+﻿using PPI_projektas.objects.abstractions;
+
+public class User : Entity
 {
     private string username;
     private readonly string password;
@@ -7,7 +9,7 @@
     public List<Note> createdNotes;
     public List<Note> favoriteNotes;
 
-    public User(string name, string password, string email)
+    public User(string name, string password, string email) : base()
     {
         this.username = name;
         this.password = password;

@@ -2,18 +2,20 @@
 using System.Collections.Generic;
 using System.IO;
 
-public class Note
+using PPI_projektas.objects.abstractions;
+
+public class Note : Entity
 {
 	//all pragma warnings are to be removed when User class is implemented
 	#pragma warning disable CS0246
-	const User author = null;
+	public readonly User author;
 	#pragma warning restore CS0246
 
 	public List<string> tags { get; set; }
 	string location;
 
 	#pragma warning disable CS0246, CS0176
-	public Note(User author)
+	public Note(User author) : base()
 	{
 		this.author = author;
 		tags = new List<string>();
@@ -22,5 +24,5 @@ public class Note
 	}
 	#pragma warning restore CS0246, CS0176
 
-	public void updateNote(string text) => File.WriteAllText(location, text);
+	//public void updateNote(string text) => File.WriteAllText(location, text);
 }

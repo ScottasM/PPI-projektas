@@ -1,45 +1,47 @@
 namespace PPI_projektas;
 
-public class Group
-{
-    public readonly Guid Id;
-    public string Name { get; set; }
-    /*
-    public User owner { get; set; }
-    public List<User> members { get; }
-    */
-    public List<Note> notes { get; }
+using PPI_projektas.objects.abstractions;
 
-    public Group(string name/*, User owner*/)
+public class Group : Entity
+{
+
+    public string Name { get; set; }
+    
+    public User Owner { get; set; }
+
+    public List<User> Members { get; }
+    
+    public List<Note> Notes { get; }
+
+
+    public Group(string name, User owner) : base()
     {
-        Id = new Guid();
         Name = name;
-        notes = new List<Note>();
-        // this.owner = owner;
-        // members = new List<User>();
+        Notes = new List<Note>();
+        Owner = owner;
+        Members = new List<User>();
     }
-    /*
+    
+
     public Group(string name, User owner, List<User> members) : this(name, owner)
     {
-        this.members = members;
+        Members = members;
     }
-    */
-
-    /*
+    
+    
     public void CreateNote(User author)
     {
-        Note newNote = new Note(author);
-        notes.Add(newNote);
+        var newNote = new Note(author);
+        Notes.Add(newNote);
     }
-    */
-
-    public void AddNote(Note note) => notes.Add(note);
-
-    public void RemoveNote(Note note) => notes.Remove(note);
     
-    /*
-    public void AddUser(Note note) => members.Add(note);
 
-    public void RemoveUser(Note note) => members.Remove(note);
-    */
+    public void AddNote(Note note) => Notes.Add(note);
+
+    public void RemoveNote(Note note) => Notes.Remove(note);
+    
+    public void AddUser(User member) => Members.Add(member);
+
+    public void RemoveUser(User member) => Members.Remove(member);
+    
 }
