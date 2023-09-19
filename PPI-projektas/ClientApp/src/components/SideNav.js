@@ -6,7 +6,11 @@ import { FiSettings } from 'react-icons/fi';
 
 export class SideNav extends Component {
     static displayName = SideNav.name;
-    
+
+    constructor(props) {
+        super(props);
+    }
+
     render() {
         return (
             <nav className="sidenav">
