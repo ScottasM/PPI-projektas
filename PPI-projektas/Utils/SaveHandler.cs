@@ -4,7 +4,7 @@ using PPI_projektas.objects.abstractions;
 
 namespace PPI_projektas.Utils
 {
-    public class DataHandler
+    public class SaveHandler
     {
         private Dictionary<Type, string> _filePaths = new Dictionary<Type, string>(3) {
             {typeof(User),"Users.txt"},

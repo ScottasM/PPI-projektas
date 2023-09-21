@@ -4,14 +4,23 @@ namespace PPI_projektas.Utils
 {
     public class UpdateSyncing
     {
-        private static List<User> allUsers = new List<User>();
-        private static List<Group> allGroups = new List<Group>();
-        private static List<Note> allNotes = new List<Note>();
+        private List<User> allUsers = new List<User>();
+        private List<Group> allGroups = new List<Group>();
+        private List<Note> allNotes = new List<Note>();
+
+        private SaveHandler saveHandler;
 
         public UpdateSyncing()
         {
-            
+            saveHandler = LazySingleton<SaveHandler>.Instance;
+
+            allUsers = saveHandler.LoadList<User>();
+            allNotes = saveHandler.LoadList<Note>();
+            allGroups = saveHandler.LoadList<Group>();
+
         }
+
+
 
 
 
