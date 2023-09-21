@@ -4,6 +4,8 @@ namespace PPI_projektas.Utils
 {
     public class UpdateSyncing
     {
+        public static UpdateSyncing Instance;
+
         private List<User> allUsers = new List<User>();
         private List<Group> allGroups = new List<Group>();
         private List<Note> allNotes = new List<Note>();
@@ -12,6 +14,12 @@ namespace PPI_projektas.Utils
 
         public UpdateSyncing()
         {
+            #region Singleton
+            if (Instance != null)
+                Instance = null;
+            Instance = this;
+            #endregion
+
             saveHandler = LazySingleton<SaveHandler>.Instance;
 
             allUsers = saveHandler.LoadList<User>();
@@ -23,18 +31,10 @@ namespace PPI_projektas.Utils
             foreach(Group group in allGroups) {
 
                 group.Owner = allUsers.Find(inst => inst.Id == group.OwnerGuid);
-
                 foreach(Guid guid in group.MembersGuid) group.AddUser(allUsers.Find(inst => inst.Id == guid));
-                
-                foreach(Guid guid in group.NotesGuid) group.AddNote(allNotes.Find(inst => inst.Id == guid))
+                foreach (Guid guid in group.NotesGuid) group.AddNote(allNotes.Find(inst => inst.Id == guid));
             }
         }
-
-        
-
-
-
-
 
     }
 }
