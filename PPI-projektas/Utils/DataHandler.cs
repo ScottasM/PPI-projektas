@@ -18,6 +18,8 @@ namespace PPI_projektas.Utils
             allNotes = saveHandler.LoadList<Note>();
             allGroups = saveHandler.LoadList<Group>();
 
+
+
         }
 
 
