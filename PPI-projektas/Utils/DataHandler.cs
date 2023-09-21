@@ -7,6 +7,9 @@ namespace PPI_projektas.Utils
     public static class DataHandler
     {
 
+        
+
+
         private static Dictionary<Type, string> _filePaths = new Dictionary<Type, string>(3) {
             {typeof(User),"Users.txt"},
             {typeof(Group),"Groups.txt"},
@@ -58,7 +61,10 @@ namespace PPI_projektas.Utils
             if (list == null)
                 return;
 
-            T? tempObj = list.Find(inst => inst.Id == obj.Id);
+            int index = list.FindIndex(inst => inst.Id == obj.Id) ;
+            list[index] = obj;
+
+            SaveList(list);
         }
     }
 }
