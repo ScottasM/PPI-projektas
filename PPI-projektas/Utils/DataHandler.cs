@@ -19,8 +19,18 @@ namespace PPI_projektas.Utils
             allGroups = saveHandler.LoadList<Group>();
 
 
+            // assign loaded guids to actual objects
+            foreach(Group group in allGroups) {
 
+                group.Owner = allUsers.Find(inst => inst.Id == group.OwnerGuid);
+
+                foreach(Guid guid in group.MembersGuid) group.AddUser(allUsers.Find(inst => inst.Id == guid));
+                
+                foreach(Guid guid in group.NotesGuid) group.AddNote(allNotes.Find(inst => inst.Id == guid))
+            }
         }
+
+        
 
 
 
