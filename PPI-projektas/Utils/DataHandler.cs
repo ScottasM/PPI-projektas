@@ -4,19 +4,15 @@ using PPI_projektas.objects.abstractions;
 
 namespace PPI_projektas.Utils
 {
-    public static class DataHandler
+    public class DataHandler
     {
-
-        
-
-
-        private static Dictionary<Type, string> _filePaths = new Dictionary<Type, string>(3) {
+        private Dictionary<Type, string> _filePaths = new Dictionary<Type, string>(3) {
             {typeof(User),"Users.txt"},
             {typeof(Group),"Groups.txt"},
             {typeof(Note),"Notes.txt"}
         };
         
-        private static string? SerializeList<T>(List<T> obj)
+        private string? SerializeList<T>(List<T> obj)
         {
             try {
                 return JsonSerializer.Serialize(obj);
@@ -28,7 +24,7 @@ namespace PPI_projektas.Utils
             
         }
 
-        public static void SaveList<T>(List<T> obj)
+        public void SaveList<T>(List<T> obj)
         {
             string? sr = SerializeList(obj);
             if (sr == null)
@@ -42,7 +38,7 @@ namespace PPI_projektas.Utils
             }
         }
 
-        public static List<T> LoadList<T>()
+        public List<T> LoadList<T>()
         {
             if (File.Exists(_filePaths[typeof(T)])) {
                 var json = File.ReadAllText(_filePaths[typeof(T)]);
@@ -55,7 +51,7 @@ namespace PPI_projektas.Utils
             return new List<T>();
         }
         
-        public static void SaveObject<T>(T obj) where T : Entity
+        public void SaveObject<T>(T obj) where T : Entity
         {
             List<T> list = LoadList<T>();
             if (list == null)
