@@ -1,4 +1,5 @@
 ﻿using System.Text.Json;
+using PPI_projektas.objects;
 using PPI_projektas.objects.abstractions;
 
 namespace PPI_projektas.Utils
@@ -6,7 +7,7 @@ namespace PPI_projektas.Utils
     public static class DataHandler
     {
 
-        private static Dictionary<Type, string> filePaths = new Dictionary<Type, string>(3) {
+        private static Dictionary<Type, string> _filePaths = new Dictionary<Type, string>(3) {
             {typeof(User),"Users.txt"},
             {typeof(Group),"Groups.txt"},
             {typeof(Note),"Notes.txt"}
@@ -31,7 +32,7 @@ namespace PPI_projektas.Utils
                 return;
 
             try {
-                File.WriteAllText(filePaths[obj.GetType()], sr);
+                File.WriteAllText(_filePaths[obj.GetType()], sr);
             }
             catch (Exception err) {
                 Console.WriteLine($"Failed to save file : {err.Message}");
@@ -40,8 +41,8 @@ namespace PPI_projektas.Utils
 
         public static List<T> LoadList<T>()
         {
-            if (File.Exists(filePaths[typeof(T)])) {
-                var json = File.ReadAllText(filePaths[typeof(T)]);
+            if (File.Exists(_filePaths[typeof(T)])) {
+                var json = File.ReadAllText(_filePaths[typeof(T)]);
                 var list = JsonSerializer.Deserialize<List<T>>(json);
 
                 if (list != null)

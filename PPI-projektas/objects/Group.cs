@@ -1,6 +1,6 @@
-namespace PPI_projektas;
-
 using PPI_projektas.objects.abstractions;
+
+namespace PPI_projektas.objects;
 
 public class Group : Entity
 {
@@ -14,7 +14,7 @@ public class Group : Entity
     public List<Note> Notes { get; }
 
 
-    public Group(string name, User owner) : base()
+    public Group(string name, User owner)
     {
         Name = name;
         Notes = new List<Note>();

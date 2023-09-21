@@ -1,29 +1,31 @@
 ﻿using PPI_projektas.objects.abstractions;
 
+namespace PPI_projektas.objects;
+
 public class User : Entity
 {
-    private string username;
-    private readonly string password;
-    private readonly string email;
+    private string _username;
+    private readonly string _password;
+    private readonly string _email;
 
-    public List<Note> createdNotes;
-    public List<Note> favoriteNotes;
+    public List<Note> CreatedNotes;
+    public List<Note> FavoriteNotes;
 
-    public User(string name, string password, string email) : base()
+    public User(string name, string password, string email)
     {
-        this.username = name;
-        this.password = password;
-        this.email = email;
-        this.createdNotes = new List<Note>();
-        this.favoriteNotes = new List<Note>();
+        _username = name;
+        _password = password;
+        _email = email;
+        CreatedNotes = new List<Note>();
+        FavoriteNotes = new List<Note>();
     }
 
-    public string getUsername() => username;
-    public void setUsername(string name) => username = name;
+    public string GetUsername() => _username;
+    public void SetUsername(string name) => _username = name;
 
-    public void addCreatedNote(Note note) => createdNotes.Add(note);
-    public void removeCreatedNote(Note note) => createdNotes.Remove(note);
+    public void AddCreatedNote(Note note) => CreatedNotes.Add(note);
+    public void RemoveCreatedNote(Note note) => CreatedNotes.Remove(note);
 
-    public void addFavoriteNote(Note note) => favoriteNotes.Add(note);
-    public void removeFavoriteNote(Note note) => favoriteNotes.Remove(note);
+    public void AddFavoriteNote(Note note) => FavoriteNotes.Add(note);
+    public void RemoveFavoriteNote(Note note) => FavoriteNotes.Remove(note);
 }
