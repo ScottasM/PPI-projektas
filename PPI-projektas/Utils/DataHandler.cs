@@ -2,9 +2,9 @@
 
 namespace PPI_projektas.Utils
 {
-    public class UpdateSyncing
+    public class DataHandler
     {
-        public static UpdateSyncing Instance;
+        public static DataHandler Instance;
 
         private List<User> allUsers = new List<User>();
         private List<Group> allGroups = new List<Group>();
@@ -12,7 +12,7 @@ namespace PPI_projektas.Utils
 
         private SaveHandler saveHandler;
 
-        public UpdateSyncing()
+        public DataHandler()
         {
             #region Singleton
             if (Instance != null)
@@ -40,6 +40,25 @@ namespace PPI_projektas.Utils
                 foreach (Guid guid in user.FavoriteNotesGuids) user.AddGroup(allGroups.Find(inst => inst.Id == guid));
             }
             foreach (Note note in allNotes) note.Author = allUsers.Find(inst => inst.Id == note.AuthorGuid);
+
+            SaveTimeout(15);
+        }
+
+
+        private async void SaveTimeout(int TimeoutSeconds)
+        {
+            while (true) {
+                await Task.Delay(TimeoutSeconds * 1000);
+                saveHandler.SaveList(allGroups);
+                saveHandler.SaveList(allUsers);
+                saveHandler.SaveList(allGroups);
+            }
+
+        }
+
+        public void Update<T>(T obj) 
+        {
+            
         }
 
     }
