@@ -37,7 +37,7 @@ namespace PPI_projektas.Utils
             foreach(User user in allUsers) {
                 foreach (Guid guid in user.CreatedNotesGuids) user.AddCreatedNote(allNotes.Find(inst => inst.Id == guid));
                 foreach (Guid guid in user.FavoriteNotesGuids) user.AddCreatedNote(allNotes.Find(inst => inst.Id == guid));
-                foreach (Guid guid in user.FavoriteNotesGuids) user.AddGroup(allGroups.Find(inst => inst.Id == guid));
+                foreach (Guid guid in user.GroupsGuids) user.AddGroup(allGroups.Find(inst => inst.Id == guid));
             }
             foreach (Note note in allNotes) note.Author = allUsers.Find(inst => inst.Id == note.AuthorGuid);
 

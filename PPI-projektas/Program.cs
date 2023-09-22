@@ -1,5 +1,8 @@
 using PPI_projektas.Utils;
 
+
+DataHandler dataHandler = new DataHandler();
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
