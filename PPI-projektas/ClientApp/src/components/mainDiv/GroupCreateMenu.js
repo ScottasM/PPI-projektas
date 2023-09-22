@@ -35,13 +35,21 @@ export class GroupCreateMenu extends Component {
     };
     
    async handlePost(groupName) {
-        const response = await fetch('group', {
-            method: 'post',
-            headers: {'Content-Type': 'string'},
-            body: {
-                groupName
-            }
-        });
+       
+       const groupData = {
+           GroupName: groupName,
+       };
+       
+       let data = new FormData();
+       data.append("groupData", JSON.stringify(groupData));
+       
+       fetch('http://localhost:5268/api/group/creategroup',
+           {
+               method: "Post",
+               body: data
+           })
+       
+       console.log('Posted');
     }
     
     render() {

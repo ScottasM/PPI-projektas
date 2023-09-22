@@ -1,3 +1,5 @@
+using System.Net;
+using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
 using PPI_projektas.objects;
 using PPI_projektas.Utils;
@@ -6,23 +8,25 @@ namespace PPI_projektas.Controllers
 
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class GroupController : ControllerBase
     {
         [HttpGet]
-        public IActionResult GetGroups()
+        public IActionResult Get()
         {
             var groups = DataHandler.LoadList<Group>();
             return Ok(groups);
         }
 
-        [HttpPost]
-        public IActionResult CreateGroup(string name)
+        [HttpPost("creategroup")]
+        public IActionResult CreateGroup(string data)
         {
             // if (owner == null)
             // {
             //     return BadRequest("No creating User");
             // }
+            
+            var obj = JsonSerializer.Deserialize<GroupData>(data);
 
             Console.WriteLine("HttpPost");
             
@@ -33,7 +37,12 @@ namespace PPI_projektas.Controllers
             // DataHandler.SaveList(groups);
             //
             // return CreatedAtAction("GetGroups", new { id = group.Id }, group);
-            return CreatedAtAction("GetGroups", 0, 1);
+            return Ok();
         }
+    }
+
+    public class GroupData
+    {
+        public string GroupName { get; set; }
     }
 }
