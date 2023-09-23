@@ -20,36 +20,34 @@ export class GroupCreateMenu extends Component {
         event.preventDefault();
         const { groupName } = this.state;
         
-        const data = {
-            name: groupName,
-            owner: {
-                // Owner data
-            }
-        }
-        
-        console.log('Group Name:', groupName);
-        
         this.handlePost(groupName)
         
         this.setState({ groupName: '' });
     };
     
-   async handlePost(groupName) {
+   handlePost(groupName) {
        
        const groupData = {
            GroupName: groupName,
+           OwnerId: '0f8fad5b-d9cb-469f-a165-70867728950e',
        };
-       
-       let data = new FormData();
-       data.append("groupData", JSON.stringify(groupData));
-       
-       fetch('http://localhost:5268/api/group/creategroup',
-           {
-               method: "Post",
-               body: data
+
+       fetch('http://localhost:5268/api/group/creategroup', {
+           method: 'POST',
+           headers: {
+               'Content-Type': 'application/json',
+           },
+           body: JSON.stringify(groupData),
+       })
+           .then((response) => {
+               if (!response.ok) {
+                   throw new Error('Network response was not ok');
+               }
+               console.log('Posted');
            })
-       
-       console.log('Posted');
+           .catch((error) => {
+               console.error('There was a problem with the fetch operation:', error);
+           });
     }
     
     render() {

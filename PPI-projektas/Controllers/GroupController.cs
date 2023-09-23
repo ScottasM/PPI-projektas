@@ -19,30 +19,29 @@ namespace PPI_projektas.Controllers
         }
 
         [HttpPost("creategroup")]
-        public IActionResult CreateGroup(string data)
+        public IActionResult CreateGroup([FromBody] GroupData groupData)
         {
-            // if (owner == null)
-            // {
-            //     return BadRequest("No creating User");
-            // }
-            
-            var obj = JsonSerializer.Deserialize<GroupData>(data);
+            if (groupData == null) return BadRequest("Invalid Data");
 
-            Console.WriteLine("HttpPost");
+            if (string.IsNullOrEmpty(groupData.OwnerId.ToString())) return BadRequest("OwnerId is empty or null");
+
+            Console.WriteLine("HttpPost " + groupData.GroupName);
+
+            var owner = new User("test", " ", " ");
             
-            // var group = new Group(name, owner);
-            //
-            // var groups = DataHandler.LoadList<Group>();
-            // groups.Add(group);
-            // DataHandler.SaveList(groups);
-            //
-            // return CreatedAtAction("GetGroups", new { id = group.Id }, group);
-            return Ok();
+            var group = new Group(groupData.GroupName, owner);
+            
+            var groups = DataHandler.LoadList<Group>();
+            groups.Add(group);
+            DataHandler.SaveList(groups);
+            
+            return CreatedAtAction("CreateGroup", new { id = group.Id }, group);
         }
     }
 
     public class GroupData
     {
         public string GroupName { get; set; }
+        public Guid OwnerId { get; set; }
     }
 }
