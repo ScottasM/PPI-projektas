@@ -56,12 +56,8 @@ namespace PPI_projektas.Utils
 
         }
 
-        public static void Create<T>(T obj)
+        public static void Create<T>(T obj) // not pretty, but should work
         {
-
-            Group grp = new Group();
-            DataHandler.Create(grp);
-
             if (obj == null)
                 return;
 
@@ -76,6 +72,24 @@ namespace PPI_projektas.Utils
             else if (obj is Note) {
                 var obje = obj as Note;
                 Instance.allNotes.Add(obje);
+            }
+        }
+
+        public static void Delete<T>(T obj)
+        {
+            if(obj == null) return;
+
+            if (obj is Group) {
+                var obje = obj as Group;
+                Instance.allGroups.Remove(obje);
+            }
+            else if (obj is User) {
+                var obje = obj as User;
+                Instance.allUsers.Remove(obje);
+            }
+            else if (obj is Note) {
+                var obje = obj as Note;
+                Instance.allNotes.Remove(obje);
             }
         }
     }

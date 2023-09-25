@@ -18,8 +18,6 @@ namespace PPI_projektas.Utils
         private string? SerializeList<T>(List<T> obj)
         {
             try {
-                Group grp = new Group();
-                DataHandler.Create(grp);
                 return JsonSerializer.Serialize(obj);
             }
             catch(Exception err) {
