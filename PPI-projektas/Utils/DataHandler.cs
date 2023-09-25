@@ -56,10 +56,27 @@ namespace PPI_projektas.Utils
 
         }
 
-        public void Update<T>(T obj) 
+        public static void Create<T>(T obj)
         {
-            
-        }
 
+            Group grp = new Group();
+            DataHandler.Create(grp);
+
+            if (obj == null)
+                return;
+
+            if (obj is Group) {
+                var obje = obj as Group;
+                Instance.allGroups.Add(obje);
+            }
+            else if (obj is User) {
+                var obje = obj as User;
+                Instance.allUsers.Add(obje);
+            }
+            else if (obj is Note) {
+                var obje = obj as Note;
+                Instance.allNotes.Add(obje);
+            }
+        }
     }
 }
