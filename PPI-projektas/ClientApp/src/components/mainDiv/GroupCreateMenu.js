@@ -28,10 +28,10 @@ export class GroupCreateMenu extends Component {
        
        const groupData = {
            GroupName: groupName,
-           OwnerId: '0f8fad5b-d9cb-469f-a165-70867728950e',
+           OwnerId: '0f8fad5b-d9cb-469f-a165-70867728950e', // temporary static user id
        };
 
-       fetch('http://localhost:5268/api/group/creategroup', {
+       fetch('http://localhost:5268/api/group/creategroup', { // temporary localhost api url
            method: 'POST',
            headers: {
                'Content-Type': 'application/json',
