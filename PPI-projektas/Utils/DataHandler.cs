@@ -6,11 +6,11 @@ namespace PPI_projektas.Utils
     {
         public static DataHandler Instance;
 
-        private List<User> allUsers = new List<User>();
-        private List<Group> allGroups = new List<Group>();
-        private List<Note> allNotes = new List<Note>();
+        private List<User> _allUsers = new List<User>();
+        private List<Group> _allGroups = new List<Group>();
+        private List<Note> _allNotes = new List<Note>();
 
-        private SaveHandler saveHandler;
+        private SaveHandler _saveHandler;
 
         public DataHandler()
         {
@@ -20,26 +20,26 @@ namespace PPI_projektas.Utils
             Instance = this;
             #endregion
 
-            saveHandler = LazySingleton<SaveHandler>.Instance;
+            _saveHandler = LazySingleton<SaveHandler>.Instance;
 
-            allUsers = saveHandler.LoadList<User>();
-            allNotes = saveHandler.LoadList<Note>();
-            allGroups = saveHandler.LoadList<Group>();
+            _allUsers = _saveHandler.LoadList<User>();
+            _allNotes = _saveHandler.LoadList<Note>();
+            _allGroups = _saveHandler.LoadList<Group>();
 
 
             // assign loaded guids to actual objects
-            foreach(Group group in allGroups) {
-                group.Owner = allUsers.Find(inst => inst.Id == group.OwnerGuid);
+            foreach(Group group in _allGroups) {
+                group.Owner = _allUsers.Find(inst => inst.Id == group.OwnerGuid);
 
-                foreach (Guid guid in group.MembersGuid) group.AddUser(allUsers.Find(inst => inst.Id == guid));
-                foreach (Guid guid in group.NotesGuid) group.AddNote(allNotes.Find(inst => inst.Id == guid));
+                foreach (Guid guid in group.MembersGuid) group.AddUser(_allUsers.Find(inst => inst.Id == guid));
+                foreach (Guid guid in group.NotesGuid) group.AddNote(_allNotes.Find(inst => inst.Id == guid));
             }
-            foreach(User user in allUsers) {
-                foreach (Guid guid in user.CreatedNotesGuids) user.AddCreatedNote(allNotes.Find(inst => inst.Id == guid));
-                foreach (Guid guid in user.FavoriteNotesGuids) user.AddCreatedNote(allNotes.Find(inst => inst.Id == guid));
-                foreach (Guid guid in user.GroupsGuids) user.AddGroup(allGroups.Find(inst => inst.Id == guid));
+            foreach(User user in _allUsers) {
+                foreach (Guid guid in user.CreatedNotesGuids) user.AddCreatedNote(_allNotes.Find(inst => inst.Id == guid));
+                foreach (Guid guid in user.FavoriteNotesGuids) user.AddCreatedNote(_allNotes.Find(inst => inst.Id == guid));
+                foreach (Guid guid in user.GroupsGuids) user.AddGroup(_allGroups.Find(inst => inst.Id == guid));
             }
-            foreach (Note note in allNotes) note.Author = allUsers.Find(inst => inst.Id == note.AuthorGuid);
+            foreach (Note note in _allNotes) note.Author = _allUsers.Find(inst => inst.Id == note.AuthorGuid);
 
             SaveTimeout(15);
         }
@@ -49,9 +49,9 @@ namespace PPI_projektas.Utils
         {
             while (true) {
                 await Task.Delay(TimeoutSeconds * 1000);
-                saveHandler.SaveList(allGroups);
-                saveHandler.SaveList(allUsers);
-                saveHandler.SaveList(allGroups);
+                _saveHandler.SaveList(_allGroups);
+                _saveHandler.SaveList(_allUsers);
+                _saveHandler.SaveList(_allGroups);
             }
 
         }
@@ -63,15 +63,15 @@ namespace PPI_projektas.Utils
 
             if (obj is Group) {
                 var obje = obj as Group;
-                Instance.allGroups.Add(obje);
+                Instance._allGroups.Add(obje);
             }
             else if (obj is User) {
                 var obje = obj as User;
-                Instance.allUsers.Add(obje);
+                Instance._allUsers.Add(obje);
             }
             else if (obj is Note) {
                 var obje = obj as Note;
-                Instance.allNotes.Add(obje);
+                Instance._allNotes.Add(obje);
             }
         }
 
@@ -81,15 +81,15 @@ namespace PPI_projektas.Utils
 
             if (obj is Group) {
                 var obje = obj as Group;
-                Instance.allGroups.Remove(obje);
+                Instance._allGroups.Remove(obje);
             }
             else if (obj is User) {
                 var obje = obj as User;
-                Instance.allUsers.Remove(obje);
+                Instance._allUsers.Remove(obje);
             }
             else if (obj is Note) {
                 var obje = obj as Note;
-                Instance.allNotes.Remove(obje);
+                Instance._allNotes.Remove(obje);
             }
         }
     }
