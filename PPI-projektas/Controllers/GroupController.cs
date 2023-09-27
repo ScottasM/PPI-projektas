@@ -28,7 +28,8 @@ namespace PPI_projektas.Controllers
 
             Console.WriteLine("HttpPost " + groupData.GroupName);
 
-            var owner = new User("test", " ", " ");
+            var owner = new User("test", " ", " "); // temporary user for all groups
+            DataHandler.Create(owner);
             
             var group = new Group(groupData.GroupName, owner);
             DataHandler.Create(group);

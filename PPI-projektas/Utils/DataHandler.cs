@@ -51,7 +51,7 @@ namespace PPI_projektas.Utils
                 await Task.Delay(TimeoutSeconds * 1000);
                 _saveHandler.SaveList(_allGroups);
                 _saveHandler.SaveList(_allUsers);
-                _saveHandler.SaveList(_allGroups);
+                _saveHandler.SaveList(_allNotes);
             }
 
         }
