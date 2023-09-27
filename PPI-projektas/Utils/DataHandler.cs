@@ -1,64 +1,96 @@
-﻿using System.Text.Json;
-using PPI_projektas.objects;
-using PPI_projektas.objects.abstractions;
+﻿using PPI_projektas.objects;
 
 namespace PPI_projektas.Utils
 {
-    public static class DataHandler
+    public class DataHandler
     {
+        public static DataHandler Instance;
 
-        private static Dictionary<Type, string> _filePaths = new Dictionary<Type, string>(3) {
-            {typeof(User),"Users.txt"},
-            {typeof(Group),"Groups.txt"},
-            {typeof(Note),"Notes.txt"}
-        };
-        
-        private static string? SerializeList<T>(List<T> obj)
+        private List<User> _allUsers = new List<User>();
+        private List<Group> _allGroups = new List<Group>();
+        private List<Note> _allNotes = new List<Note>();
+
+        private SaveHandler _saveHandler;
+
+        public DataHandler()
         {
-            try {
-                return JsonSerializer.Serialize(obj);
+            #region Singleton
+            if (Instance != null)
+                Instance = null;
+            Instance = this;
+            #endregion
+
+            _saveHandler = LazySingleton<SaveHandler>.Instance;
+
+            _allUsers = _saveHandler.LoadList<User>();
+            _allNotes = _saveHandler.LoadList<Note>();
+            _allGroups = _saveHandler.LoadList<Group>();
+
+
+            // assign loaded guids to actual objects
+            foreach(Group group in _allGroups) {
+                group.Owner = _allUsers.Find(inst => inst.Id == group.OwnerGuid);
+
+                foreach (Guid guid in group.MembersGuid) group.AddUser(_allUsers.Find(inst => inst.Id == guid));
+                foreach (Guid guid in group.NotesGuid) group.AddNote(_allNotes.Find(inst => inst.Id == guid));
             }
-            catch(Exception err) {
-                Console.WriteLine($"Error while serializing a list : {err.Message}");
-                return null;
+            foreach(User user in _allUsers) {
+                foreach (Guid guid in user.CreatedNotesGuids) user.AddCreatedNote(_allNotes.Find(inst => inst.Id == guid));
+                foreach (Guid guid in user.FavoriteNotesGuids) user.AddCreatedNote(_allNotes.Find(inst => inst.Id == guid));
+                foreach (Guid guid in user.GroupsGuids) user.AddGroup(_allGroups.Find(inst => inst.Id == guid));
             }
-            
+            foreach (Note note in _allNotes) note.Author = _allUsers.Find(inst => inst.Id == note.AuthorGuid);
+
+            SaveTimeout(15);
         }
 
-        public static void SaveList<T>(List<T> obj)
+
+        private async void SaveTimeout(int TimeoutSeconds)
         {
-            string? sr = SerializeList(obj);
-            if (sr == null)
+            while (true) {
+                await Task.Delay(TimeoutSeconds * 1000);
+                _saveHandler.SaveList(_allGroups);
+                _saveHandler.SaveList(_allUsers);
+                _saveHandler.SaveList(_allGroups);
+            }
+
+        }
+
+        public static void Create<T>(T obj) // not pretty, but should work
+        {
+            if (obj == null)
                 return;
 
-            try {
-                File.WriteAllText(_filePaths[obj.GetType()], sr);
+            if (obj is Group) {
+                var obje = obj as Group;
+                Instance._allGroups.Add(obje);
             }
-            catch (Exception err) {
-                Console.WriteLine($"Failed to save file : {err.Message}");
+            else if (obj is User) {
+                var obje = obj as User;
+                Instance._allUsers.Add(obje);
+            }
+            else if (obj is Note) {
+                var obje = obj as Note;
+                Instance._allNotes.Add(obje);
             }
         }
 
-        public static List<T> LoadList<T>()
+        public static void Delete<T>(T obj)
         {
-            if (File.Exists(_filePaths[typeof(T)])) {
-                var json = File.ReadAllText(_filePaths[typeof(T)]);
-                var list = JsonSerializer.Deserialize<List<T>>(json);
+            if(obj == null) return;
 
-                if (list != null)
-                    return list;
+            if (obj is Group) {
+                var obje = obj as Group;
+                Instance._allGroups.Remove(obje);
             }
-
-            return new List<T>();
-        }
-        
-        public static void SaveObject<T>(T obj) where T : Entity
-        {
-            List<T> list = LoadList<T>();
-            if (list == null)
-                return;
-
-            T? tempObj = list.Find(inst => inst.Id == obj.Id);
+            else if (obj is User) {
+                var obje = obj as User;
+                Instance._allUsers.Remove(obje);
+            }
+            else if (obj is Note) {
+                var obje = obj as Note;
+                Instance._allNotes.Remove(obje);
+            }
         }
     }
 }
