@@ -14,7 +14,8 @@ namespace PPI_projektas.Controllers
         [HttpGet]
         public IActionResult Get()
         {
-            var groups = DataHandler.LoadList<Group>();
+            var saveHandler = new SaveHandler();
+            var groups = saveHandler.LoadList<Group>();
             return Ok(groups);
         }
 
@@ -30,10 +31,7 @@ namespace PPI_projektas.Controllers
             var owner = new User("test", " ", " ");
             
             var group = new Group(groupData.GroupName, owner);
-            
-            var groups = DataHandler.LoadList<Group>();
-            groups.Add(group);
-            DataHandler.SaveList(groups);
+            DataHandler.Create(group);
             
             return CreatedAtAction("CreateGroup", new { id = group.Id }, group);
         }
