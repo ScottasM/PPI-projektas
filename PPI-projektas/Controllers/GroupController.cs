@@ -14,8 +14,7 @@ namespace PPI_projektas.Controllers
         [HttpGet]
         public IActionResult Get(Guid ownerId)
         {
-            var saveHandler = new SaveHandler();
-            var groups = saveHandler.LoadList<Group>();
+            var groups = DataHandler.Instance.AllGroups;
             var groupNames = groups
                 //.Where(group => group.OwnerGuid == ownerId) Will be uncommented then user is associated on the frontend
                 .Select(group => group.Name)

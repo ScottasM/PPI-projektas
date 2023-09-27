@@ -4,8 +4,8 @@ import '../Group.css'
 export class GroupCreateMenu extends Component {
     static displayName = GroupCreateMenu.name;
 
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
         this.state = {
             groupName: '',
         };
@@ -24,14 +24,14 @@ export class GroupCreateMenu extends Component {
         this.setState({ groupName: '' });
     };
     
-   handlePost(groupName) {
+   async handlePost(groupName) {
        
        const groupData = {
            GroupName: groupName,
            OwnerId: '0f8fad5b-d9cb-469f-a165-70867728950e', // temporary static user id
        };
 
-       fetch('http://localhost:5268/api/group/creategroup', { // temporary localhost api url
+       await fetch('http://localhost:5268/api/group/creategroup', { // temporary localhost api url
            method: 'POST',
            headers: {
                'Content-Type': 'application/json',
@@ -47,6 +47,9 @@ export class GroupCreateMenu extends Component {
            .catch((error) => {
                console.error('There was a problem with the fetch operation:', error);
            });
+
+       this.props.fetchGroupList();
+       this.props.toggleGroupCreateMenu();
     }
     
     render() {
