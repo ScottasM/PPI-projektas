@@ -12,6 +12,8 @@ public class Note : Entity
 
 	public List<string> Tags { get; set; }
 	
+	public Note () {} // For deserialization
+	
 	public Note(User author)
 	{
 		Author = author;

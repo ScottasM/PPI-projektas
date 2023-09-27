@@ -17,7 +17,9 @@ public class Group : Entity
     [JsonIgnore] public List<Note> Notes { get; }
     [JsonInclude] public List<Guid> NotesGuid;
 
-
+    public Group () {} // For deserialization
+    
+    
     public Group(string name, User owner)
     {
         Name = name;

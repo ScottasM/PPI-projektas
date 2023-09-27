@@ -5,9 +5,9 @@ namespace PPI_projektas.objects;
 
 public class User : Entity
 {
-    [JsonInclude] private string _username;
-    [JsonInclude] private readonly string _password;
-    [JsonInclude] private readonly string _email;
+    private string _username;
+    private readonly string _password;
+    private readonly string _email;
 
 
     [JsonIgnore] public List<Note> CreatedNotes;
@@ -19,6 +19,8 @@ public class User : Entity
     [JsonIgnore] public List<Group> Groups;
     [JsonInclude] public List<Guid> GroupsGuids;
 
+    public User () {} // For deserialization
+    
     public User(string name, string password, string email)
     {
         _username = name;
