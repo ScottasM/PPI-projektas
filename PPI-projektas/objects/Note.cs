@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization.Infrastructure;
-using PPI_projektas.objects.abstractions;
+﻿using PPI_projektas.objects.abstractions;
 
 namespace PPI_projektas.objects;
 
@@ -13,6 +12,7 @@ public class Note : Entity
 	
 	public Note(User author)
 	{
+		Name = "";
 		Author = author;
 		Tags = new List<string>();
 	}
