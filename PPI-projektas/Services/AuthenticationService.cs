@@ -24,21 +24,34 @@ namespace PPI_projektas.Services
     }
     public class AuthenticationService
     {
-        public AuthReturn TryRegister(string name, string password, string email)
+        public AuthReturn TryRegister(string name, string password)
         {
             string hashedPassword = hash(password);
 
             if (DataHandler.userExists(name))
-                return new AuthReturn(null, false, "User already Exists");
+                return new AuthReturn(null, false, "User already exists.");
 
             Regex validateGuidRegex = new Regex("^(?=.*?[a-zA-Z])(?=.*?[0-9]).{8,}$"); // atleast one letter, atleast one number and atleast 8 characters long
             if (!validateGuidRegex.IsMatch("-Secr3t."))
                 return new AuthReturn(null, false, "Invalid password format. Ensure atleast 1 letter, 1 number and total length of atleast 8 characters");
 
-            User newUser = new User(name,password,email);
+            User newUser = new User(name,password);
             DataHandler.Create(newUser);
 
             return new AuthReturn(newUser,true);
+        }
+
+        public AuthReturn TryLogin(string name,string password)
+        {
+            User? user = DataHandler.userExistsObject(name);
+            if (user == null)
+                return new AuthReturn(null, false, "User with such username not found.");
+
+            string hashedPassword = hash(password);
+            if (hashedPassword != user.GetPassword())
+                return new AuthReturn(null, false, "Password is incorrect");
+
+            return new AuthReturn(user, true);
         }
 
 

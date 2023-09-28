@@ -5,7 +5,7 @@ namespace PPI_projektas.objects;
 
 public class User : Entity
 {
-    public string _username { get; private set; }
+    private string _username;
     private readonly string _password;
     private readonly string _email;
 
@@ -20,11 +20,10 @@ public class User : Entity
     [JsonIgnore] public List<Group> Groups;
     public List<Guid> GroupsGuids;
 
-    public User(string name, string password, string email)
+    public User(string name, string password)
     {
         _username = name;
         _password = password;
-        _email = email;
         CreatedNotes = new List<Note>();
         FavoriteNotes = new List<Note>();
         FavoriteNotesGuids = new List<Guid>();
@@ -34,6 +33,8 @@ public class User : Entity
 
     public string GetUsername() => _username;
     public void SetUsername(string name) => _username = name;
+
+    public string GetPassword() => _password;
 
     public void AddCreatedNote(Note note)
     {
