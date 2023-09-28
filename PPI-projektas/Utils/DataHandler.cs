@@ -95,7 +95,7 @@ namespace PPI_projektas.Utils
 
         public static bool userExists(string username)
         {
-            return 
+            return Instance._allUsers.Any(inst => inst._username == username);
         }
     }
 }

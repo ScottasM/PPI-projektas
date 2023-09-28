@@ -28,12 +28,12 @@ namespace PPI_projektas.Services
         {
             string hashedPassword = hash(password);
 
-            User userExists = DataHandler.Instance.All
-
+            if (DataHandler.userExists(name))
+                return new AuthReturn(null, false, "User already Exists");
 
             Regex validateGuidRegex = new Regex("^(?=.*?[a-zA-Z])(?=.*?[0-9]).{8,}$"); // atleast one letter, atleast one number and atleast 8 characters long
-            Console.WriteLine(validateGuidRegex.IsMatch("-Secr3t."));  
-
+            if (!validateGuidRegex.IsMatch("-Secr3t."))
+                return new AuthReturn(null, false, "Invalid password format. Ensure atleast 1 letter, 1 number and total length of atleast 8 characters");
 
             User newUser = new User(name,password,email);
             DataHandler.Create(newUser);
