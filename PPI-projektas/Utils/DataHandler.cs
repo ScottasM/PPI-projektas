@@ -92,5 +92,10 @@ namespace PPI_projektas.Utils
                 Instance._allNotes.Remove(obje);
             }
         }
+
+        public static bool userExists(string username)
+        {
+            return 
+        }
     }
 }

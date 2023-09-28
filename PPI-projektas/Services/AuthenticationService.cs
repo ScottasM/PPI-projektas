@@ -1,21 +1,44 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
 using System.Text;
+using System.Text.RegularExpressions;
 using PPI_projektas.objects;
 using PPI_projektas.Utils;
+using System.Linq;
 
 namespace PPI_projektas.Services
 {
+    public class AuthReturn
+    {
+        public User? user;
+        public bool success;
+        public string? errorMessage;
+
+        public AuthReturn(User? user, bool success = true, string errorMessage = "")
+        {
+            this.user = user;
+            this.success = success;
+            this.errorMessage = errorMessage;
+        }
+    }
     public class AuthenticationService
     {
-        public User TryRegister(string name, string password, string email)
+        public AuthReturn TryRegister(string name, string password, string email)
         {
             string hashedPassword = hash(password);
+
+            User userExists = DataHandler.Instance.All
+
+
+            Regex validateGuidRegex = new Regex("^(?=.*?[a-zA-Z])(?=.*?[0-9]).{8,}$"); // atleast one letter, atleast one number and atleast 8 characters long
+            Console.WriteLine(validateGuidRegex.IsMatch("-Secr3t."));  
+
 
             User newUser = new User(name,password,email);
             DataHandler.Create(newUser);
 
-            return newUser;
+            return new AuthReturn(newUser,true);
         }
 
 
