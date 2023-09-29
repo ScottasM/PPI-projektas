@@ -12,10 +12,14 @@ namespace PPI_projektas.Controllers
     public class GroupController : ControllerBase
     {
         [HttpGet]
-        public IActionResult Get()
+        public IActionResult Get(Guid ownerId)
         {
-            var groups = DataHandler.LoadList<Group>();
-            return Ok(groups);
+            var groups = DataHandler.Instance.AllGroups;
+            var groupNames = groups
+                //.Where(group => group.OwnerGuid == ownerId) Will be uncommented then user is associated on the frontend
+                .Select(group => group.Name)
+                .ToList();
+            return Ok(groupNames);
         }
 
         [HttpPost("creategroup")]
@@ -27,13 +31,11 @@ namespace PPI_projektas.Controllers
 
             Console.WriteLine("HttpPost " + groupData.GroupName);
 
-            var owner = new User("test", " ", " ");
+            var owner = new User("test", " ", " "); // temporary user for all groups
+            DataHandler.Create(owner);
             
             var group = new Group(groupData.GroupName, owner);
-            
-            var groups = DataHandler.LoadList<Group>();
-            groups.Add(group);
-            DataHandler.SaveList(groups);
+            DataHandler.Create(group);
             
             return CreatedAtAction("CreateGroup", new { id = group.Id }, group);
         }

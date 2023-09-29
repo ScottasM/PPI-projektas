@@ -7,10 +7,12 @@ public class Note : Entity
 {
 	[JsonIgnore] public User Author;
 
-	public Guid AuthorGuid;
+	[JsonInclude] public Guid AuthorGuid;
 
 
 	public List<string> Tags { get; set; }
+	
+	public Note () {} // For deserialization
 	
 	public Note(User author)
 	{
