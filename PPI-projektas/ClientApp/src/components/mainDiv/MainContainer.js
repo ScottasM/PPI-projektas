@@ -4,6 +4,10 @@ import {CreatingButtons} from "./CreatingButtons";
 export class MainContainer extends Component {
     static displayName = MainContainer.name;
 
+    constructor(props) {
+        super(props);
+    }
+    
 
     state = {
         displayGroupCreateMenu: false,
@@ -19,7 +23,7 @@ export class MainContainer extends Component {
         return (
             <div className="bg-white">
                 <CreatingButtons toggleMenu={this.toggleGroupCreateMenu}/>
-                {this.state.displayGroupCreateMenu && <GroupCreateMenu />}
+                {this.state.displayGroupCreateMenu && <GroupCreateMenu fetchGroupList={this.props.fetchGroupList} toggleGroupCreateMenu={this.toggleGroupCreateMenu} />}
             </div>
         );
     }

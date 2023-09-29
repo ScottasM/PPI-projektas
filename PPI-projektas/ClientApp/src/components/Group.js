@@ -3,11 +3,15 @@ import './Group.css';
 
 export class Group extends Component {
     static displayName = Group.name;
+    
+    constructor(props) {
+        super(props);
+    }
 
     render() {
         return (
             <div className="group bg-white rounded-circle">
-                <p>Group</p>
+                <p>{this.props.groupInitials}</p>
             </div>
         );
     }
