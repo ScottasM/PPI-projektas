@@ -22,6 +22,22 @@ export class Group extends Component {
         document.removeEventListener('click', this.hideContextMenu);
     }
     
+    handleDelete = async () => {
+        try {
+            await fetch(`http://localhost:5268/api/group/delete/${this.props.groupId}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+
+            console.log('Deleted');
+            this.props.fetchGroupList();
+        } catch (error) {
+            console.error('There was a problem with the fetch operation:', error);
+        }
+    }
+    
     render() {
         const { isContextMenuVisible } = this.state;
 
@@ -37,7 +53,7 @@ export class Group extends Component {
                                 <button className="context-button">Edit</button>
                             </li>
                             <li>
-                                <button className="context-button">Delete</button>
+                                <button className="context-button" onClick={this.handleDelete}>Delete</button>
                             </li>
                         </ul>
                     </div>

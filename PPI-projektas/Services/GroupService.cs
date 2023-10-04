@@ -29,13 +29,21 @@ public class GroupService
     {
 
         // var owner = DataHandler.Instance.AllUsers.Find(user => user.Id == ownerId);
-        // if (owner == null) throw new UserDoesNotExistException(ownerId);
+        // if (owner == null) throw new ObjectDoesNotExistException(ownerId);
         
         // var group = new Group(groupName, owner);
         var group = new Group(groupName, new User());
         DataHandler.Create(group);
 
         return group.Id;
+    }
+
+    public void DeleteGroup(Guid groupId)
+    {
+        var group = DataHandler.Instance.AllGroups.Find(group => group.Id == groupId);
+        if (group == null) throw new ObjectDoesNotExistException(groupId);
+
+        DataHandler.Delete(group);
     }
 
     public class GroupDataItem

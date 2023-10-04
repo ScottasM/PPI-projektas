@@ -37,16 +37,28 @@ namespace PPI_projektas.Controllers
                 var groupService = new GroupService();
                 groupId = groupService.CreateGroup(groupData.GroupName, groupData.OwnerId);
             }
-            catch (UserDoesNotExistException e)
+            catch (ObjectDoesNotExistException)
             {
                 return BadRequest("USER-ERROR");
             }
-            catch (Exception e)
-            {
-                return BadRequest();
-            }
             
             return CreatedAtAction("CreateGroup", groupId);
+        }
+
+        [HttpDelete("delete/{groupId:guid}")]
+        public IActionResult Delete(Guid groupId)
+        {
+            var groupService = new GroupService();
+
+            try
+            {
+                groupService.DeleteGroup(groupId);
+                return NoContent();
+            }
+            catch (ObjectDoesNotExistException)
+            {
+                return NotFound();
+            }
         }
     }
     

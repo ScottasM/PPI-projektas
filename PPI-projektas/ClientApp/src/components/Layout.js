@@ -10,8 +10,10 @@ export class Layout extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            displayGroupEditMenu: false,
             mounted: false,
             groups: [],
+            toggledGroupId: '00000000-0000-0000-0000-000000000000',
         };
     }
 
@@ -20,6 +22,13 @@ export class Layout extends Component {
             this.fetchGroupList();
             this.setState({ mounted : true});
         }
+    }
+
+    toggleGroupEditMenu = (groupId) => {
+        this.setState((prevState) => ({
+            displayGroupEditMenu: !prevState.displayGroupEditMenu,
+            toggledGroupId: groupId,
+        }));
     }
     
     fetchGroupList = async () => {
@@ -46,8 +55,8 @@ export class Layout extends Component {
     render() {
     return (
       <div>
-          <SideNav groups={this.state.groups}/>
-          <MainContainer fetchGroupList={this.fetchGroupList}/>
+          <SideNav fetchGroupList={this.fetchGroupList} groups={this.state.groups}/>
+          <MainContainer fetchGroupList={this.fetchGroupList} toggledGroupId={this.state.toggledGroupId}/>
       </div>
     );
   }
