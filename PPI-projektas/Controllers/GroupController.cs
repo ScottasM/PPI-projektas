@@ -1,7 +1,9 @@
 using System.Net;
 using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
+using PPI_projektas.Exceptions;
 using PPI_projektas.objects;
+using PPI_projektas.Services;
 using PPI_projektas.Utils;
 
 namespace PPI_projektas.Controllers
@@ -15,19 +17,11 @@ namespace PPI_projektas.Controllers
         [HttpGet]
         public IActionResult Get(Guid ownerId)
         {
-                
-                
-            var groups = DataHandler.Instance.AllGroups;
-            var groupNames = groups
-                //.Where(group => group.OwnerGuid == ownerId) Will be uncommented when user is associated on the frontend
-                .Select(group => group.Name)
-                .ToList();
-            var groupIds = groups
-                //.Where(group => group.OwnerGuid == ownerId) Will be uncommented when user is associated on the frontend
-                .Select(group => group.Id)
-                .ToList();
+            if (ownerId == null) return BadRequest("USER-ERROR");
             
-            var groupData = new GroupData(groupNames, groupIds);
+            var groupService = new GroupService();
+
+            var groupData = groupService.GetGroupsByOwner(ownerId);
             
             return Ok(groupData);
         }
@@ -36,41 +30,23 @@ namespace PPI_projektas.Controllers
         public IActionResult CreateGroup([FromBody] GroupCreateData groupData)
         {
             if (groupData == null) return BadRequest("Invalid Data");
-
-            if (string.IsNullOrEmpty(groupData.OwnerId.ToString())) return BadRequest("OwnerId is empty or null");
-
-            var owner = new User("test", " ", " "); // temporary user for all groups
-            DataHandler.Create(owner);
             
-            var group = new Group(groupData.GroupName, owner);
-            DataHandler.Create(group);
-            
-            return CreatedAtAction("CreateGroup", new { id = group.Id }, group);
-        }
-    }
-
-    public class GroupDataItem
-    {
-        public Guid Id { get; set; }
-        public string Name { get; set; }
-    }
-
-    public class GroupData
-    {
-        public List<GroupDataItem> Groups { get; set; }
-
-        public GroupData(List<string> groupNames, List<Guid> groupIds)
-        {
-            Groups = new List<GroupDataItem>();
-
-            for (var i = 0; i < Math.Min(groupNames.Count, groupIds.Count); i++)
+            Guid groupId;
+            try
             {
-                Groups.Add(new GroupDataItem
-                {
-                    Id = groupIds[i],
-                    Name = groupNames[i]
-                });
+                var groupService = new GroupService();
+                groupId = groupService.CreateGroup(groupData.GroupName, groupData.OwnerId);
             }
+            catch (UserDoesNotExistException e)
+            {
+                return BadRequest("USER-ERROR");
+            }
+            catch (Exception e)
+            {
+                return BadRequest();
+            }
+            
+            return CreatedAtAction("CreateGroup", groupId);
         }
     }
     
