@@ -6,9 +6,9 @@ namespace PPI_projektas.Utils
     {
         public static DataHandler Instance;
 
-        private List<User> _allUsers = new List<User>();
-        private List<Group> _allGroups = new List<Group>();
-        private List<Note> _allNotes = new List<Note>();
+        public List<User> _allUsers = new List<User>();
+        public List<Group> _allGroups = new List<Group>();
+        public List<Note> _allNotes = new List<Note>();
 
         private SaveHandler _saveHandler;
 
