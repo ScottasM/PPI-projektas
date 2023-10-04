@@ -64,14 +64,17 @@ namespace PPI_projektas.Utils
             if (obj is Group) {
                 var obje = obj as Group;
                 Instance._allGroups.Add(obje);
+                Instance._saveHandler.SaveList(Instance._allGroups);
             }
             else if (obj is User) {
                 var obje = obj as User;
                 Instance._allUsers.Add(obje);
+                Instance._saveHandler.SaveList(Instance._allUsers);
             }
             else if (obj is Note) {
                 var obje = obj as Note;
                 Instance._allNotes.Add(obje);
+                Instance._saveHandler.SaveList(Instance._allNotes);
             }
         }
 
@@ -82,14 +85,17 @@ namespace PPI_projektas.Utils
             if (obj is Group) {
                 var obje = obj as Group;
                 Instance._allGroups.Remove(obje);
+                Instance._saveHandler.SaveList(Instance._allGroups);
             }
             else if (obj is User) {
                 var obje = obj as User;
                 Instance._allUsers.Remove(obje);
+                Instance._saveHandler.SaveList(Instance._allUsers);
             }
             else if (obj is Note) {
                 var obje = obj as Note;
                 Instance._allNotes.Remove(obje);
+                Instance._saveHandler.SaveList(Instance._allNotes);
             }
         }
 
