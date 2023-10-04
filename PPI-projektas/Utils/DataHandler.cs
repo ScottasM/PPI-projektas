@@ -39,6 +39,7 @@ namespace PPI_projektas.Utils
                 foreach (Guid guid in user.FavoriteNotesGuids) user.AddCreatedNote(_allNotes.Find(inst => inst.Id == guid));
                 foreach (Guid guid in user.GroupsGuids) user.AddGroup(_allGroups.Find(inst => inst.Id == guid));
             }
+            00
             foreach (Note note in _allNotes) note.Author = _allUsers.Find(inst => inst.Id == note.AuthorGuid);
 
             SaveTimeout(15);

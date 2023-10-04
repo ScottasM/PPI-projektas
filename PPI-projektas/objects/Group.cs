@@ -18,7 +18,7 @@ public class Group : Entity
     public List<Guid> NotesGuid;
 
 
-    public Group(string name, User owner)
+    public Group(string name, User owner, bool createGUID = false) : base(createGUID)
     {
         Name = name;
         Notes = new List<Note>();
@@ -27,6 +27,7 @@ public class Group : Entity
 
         NotesGuid = new List<Guid>();
         MembersGuid = new List<Guid>();
+        
     }
     
 

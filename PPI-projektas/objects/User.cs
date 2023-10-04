@@ -20,7 +20,7 @@ public class User : Entity
     [JsonIgnore] public List<Group> Groups;
     public List<Guid> GroupsGuids;
 
-    public User(string name, string password)
+    public User(string name, string password, bool createGUID = false) : base(createGUID)
     {
         _username = name;
         _password = password;

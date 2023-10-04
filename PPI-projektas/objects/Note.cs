@@ -12,8 +12,8 @@ public class Note : Entity
 
 	public List<string> Tags { get; set; }
 	
-	public Note(User author)
-	{
+	public Note(User author,bool createGUID = true) : base(createGUID)
+    {
 		Author = author;
 		AuthorGuid = author.Id;
 		Tags = new List<string>();
