@@ -5,24 +5,24 @@ namespace PPI_projektas.objects;
 
 public class Note : Entity
 {
+	public string Name { get; set; }
+
 	[JsonIgnore] public User Author;
 
 	[JsonInclude] public Guid AuthorGuid;
-
-	public string Name { get; set; }
 
 	public List<string> Tags { get; set; }
 	
 	public Note () {} // For deserialization
 	
+	public string Text;
+
 	public Note(User author)
 	{
 		Name = "";
 		Author = author;
 		AuthorGuid = author.Id;
 		Tags = new List<string>();
+		Text = "";
 	}
-
-	
-	
 }
