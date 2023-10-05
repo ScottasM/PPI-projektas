@@ -8,7 +8,7 @@ export class TagList extends Component {
     render() {
         return <div>
             {this.props.Tags.map((tag) => (
-                <div className="inline-tag">{tag}</div>
+                <div className="inLineTag">{tag}</div>
             ))}
         </div>
     }

@@ -1,4 +1,4 @@
-﻿import react, {Component, useEffect} from "react"
+﻿import react, {Component} from "react"
 import {NoteViewer} from "./NoteViewer";
 import {NoteEditor} from "./NoteEditor";
 
@@ -37,16 +37,16 @@ export class NoteHub extends Component {
             name: event.target.value
         })
     }
-    
-    changeTags = (tag) => {
-        this.setState({
-            tagChange: tag
-        })
-    }
 
     handleTextChanged = (event) => {
         this.setState({
             text: event.target.value
+        })
+    }
+
+    changeTags = (tag) => {
+        this.setState({
+            tagChange: tag
         })
     }
     
@@ -64,8 +64,8 @@ export class NoteHub extends Component {
                     tags={this.state.tags}
                     text={this.state.name}
                     handleNameChange={this.handleNameChange}
-                    changeTagsChange={this.changeTags}
                     handleTextChange={this.handleTextChanged}
+                    changeTags={this.changeTags}
                 />}
             </div>
         )
