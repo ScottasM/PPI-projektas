@@ -38,6 +38,19 @@ public class GroupService
         return group.Id;
     }
 
+    public void EditGroup(Guid groupId, string? optionalNewName = null, List<User>? optionalNewUsers = null)
+    {
+        var group = DataHandler.Instance.AllGroups.Find(group => group.Id == groupId);
+        if (group == null) throw new ObjectDoesNotExistException(groupId);
+        
+        if (optionalNewName != null) group.Name = optionalNewName;
+        if (optionalNewUsers != null)
+        {
+            foreach (var user in optionalNewUsers.Where(user => !group.Members.Contains(user)))
+                group.AddUser(user);
+        }
+    }
+
     public void DeleteGroup(Guid groupId)
     {
         var group = DataHandler.Instance.AllGroups.Find(group => group.Id == groupId);
