@@ -11,6 +11,7 @@ export class GroupCreateMenu extends Component {
             groupName: '',
             userSearch: '',
             users: [],
+            members: [],
         };
     }
 
@@ -20,11 +21,31 @@ export class GroupCreateMenu extends Component {
     
     handleUserSearch = (event) => {
         this.setState({userSearch: event.target.value });
+        this.handleUserGet();
     }
     
     handleUserGet = async () => {
         try {
             const response = await fetch(`http://localhost:5268/api/user/getusersbysearch/${this.state.userSearch}`);
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            const responseData = await response.json();
+
+            const userData = responseData.map(user => ({
+                id: user.id,
+                name: user.name
+            }));
+
+            this.setState({ users: userData});
+        } catch (error) {
+            console.error('There was a problem with the get operation:', error);
+        }
+    }
+
+    handleMemberGet = async () => {
+        try {
+            const response = await fetch(`http://localhost:5268/api/group/groupmembers/${this.state.userSearch}`);
             if (!response.ok) {
                 throw new Error('Network response was not ok');
             }
@@ -55,9 +76,10 @@ export class GroupCreateMenu extends Component {
        const groupData = {
            GroupName: groupName,
            OwnerId: '0f8fad5b-d9cb-469f-a165-70867728950e', // temporary static user id
+           // MemberIds : this.state.members.map(member => member.id), TODO: Get selected members from editing menu
        };
 
-       await fetch('http://localhost:5268/api/group/creategroup', { // temporary localhost api url
+       await fetch(`http://localhost:5268/api/group/${this.props.configType}group`, { // temporary localhost api url
            method: 'POST',
            headers: {
                'Content-Type': 'application/json',
@@ -97,7 +119,9 @@ export class GroupCreateMenu extends Component {
                     />
                     <br />
                     <br />
-                    <UserSelection handleUserSearch={this.handleUserSearch} userSearch={this.userSearch} users={this.state.users} />
+                    <UserSelection
+                        handleUserSearch={this.handleUserSearch} userSearch={this.userSearch} 
+                        users={this.state.users} members={this.state.members}/>
                     <br />
                     <input type="submit" value="Create" />
                 </form>

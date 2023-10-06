@@ -6,14 +6,13 @@ export class MainContainer extends Component {
 
     constructor(props) {
         super(props);
+        this.state = {
+            displayGroupCreateMenu: false,
+            groupConfigMenuType: 'create',
+        };
     }
     
-
-    state = {
-        displayGroupCreateMenu: false,
-    };
-    
-    toggleGroupCreateMenu = () => {
+    toggleGroupCreateMenu = () => { // TODO: get argument and change groupConfigMenuType accordingly
         this.setState((prevState) => ({
             displayGroupCreateMenu: !prevState.displayGroupCreateMenu,
         }));
@@ -23,7 +22,11 @@ export class MainContainer extends Component {
         return (
             <div className="bg-white">
                 <CreatingButtons toggleMenu={this.toggleGroupCreateMenu}/>
-                {this.state.displayGroupCreateMenu && <GroupCreateMenu fetchGroupList={this.props.fetchGroupList} toggleGroupCreateMenu={this.toggleGroupCreateMenu} />}
+                {this.state.displayGroupCreateMenu && 
+                    <GroupCreateMenu 
+                        configType = {this.state.groupConfigMenuType}
+                        fetchGroupList={this.props.fetchGroupList} toggleGroupCreateMenu={this.toggleGroupCreateMenu} />
+                }
             </div>
         );
     }

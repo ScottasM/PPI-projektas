@@ -7,16 +7,27 @@ namespace PPI_projektas.Services;
 public class GroupService
 {
     
-    public List<GroupDataItem> GetGroupsByOwner(Guid ownerId)
+    public List<ObjectDataItem> GetGroupsByOwner(Guid ownerId)
     {
         var data = DataHandler.Instance.AllGroups
             //.Where(group => group.OwnerGuid == ownerId) Will be uncommented when user is associated on the frontend
-            .Select(group => new GroupDataItem(group.Id, group.Name))
+            .Select(group => new ObjectDataItem(group.Id, group.Name))
             .ToList();
         
         return data;
     }
-    
+
+    public List<ObjectDataItem> GetUsersInGroup(Guid groupId)
+    {
+        var group = DataHandler.Instance.AllGroups.Find(group => group.Id == groupId);
+        if (group == null) throw new ObjectDoesNotExistException(groupId);
+
+        var users = group.Members
+            .Select(user => new ObjectDataItem(user.Id, user.GetUsername()))
+            .ToList();
+
+        return users;
+    }
     
     public Guid CreateGroup(string groupName, Guid ownerId)
     {
@@ -30,6 +41,7 @@ public class GroupService
 
         return group.Id;
     }
+    
 
     public void EditGroup(Guid groupId, string? optionalNewName = null, List<User>? optionalNewUsers = null)
     {
@@ -52,14 +64,14 @@ public class GroupService
         DataHandler.Delete(group);
     }
 
-    public class GroupDataItem
+    public struct ObjectDataItem
     {
-        public GroupDataItem(Guid id, string name)
+        public Guid Id { get; set; }
+        public string Name { get; set; }
+        public ObjectDataItem(Guid id, string name)
         {
             Id = id;
             Name = name;
         }
-        public Guid Id { get; set; }
-        public string Name { get; set; }
     }
 }

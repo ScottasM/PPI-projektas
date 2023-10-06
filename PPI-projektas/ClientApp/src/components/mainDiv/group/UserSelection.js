@@ -27,7 +27,20 @@ export class UserSelection extends Component {
                         </div>
                     ))}
                 </div>
+                <p>Group Members</p>
+                <div className="scroll-container">
+                    {this.props.members.map((member, index) => (
+                        <div key={member.id} className="scroll-item">
+                            {member.name}
+                        </div>
+                    ))}
+                </div>
             </div>
         );
     }
+
+    static defaultProps = {
+        users: [],
+        members: [],
+    };
 }
