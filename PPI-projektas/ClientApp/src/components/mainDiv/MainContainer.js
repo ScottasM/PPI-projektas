@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {GroupCreateMenu} from "./GroupCreateMenu";
+import {GroupCreateMenu} from "./group/GroupCreateMenu";
 import {CreatingButtons} from "./CreatingButtons";
 export class MainContainer extends Component {
     static displayName = MainContainer.name;

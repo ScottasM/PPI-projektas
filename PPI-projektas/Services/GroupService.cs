@@ -62,17 +62,4 @@ public class GroupService
         public Guid Id { get; set; }
         public string Name { get; set; }
     }
-
-    public class GroupData
-    {
-        public List<GroupDataItem> Groups { get; set; }
-
-        public GroupData(List<string> groupNames, List<Guid> groupIds)
-        {
-            Groups = new List<GroupDataItem>();
-
-            for (var i = 0; i < Math.Min(groupNames.Count, groupIds.Count); i++)
-                Groups.Add(new GroupDataItem(groupIds[i], groupNames[i]));
-        }
-    }
 }
