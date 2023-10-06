@@ -7,21 +7,14 @@ namespace PPI_projektas.Services;
 public class GroupService
 {
     
-    public GroupData GetGroupsByOwner(Guid ownerId)
+    public List<GroupDataItem> GetGroupsByOwner(Guid ownerId)
     {
-        var groups = DataHandler.Instance.AllGroups;
-        var groupNames = groups
+        var data = DataHandler.Instance.AllGroups
             //.Where(group => group.OwnerGuid == ownerId) Will be uncommented when user is associated on the frontend
-            .Select(group => group.Name)
+            .Select(group => new GroupDataItem(group.Id, group.Name))
             .ToList();
-        var groupIds = groups
-            //.Where(group => group.OwnerGuid == ownerId) Will be uncommented when user is associated on the frontend
-            .Select(group => group.Id)
-            .ToList();
-            
-        var groupData = new GroupData(groupNames, groupIds);
-
-        return groupData;
+        
+        return data;
     }
     
     
@@ -61,6 +54,11 @@ public class GroupService
 
     public class GroupDataItem
     {
+        public GroupDataItem(Guid id, string name)
+        {
+            Id = id;
+            Name = name;
+        }
         public Guid Id { get; set; }
         public string Name { get; set; }
     }
@@ -74,13 +72,7 @@ public class GroupService
             Groups = new List<GroupDataItem>();
 
             for (var i = 0; i < Math.Min(groupNames.Count, groupIds.Count); i++)
-            {
-                Groups.Add(new GroupDataItem
-                {
-                    Id = groupIds[i],
-                    Name = groupNames[i]
-                });
-            }
+                Groups.Add(new GroupDataItem(groupIds[i], groupNames[i]));
         }
     }
 }

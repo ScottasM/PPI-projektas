@@ -41,9 +41,9 @@ export class Layout extends Component {
             }
             const responseData = await response.json();
 
-            const groupData = responseData.groups.map(group => ({
-                name: group.name,
-                id: group.id
+            const groupData = responseData.map(group => ({
+                id: group.id,
+                name: group.name
             }));
             
             this.setState({ groups: groupData });
