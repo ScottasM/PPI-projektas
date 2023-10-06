@@ -57,3 +57,20 @@
     color: #000000;
     cursor: pointer;
 }
+
+.scroll-container {
+    /*width: 300px;*/
+    overflow-x: auto;
+    white-space: nowrap;
+    display: flex;
+}
+
+.scroll-item {
+    flex: 0 0 auto;
+    padding-left: 5px;
+    padding-right: 5px;
+    background-color: #f0f0f0; /* Add your desired background color */
+    border: 1px solid #ccc; /* Add your desired border styles */
+    margin-right: 10px; /* Adjust the margin between items as per your preference */
+    color: black;
+}
