@@ -1,5 +1,6 @@
 using PPI_projektas.Exceptions;
 using PPI_projektas.objects;
+using PPI_projektas.objects.abstractions;
 using PPI_projektas.Utils;
 
 namespace PPI_projektas.Services;
@@ -19,8 +20,7 @@ public class GroupService
 
     public List<ObjectDataItem> GetUsersInGroup(Guid groupId)
     {
-        var group = DataHandler.Instance.AllGroups.Find(group => group.Id == groupId);
-        if (group == null) throw new ObjectDoesNotExistException(groupId);
+        var group = FindObjectById(groupId, DataHandler.Instance.AllGroups);
 
         var users = group.Members
             .Select(user => new ObjectDataItem(user.Id, user.GetUsername()))
@@ -29,14 +29,26 @@ public class GroupService
         return users;
     }
     
-    public Guid CreateGroup(string groupName, Guid ownerId)
+    public Guid CreateGroup(Guid ownerId, string groupName)
     {
 
-        // var owner = DataHandler.Instance.AllUsers.Find(user => user.Id == ownerId);
-        // if (owner == null) throw new ObjectDoesNotExistException(ownerId);
+        // var owner = FindObjectById(ownerId, DataHandler.Instance.AllUsers);
         
         // var group = new Group(groupName, owner);
         var group = new Group(groupName, new User());
+        DataHandler.Create(group);
+
+        return group.Id;
+    }
+
+    public Guid CreateGroup(Guid ownerId, string groupName, List<Guid> groupMemberIds)
+    {
+        // var owner = FindObjectById(ownerId, DataHandler.Instance.AllUsers);
+
+        var groupMembers = groupMemberIds.Select(id => FindObjectById(id, DataHandler.Instance.AllUsers)).ToList();
+
+        // var group = new Group(groupName, owner, groupMembers);
+        var group = new Group(groupName, new User(), groupMembers);
         DataHandler.Create(group);
 
         return group.Id;
@@ -45,8 +57,7 @@ public class GroupService
 
     public void EditGroup(Guid groupId, string? optionalNewName = null, List<User>? optionalNewUsers = null)
     {
-        var group = DataHandler.Instance.AllGroups.Find(group => group.Id == groupId);
-        if (group == null) throw new ObjectDoesNotExistException(groupId);
+        var group = FindObjectById(groupId, DataHandler.Instance.AllGroups);
         
         if (optionalNewName != null) group.Name = optionalNewName;
         if (optionalNewUsers != null)
@@ -58,10 +69,17 @@ public class GroupService
 
     public void DeleteGroup(Guid groupId)
     {
-        var group = DataHandler.Instance.AllGroups.Find(group => group.Id == groupId);
-        if (group == null) throw new ObjectDoesNotExistException(groupId);
+        var group = FindObjectById(groupId, DataHandler.Instance.AllGroups);
 
         DataHandler.Delete(group);
+    }
+    
+    private T FindObjectById<T>(Guid objectId, List<T> objectList) where T : Entity
+    {
+        var obj = objectList.Find(obj => obj.Id == objectId);
+        if (obj == null) throw new ObjectDoesNotExistException(objectId);
+
+        return obj;
     }
 
     public struct ObjectDataItem
