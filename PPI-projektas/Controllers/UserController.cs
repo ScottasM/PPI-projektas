@@ -13,8 +13,13 @@ namespace PPI_projektas.Controllers
         public IActionResult Get(string name)
         {
             if (name == null) return BadRequest("Invalid Data");
+
             var users = DataHandler.Instance._allUsers
-                .Where(user => user._username.Contains(name));
+                .Where(user => user.GetUsername().Contains(name))
+                .Select(user => new SimpleUserData(user.Id, user.GetUsername()))
+                .ToList();
+
+            if (users == null) return BadRequest("No users found");
 
             return Ok(users);
         }
@@ -23,7 +28,6 @@ namespace PPI_projektas.Controllers
         public IActionResult CreateUser([FromBody] UserCreateData userData)
         {
             if(userData == null) return BadRequest("Invalid Data");
-            //if (DataHandler.Instance._allUsers.Find(user => user.Id == userData.UserId) == null) return BadRequest("User already exists");
            
             var user = new User(userData.Username, userData.Password, userData.Email);
             DataHandler.Create(user);
@@ -50,5 +54,17 @@ namespace PPI_projektas.Controllers
         public string Password { get; set; }
         public string Email { get; set; }
         public Guid UserId { get; set; }
+    }
+
+    //to be moved to user services
+    public struct SimpleUserData
+    {
+        public Guid Id { get; set; }
+        public string Username { get; set; }
+        public SimpleUserData(Guid id, string name)
+        {
+            Id = id;
+            Username = name;
+        }
     }
 }
