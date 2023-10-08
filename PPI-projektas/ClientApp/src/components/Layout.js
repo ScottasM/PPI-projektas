@@ -10,8 +10,10 @@ export class Layout extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            displayGroupEditMenu: false,
             mounted: false,
-            groupNames: [],
+            groups: [],
+            toggledGroupId: '00000000-0000-0000-0000-000000000000',
         };
     }
 
@@ -20,6 +22,13 @@ export class Layout extends Component {
             this.fetchGroupList();
             this.setState({ mounted : true});
         }
+    }
+
+    toggleGroupEditMenu = (groupId) => {
+        this.setState((prevState) => ({
+            displayGroupEditMenu: !prevState.displayGroupEditMenu,
+            toggledGroupId: groupId,
+        }));
     }
     
     fetchGroupList = async () => {
@@ -30,9 +39,14 @@ export class Layout extends Component {
             if (!response.ok) {
                 throw new Error('Network response was not ok');
             }
-            const data = await response.json();
-            this.setState({ groupNames: data });
-            console.log('Got');
+            const responseData = await response.json();
+
+            const groupData = responseData.groups.map(group => ({
+                name: group.name,
+                id: group.id
+            }));
+            
+            this.setState({ groups: groupData });
         } catch (error) {
             console.error('There was a problem with the get operation:', error);
         }
@@ -41,8 +55,8 @@ export class Layout extends Component {
     render() {
     return (
       <div>
-          <SideNav groupNames={this.state.groupNames}/>
-          <MainContainer fetchGroupList={this.fetchGroupList}/>
+          <SideNav fetchGroupList={this.fetchGroupList} groups={this.state.groups}/>
+          <MainContainer fetchGroupList={this.fetchGroupList} toggledGroupId={this.state.toggledGroupId}/>
       </div>
     );
   }
