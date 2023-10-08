@@ -106,7 +106,7 @@ export class GroupCreateMenu extends Component {
         return (
             <div className="groupCreateMenu position-absolute translate-middle text-white">
                 <div className="title">
-                    <h2>Create New Group</h2>
+                    <h2>{this.props.configType.charAt(0).toUpperCase() + this.props.configType.slice(1)} Group</h2>
                 </div>
                 <form onSubmit={this.handleSubmit}>
                     <label>Group Name:</label>

@@ -1,10 +1,6 @@
-using System.Net;
-using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
 using PPI_projektas.Exceptions;
-using PPI_projektas.objects;
 using PPI_projektas.Services;
-using PPI_projektas.Utils;
 
 namespace PPI_projektas.Controllers
 

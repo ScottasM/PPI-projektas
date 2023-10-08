@@ -11,8 +11,27 @@ export class MainContainer extends Component {
             groupConfigMenuType: 'create',
         };
     }
+
+    componentDidUpdate(prevProps) {
+        if (this.props.toggledGroupId !== prevProps.toggledGroupId || this.props.displayGroupEditMenu !== prevProps.displayGroupEditMenu) {
+            if(this.props.displayGroupEditMenu){
+                this.setState(() => ({
+                    groupConfigMenuType: 'edit'
+                    }), () => {
+                        this.toggleGroupConfigMenu();
+                });
+            }
+            else {
+                this.setState(() => ({
+                    groupConfigMenuType: 'create'
+                }));
+                if(this.state.displayGroupCreateMenu)
+                    this.toggleGroupConfigMenu();
+            }
+        }
+    }
     
-    toggleGroupCreateMenu = () => { // TODO: get argument and change groupConfigMenuType accordingly
+    toggleGroupConfigMenu = () => { // TODO: get argument and change groupConfigMenuType accordingly
         this.setState((prevState) => ({
             displayGroupCreateMenu: !prevState.displayGroupCreateMenu,
         }));
@@ -21,11 +40,11 @@ export class MainContainer extends Component {
     render() {
         return (
             <div className="bg-white">
-                <CreatingButtons toggleMenu={this.toggleGroupCreateMenu}/>
+                <CreatingButtons toggleMenu={this.toggleGroupConfigMenu}/>
                 {this.state.displayGroupCreateMenu && 
                     <GroupCreateMenu 
                         configType = {this.state.groupConfigMenuType}
-                        fetchGroupList={this.props.fetchGroupList} toggleGroupCreateMenu={this.toggleGroupCreateMenu} />
+                        fetchGroupList={this.props.fetchGroupList} toggleGroupCreateMenu={this.toggleGroupConfigMenu} />
                 }
             </div>
         );

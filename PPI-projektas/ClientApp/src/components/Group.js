@@ -50,7 +50,7 @@ export class Group extends Component {
                     <div className="context-menu">
                         <ul>
                             <li>
-                                <button className="context-button">Edit</button>
+                                <button className="context-button" onClick={() => this.props.toggleGroupEditMenu(this.props.groupId)}>Edit</button>
                             </li>
                             <li>
                                 <button className="context-button" onClick={this.handleDelete}>Delete</button>
