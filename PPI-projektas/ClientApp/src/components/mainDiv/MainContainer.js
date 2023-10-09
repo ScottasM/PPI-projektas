@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-import { GroupCreateMenu } from "./GroupCreateMenu";
+import { GroupCreateMenu } from "./group/GroupCreateMenu";
 import { UserLoginMenu } from "./UserLoginMenu";
 import { UserSignInMenu } from "./UserSignInMenu";
 import { CreatingButtons } from "./CreatingButtons";
