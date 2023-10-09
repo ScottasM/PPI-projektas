@@ -1,7 +1,9 @@
 using System.Net;
 using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
+using PPI_projektas.Exceptions;
 using PPI_projektas.objects;
+using PPI_projektas.Services;
 using PPI_projektas.Utils;
 
 namespace PPI_projektas.Controllers
@@ -11,37 +13,56 @@ namespace PPI_projektas.Controllers
     [Route("api/[controller]")]
     public class GroupController : ControllerBase
     {
+        
         [HttpGet]
         public IActionResult Get(Guid ownerId)
         {
-            var groups = DataHandler.Instance.AllGroups;
-            var groupNames = groups
-                //.Where(group => group.OwnerGuid == ownerId) Will be uncommented then user is associated on the frontend
-                .Select(group => group.Name)
-                .ToList();
-            return Ok(groupNames);
+            if (ownerId == null) return BadRequest("USER-ERROR");
+            
+            var groupService = new GroupService();
+
+            var groupData = groupService.GetGroupsByOwner(ownerId);
+            
+            return Ok(groupData);
         }
 
         [HttpPost("creategroup")]
-        public IActionResult CreateGroup([FromBody] GroupData groupData)
+        public IActionResult CreateGroup([FromBody] GroupCreateData groupData)
         {
             if (groupData == null) return BadRequest("Invalid Data");
-
-            if (string.IsNullOrEmpty(groupData.OwnerId.ToString())) return BadRequest("OwnerId is empty or null");
-
-            Console.WriteLine("HttpPost " + groupData.GroupName);
-
-            var owner = new User("test", " ", " "); // temporary user for all groups
-            DataHandler.Create(owner);
             
-            var group = new Group(groupData.GroupName, owner);
-            DataHandler.Create(group);
+            Guid groupId;
+            try
+            {
+                var groupService = new GroupService();
+                groupId = groupService.CreateGroup(groupData.GroupName, groupData.OwnerId);
+            }
+            catch (ObjectDoesNotExistException)
+            {
+                return BadRequest("USER-ERROR");
+            }
             
-            return CreatedAtAction("CreateGroup", new { id = group.Id }, group);
+            return CreatedAtAction("CreateGroup", groupId);
+        }
+
+        [HttpDelete("delete/{groupId:guid}")]
+        public IActionResult Delete(Guid groupId)
+        {
+            var groupService = new GroupService();
+
+            try
+            {
+                groupService.DeleteGroup(groupId);
+                return NoContent();
+            }
+            catch (ObjectDoesNotExistException)
+            {
+                return NotFound();
+            }
         }
     }
-
-    public class GroupData
+    
+    public record GroupCreateData
     {
         public string GroupName { get; set; }
         public Guid OwnerId { get; set; }

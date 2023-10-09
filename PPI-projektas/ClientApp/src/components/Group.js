@@ -6,12 +6,58 @@ export class Group extends Component {
     
     constructor(props) {
         super(props);
+        this.state = {
+            isContextMenuVisible: false,
+        }
     }
 
+    showContextMenu = (event) => {
+        event.preventDefault();
+        this.setState({ isContextMenuVisible: true });
+        
+        document.addEventListener('click', this.hideContextMenu);
+    }
+    hideContextMenu = () => {
+        this.setState({ isContextMenuVisible: false });
+        document.removeEventListener('click', this.hideContextMenu);
+    }
+    
+    handleDelete = async () => {
+        try {
+            await fetch(`http://localhost:5268/api/group/delete/${this.props.groupId}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+
+            console.log('Deleted');
+            this.props.fetchGroupList();
+        } catch (error) {
+            console.error('There was a problem with the fetch operation:', error);
+        }
+    }
+    
     render() {
+        const { isContextMenuVisible } = this.state;
+
         return (
-            <div className="group bg-white rounded-circle">
-                <p>{this.props.groupInitials}</p>
+            <div className="group-container">
+                <button className="group bg-white rounded-circle" onContextMenu={this.showContextMenu}>
+                    {this.props.groupInitials}
+                </button>
+                {isContextMenuVisible && (
+                    <div className="context-menu">
+                        <ul>
+                            <li>
+                                <button className="context-button">Edit</button>
+                            </li>
+                            <li>
+                                <button className="context-button" onClick={this.handleDelete}>Delete</button>
+                            </li>
+                        </ul>
+                    </div>
+                )}
             </div>
         );
     }
