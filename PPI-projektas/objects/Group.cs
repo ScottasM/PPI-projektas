@@ -9,20 +9,23 @@ public class Group : Entity
     public string Name { get; set; }
 
     [JsonIgnore] public User Owner { get; set; }
-    public Guid OwnerGuid;
+    [JsonInclude] public Guid OwnerGuid;
 
     [JsonIgnore] public List<User> Members { get; }
-    public List<Guid> MembersGuid;
+    [JsonInclude] public List<Guid> MembersGuid;
 
     [JsonIgnore] public List<Note> Notes { get; }
-    public List<Guid> NotesGuid;
+    [JsonInclude] public List<Guid> NotesGuid;
 
-
+    public Group () {} // For deserialization
+    
+    
     public Group(string name, User owner)
     {
         Name = name;
         Notes = new List<Note>();
         Owner = owner;
+        OwnerGuid = owner.Id;
         Members = new List<User>();
 
         NotesGuid = new List<Guid>();
@@ -33,6 +36,8 @@ public class Group : Entity
     public Group(string name, User owner, List<User> members) : this(name, owner)
     {
         Members = members;
+        foreach (var member in members) 
+            MembersGuid.Add(member.Id);
     }
     
     

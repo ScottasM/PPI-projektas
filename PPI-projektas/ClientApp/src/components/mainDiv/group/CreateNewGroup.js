@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import '../Group.css';
+import '../../Group.css';
 
 export class CreateNewGroup extends Component {
     static displayName = CreateNewGroup.name;

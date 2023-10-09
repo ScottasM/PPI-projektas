@@ -11,15 +11,16 @@ public class User : Entity
 
 
     [JsonIgnore] public List<Note> CreatedNotes;
-    public List<Guid> CreatedNotesGuids;
+    [JsonInclude] public List<Guid> CreatedNotesGuids;
 
     [JsonIgnore] public List<Note> FavoriteNotes;
-    public List<Guid> FavoriteNotesGuids;
-
-
+    [JsonInclude] public List<Guid> FavoriteNotesGuids;
+    
     [JsonIgnore] public List<Group> Groups;
-    public List<Guid> GroupsGuids;
+    [JsonInclude] public List<Guid> GroupsGuids;
 
+    public User () {} // For deserialization
+    
     public User(string name, string password, string email)
     {
         _username = name;

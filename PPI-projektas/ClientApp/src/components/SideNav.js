@@ -10,11 +10,16 @@ export class SideNav extends Component {
     constructor(props) {
         super(props);
     }
-
+    
     render() {
+        
         return (
             <nav className="sidenav">
-                <Group />
+                {this.props.groups.map((group, index) => (
+                    <Group 
+                        fetchGroupList={this.props.fetchGroupList} toggleGroupEditMenu={this.props.toggleGroupEditMenu}
+                        groupId={group.id} key={group.id} groupInitials={group.name.substring(0, 3)} />
+                ))}
                 <div className="settings-div position-absolute">
                     <IconContext.Provider value={{ size: "2em" }}>
                         <button className="settings-button bg-transparent border-0"><FiSettings /></button>
@@ -23,4 +28,9 @@ export class SideNav extends Component {
             </nav>
         );
     }
+
+
+    static defaultProps = {
+        groups: [],
+    };
 }

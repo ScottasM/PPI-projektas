@@ -1,8 +1,14 @@
 ﻿.group {
+    width: 50px;
     aspect-ratio: 1/1;
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+.group p {
+    margin: 0;
+    line-height: 1;
 }
 
 .groupCreateMenu {
@@ -10,4 +16,61 @@
     left: 50%;
     transform: translate(-50%, -50%);
     background-color: #1899D6;
+}
+
+.group-container {
+    position: relative;
+}
+
+.context-menu {
+    position: absolute;
+    border-radius: 10px;
+    background: #e0e0e0;
+    border: 3px solid #00273f;
+    z-index: 1000;
+    top: 0;
+    left: 100%;
+    display: block;
+}
+
+.context-menu ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.context-menu ul li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+    
+.context-menu ul li:hover {
+    background-color: #1899D6;
+}
+
+.context-button {
+    flex-grow: 1;
+    background: 0;
+    border: 0;
+    padding: 8px 16px;
+    color: #000000;
+    cursor: pointer;
+}
+
+.scroll-container {
+    /*width: 300px;*/
+    overflow-x: auto;
+    white-space: nowrap;
+    display: flex;
+}
+
+.scroll-item {
+    flex: 0 0 auto;
+    padding-left: 5px;
+    padding-right: 5px;
+    background-color: #f0f0f0; /* Add your desired background color */
+    border: 1px solid #ccc; /* Add your desired border styles */
+    margin-right: 10px; /* Adjust the margin between items as per your preference */
+    color: black;
 }

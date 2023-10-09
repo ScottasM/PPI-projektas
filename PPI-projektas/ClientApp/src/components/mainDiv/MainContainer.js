@@ -1,26 +1,47 @@
 import React, { Component } from 'react';
+
 import { GroupCreateMenu } from "./GroupCreateMenu";
 import { UserLoginMenu } from "./UserLoginMenu";
 import { UserSignInMenu } from "./UserSignInMenu";
 import { CreatingButtons } from "./CreatingButtons";
 import { CreatingLoginButtons } from "./CreatingLoginButtons";
 import { CreatingSignInButtons } from "./CreatingSignInButtons";
+
 export class MainContainer extends Component {
     static displayName = MainContainer.name;
 
+    constructor(props) {
+        super(props);
+        this.state = {
+            displayGroupCreateMenu: false,
+            groupConfigMenuType: 'create',
+            displayLoginMenu: false,
+            displaySignInMenu: false,
+        };
+    }
 
-    state = {
-        displayGroupCreateMenu: false,
-        displayLoginMenu: false,
-        displaySignInMenu: false,
-    };
-    
-    toggleGroupCreateMenu = () => {
-        if (!(this.displayGroupCreateMenu)) {
-            this.setState({ displayLoginMenu: false, displaySignInMenu: false })
+    componentDidUpdate(prevProps) {
+        if (this.props.toggledGroupId !== prevProps.toggledGroupId || this.props.displayGroupEditMenu !== prevProps.displayGroupEditMenu) {
+            if(this.props.displayGroupEditMenu){
+                this.setState(() => ({
+                    groupConfigMenuType: 'edit'
+                    }), () => {
+                        this.toggleGroupConfigMenu();
+                });
+            }
+            else {
+                this.setState(() => ({
+                    groupConfigMenuType: 'create'
+                }));
+                if(this.state.displayGroupCreateMenu)
+                    this.toggleGroupConfigMenu();
+            }
         }
+    }
+    
+    toggleGroupConfigMenu = () => { // TODO: get argument and change groupConfigMenuType accordingly
 
-        this.setState((prevState) => ({
+    this.setState((prevState) => ({
             displayGroupCreateMenu: !prevState.displayGroupCreateMenu,
         }));
     }
@@ -49,14 +70,19 @@ export class MainContainer extends Component {
     render() {
         return (
             <div className="bg-white">
-                <CreatingButtons toggleMenu={this.toggleGroupCreateMenu} />
-                {this.state.displayGroupCreateMenu && <GroupCreateMenu />}
-
+                <CreatingButtons toggleMenu={this.toggleGroupConfigMenu}/>
+                {this.state.displayGroupCreateMenu && 
+                    <GroupCreateMenu 
+                        configType = {this.state.groupConfigMenuType}
+                        fetchGroupList={this.props.fetchGroupList} toggleGroupCreateMenu={this.toggleGroupConfigMenu} />
+                }
+                        
                 <CreatingSignInButtons toggleMenu={this.toggleSignInMenu} />
                 {this.state.displaySignInMenu && <UserSignInMenu />}
 
                 <CreatingLoginButtons toggleMenu={this.toggleLoginMenu} />
                 {this.state.displayLoginMenu && <UserLoginMenu />}
+
             </div>
         );
     }

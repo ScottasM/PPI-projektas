@@ -34,7 +34,7 @@ namespace PPI_projektas.Utils
                 return;
 
             try {
-                File.WriteAllText(_filePaths[obj.GetType()], sr);
+                File.WriteAllText(_filePaths[typeof(T)], sr);
             }
             catch (Exception err) {
                 Console.WriteLine($"Failed to save file : {err.Message}");
