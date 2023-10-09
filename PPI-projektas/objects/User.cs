@@ -5,7 +5,7 @@ namespace PPI_projektas.objects;
 
 public class User : Entity
 {
-    private string _username;
+    public string _username;
     private readonly string _password;
     private readonly string _email;
 

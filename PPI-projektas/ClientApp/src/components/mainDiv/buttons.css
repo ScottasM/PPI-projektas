@@ -1,6 +1,14 @@
 .creatingButtonsDiv {
     height: 50px;
     margin-top: 10px;
+    display: inline-block;
+}
+
+.registerButtonsDiv {
+    height: 50px;
+    margin-top: 10px;
+    display: inline-block;
+    float: right;
 }
 
 .create-button {

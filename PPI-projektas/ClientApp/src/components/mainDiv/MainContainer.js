@@ -1,6 +1,12 @@
 import React, { Component } from 'react';
-import {GroupCreateMenu} from "./group/GroupCreateMenu";
-import {CreatingButtons} from "./CreatingButtons";
+
+import { GroupCreateMenu } from "./GroupCreateMenu";
+import { UserLoginMenu } from "./UserLoginMenu";
+import { UserSignInMenu } from "./UserSignInMenu";
+import { CreatingButtons } from "./CreatingButtons";
+import { CreatingLoginButtons } from "./CreatingLoginButtons";
+import { CreatingSignInButtons } from "./CreatingSignInButtons";
+
 export class MainContainer extends Component {
     static displayName = MainContainer.name;
 
@@ -9,6 +15,8 @@ export class MainContainer extends Component {
         this.state = {
             displayGroupCreateMenu: false,
             groupConfigMenuType: 'create',
+            displayLoginMenu: false,
+            displaySignInMenu: false,
         };
     }
 
@@ -32,9 +40,31 @@ export class MainContainer extends Component {
     }
     
     toggleGroupConfigMenu = () => { // TODO: get argument and change groupConfigMenuType accordingly
-        this.setState((prevState) => ({
+
+    this.setState((prevState) => ({
             displayGroupCreateMenu: !prevState.displayGroupCreateMenu,
         }));
+    }
+
+    toggleLoginMenu = () => {
+        if (!(this.displayLoginMenu)) {
+            this.setState({ displayGroupCreateMenu: false, displaySignInMenu: false })
+        }
+
+        this.setState((prevState) => ({
+            displayLoginMenu: !prevState.displayLoginMenu,
+        }));
+    }
+
+    toggleSignInMenu = () => {
+        if (!(this.displaySignInMenu)) {
+            this.setState({ displayGroupCreateMenu: false, displayLoginMenu: false })
+        }
+
+        this.setState((prevState) => ({
+            displaySignInMenu: !prevState.displaySignInMenu,
+        }));
+ 
     }
     
     render() {
@@ -46,6 +76,13 @@ export class MainContainer extends Component {
                         configType = {this.state.groupConfigMenuType}
                         fetchGroupList={this.props.fetchGroupList} toggleGroupCreateMenu={this.toggleGroupConfigMenu} />
                 }
+                        
+                <CreatingSignInButtons toggleMenu={this.toggleSignInMenu} />
+                {this.state.displaySignInMenu && <UserSignInMenu />}
+
+                <CreatingLoginButtons toggleMenu={this.toggleLoginMenu} />
+                {this.state.displayLoginMenu && <UserLoginMenu />}
+
             </div>
         );
     }
