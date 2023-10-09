@@ -14,7 +14,7 @@ namespace PPI_projektas.Controllers
         {
             if (name == null) return BadRequest("Invalid Data");
 
-            var users = DataHandler.Instance._allUsers
+            var users = DataHandler.Instance.AllUsers
                 .Where(user => user.GetUsername().Contains(name))
                 .Select(user => new SimpleUserData(user.Id, user.GetUsername()))
                 .ToList();
@@ -32,15 +32,13 @@ namespace PPI_projektas.Controllers
             var user = new User(userData.Username, userData.Password, userData.Email);
             DataHandler.Create(user);
 
-            Guid UserId = user.Id;
-
-            return CreatedAtAction(nameof(userData), UserId);
+            return CreatedAtAction("CreateUser", user.Id);
         }
 
         [HttpDelete("delete/{userId:guid}")]
         public IActionResult Delete(Guid userId)
         {
-            var user = DataHandler.Instance._allUsers.Find(user => user.Id == userId);
+            var user = DataHandler.Instance.AllUsers.Find(user => user.Id == userId);
             if (user == null) return BadRequest("User does not exist");
             DataHandler.Delete(user);
 
