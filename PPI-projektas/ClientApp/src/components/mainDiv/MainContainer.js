@@ -39,15 +39,18 @@ export class MainContainer extends Component {
         }
     }
     
-    toggleGroupConfigMenu = () => { // TODO: get argument and change groupConfigMenuType accordingly
-
-    this.setState((prevState) => ({
-            displayGroupCreateMenu: !prevState.displayGroupCreateMenu,
-        }));
+    toggleGroupConfigMenu = () => {
+        if (!(this.state.displayGroupCreateMenu)) {
+            this.setState({ displayLoginMenu: false, displaySignInMenu: false })
+        }
+        
+        this.setState((prevState) => ({
+                displayGroupCreateMenu: !prevState.displayGroupCreateMenu,
+            }));
     }
 
     toggleLoginMenu = () => {
-        if (!(this.displayLoginMenu)) {
+        if (!(this.state.displayLoginMenu)) {
             this.setState({ displayGroupCreateMenu: false, displaySignInMenu: false })
         }
 
@@ -57,7 +60,7 @@ export class MainContainer extends Component {
     }
 
     toggleSignInMenu = () => {
-        if (!(this.displaySignInMenu)) {
+        if (!(this.state.displaySignInMenu)) {
             this.setState({ displayGroupCreateMenu: false, displayLoginMenu: false })
         }
 
