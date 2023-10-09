@@ -9,14 +9,6 @@ export class NoteEditor extends Component {
             tag: ''
         }
     }
-
-    handlePost = () => {
-
-    }
-
-    handleSave = () => {
-        this.handlePost()
-    }
     
     handleTagChanged = (event) => {
         this.state.setState({
@@ -47,7 +39,7 @@ export class NoteEditor extends Component {
                 {name}
             </input>
             <br/>
-            <button onClick={this.handleSave}>
+            <button onClick={this.props.handlePost}>
                 Save
             </button>
             <br/>

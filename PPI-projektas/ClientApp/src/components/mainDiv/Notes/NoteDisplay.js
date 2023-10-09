@@ -6,7 +6,7 @@ class NoteDisplay extends Component {
     }
     
     handleOpenNote = () => {
-        openNote(this.props.noteId)
+        openNote(this.props.id)
     }
     
     render() {
@@ -28,7 +28,7 @@ export class NoteList extends Component {
             <div>
                 <ul>
                     {this.props.notes.map(note => (
-                        <NoteDisplay noteName={note.name} noteId={note.id} openNote={this.props.openNote}/>
+                        <NoteDisplay noteName={note.name} id={note.id} openNote={this.props.openNote}/>
                     ))}
                 </ul>
             </div>
