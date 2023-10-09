@@ -1,4 +1,4 @@
-﻿import react, {Component} from "react"
+﻿import React, {Component} from "react"
 import {NoteViewer} from "./NoteViewer";
 import {NoteEditor} from "./NoteEditor";
 
@@ -7,7 +7,7 @@ export class NoteHub extends Component {
         super(props);
         this.setState({
             mounted: false,
-            toggleEditor: false
+            showEditor: false
             });
     }
     
@@ -37,66 +37,36 @@ export class NoteHub extends Component {
         }
     }
     
-    handlePost = async () => {
-        const noteData = {
-            Name: this.state.name,
-            AuthorGuid: '0f8fad5b-d9cb-469f-a165-70867728950e', // temporary static user id
-            Tags: this.state.tags,
-            Text: this.state.text,
-        };
-
-        await fetch('http://localhost:5268/api/note/updatenote', { // temporary localhost api url
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(noteData)
-        })
-            .then((response) => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-            })
-            .catch((error) => {
-                console.error('There was a problem with the fetch operation:', error);
-            });
-    }
-
-    handleNameChange = (event) => {
+    transferChanges = (name, tags, text) => {
         this.setState({
-            name: event.target.value
+            name: name,
+            tags: tags,
+            text: text
         })
-    }
-
-    handleTextChanged = (event) => {
-        this.setState({
-            text: event.target.value
-        })
-    }
-
-    changeTags = (tag) => {
-        this.setState({
-            tagChange: tag
-        })
+    } 
+    
+    toggleEditor = () => {
+        this.setState(prevState => {
+            showEditor: !prevState.showEditor
+        });
     }
     
     render() {
         return (
             <div>
-                {!this.state.toggleEditor && <NoteViewer
+                {!this.state.showEditor && <NoteViewer
                     name={this.state.name}
                     tags={this.state.tags}
                     text={this.state.text}
+                    toggleNote={this.props.toggleNote}
                     toggleEditor={this.state.toggleEditor}
                 />}
-                {this.state.toggleEditor && <NoteEditor
+                {this.state.showEditor && <NoteEditor
                     name={this.state.name}
                     tags={this.state.tags}
                     text={this.state.text}
-                    handleNameChange={this.handleNameChange}
-                    handleTextChange={this.handleTextChanged}
-                    changeTags={this.changeTags}
-                    handlePost={this.handlePost}
+                    transferChanges={this.transferChanges}
+                    toggleEditor={this.toggleEditor}
                 />}
             </div>
         )

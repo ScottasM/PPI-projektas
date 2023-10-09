@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import {GroupCreateMenu} from "./GroupCreateMenu";
 import {CreatingButtons} from "./CreatingButtons";
-import {TagList} from "./openNote/NOteDisplay";
+import {NoteList} from "./Notes/NoteDisplay";
+import {NoteHub} from "./Notes/NoteHub";
+
 export class MainContainer extends Component {
     static displayName = MainContainer.name;
 
@@ -42,7 +44,7 @@ export class MainContainer extends Component {
 
     state = {
         displayGroupCreateMenu: false,
-        toggleNoteListOrNote: false
+        showNoteListOrNote: false
     };
     
     toggleGroupCreateMenu = () => {
@@ -51,18 +53,18 @@ export class MainContainer extends Component {
         }));
     }
     
-    openNote = id => {
-        this.setState({
-            noteId: id
-        });
+    toggleNoteListOrNote = () => {
+        this.setState(prevState => ({
+            showNoteListOrNote: !prevState.toggleNoteListOrNote
+        }));
     }
     
     render() {
         return (
             <div className="bg-white">
                 <CreatingButtons toggleMenu={this.toggleGroupCreateMenu}/>
-                {!this.state.toggleNoteListOrNote && <NoteList/>}
-                {this.state.toggleNoteListOrNote && <NoteHub id={this.state.noteId}/>}
+                {!this.state.showNoteListOrNote && <NoteList/>}
+                {this.state.showNoteListOrNote && <NoteHub id={this.state.id} toggleNote={toggleNoteListOrNote}/>}
                 {this.state.displayGroupCreateMenu && <GroupCreateMenu fetchGroupList={this.props.fetchGroupList} toggleGroupCreateMenu={this.toggleGroupCreateMenu} />}
             </div>
         );
