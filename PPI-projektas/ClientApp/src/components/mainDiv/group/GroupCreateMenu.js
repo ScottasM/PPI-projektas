@@ -20,13 +20,16 @@ export class GroupCreateMenu extends Component {
     };
     
     handleUserSearch = (event) => {
-        this.setState({userSearch: event.target.value });
-        this.handleUserGet();
+        this.setState({userSearch: event.target.value }, () => {
+            if(this.state.userSearch){
+                this.handleUserGet();
+            }
+        });
     }
     
     handleUserGet = async () => {
         try {
-            const response = await fetch(`http://localhost:5268/api/user/getusersbysearch/${this.state.userSearch}`);
+            const response = await fetch(`http://localhost:5268/api/user/${this.state.userSearch}`);
             if (!response.ok) {
                 throw new Error('Network response was not ok');
             }
