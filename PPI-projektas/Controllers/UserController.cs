@@ -29,7 +29,7 @@ namespace PPI_projektas.Controllers
         {
             if(userData == null) return BadRequest("Invalid Data");
            
-            var user = new User(userData.Username, userData.Password, userData.Email);
+            var user = new User(userData.Username, userData.Password);
             DataHandler.Create(user);
 
             return CreatedAtAction("CreateUser", user.Id);

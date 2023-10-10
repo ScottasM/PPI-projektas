@@ -37,7 +37,7 @@ public class GroupService
         var members = new List<User>();
         for (var i = 0; i < 3; i++)
         {
-            var user = new User($"User + {i}", " ", " ");
+            var user = new User($"User + {i}", " ");
             DataHandler.Create(user);
             members.Add(user);
         }

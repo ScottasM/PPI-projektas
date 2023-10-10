@@ -19,8 +19,7 @@ public class Group : Entity
 
     public Group () {} // For deserialization
     
-    
-    public Group(string name, User owner)
+    public Group(string name, User owner, bool createGUID = false) : base(createGUID)
     {
         Name = name;
         Notes = new List<Note>();

@@ -64,14 +64,17 @@ namespace PPI_projektas.Utils
             if (obj is Group) {
                 var obje = obj as Group;
                 Instance.AllGroups.Add(obje);
+                Instance._saveHandler.SaveList(Instance.AllGroups);
             }
             else if (obj is User) {
                 var obje = obj as User;
                 Instance.AllUsers.Add(obje);
+                Instance._saveHandler.SaveList(Instance.AllUsers);
             }
             else if (obj is Note) {
                 var obje = obj as Note;
                 Instance.AllNotes.Add(obje);
+                Instance._saveHandler.SaveList(Instance.AllNotes);
             }
         }
 
@@ -82,15 +85,28 @@ namespace PPI_projektas.Utils
             if (obj is Group) {
                 var obje = obj as Group;
                 Instance.AllGroups.Remove(obje);
+                Instance._saveHandler.SaveList(Instance.AllGroups);
             }
             else if (obj is User) {
                 var obje = obj as User;
                 Instance.AllUsers.Remove(obje);
+                Instance._saveHandler.SaveList(Instance.AllUsers);
             }
             else if (obj is Note) {
                 var obje = obj as Note;
                 Instance.AllNotes.Remove(obje);
+                Instance._saveHandler.SaveList(Instance.AllNotes);
             }
+        }
+
+        public static bool userExists(string username)
+        {
+            return Instance.AllUsers.Any(inst => inst.GetUsername() == username);
+        }
+
+        public static User? userExistsObject(string username)
+        {
+            return Instance.AllUsers.Find(inst => inst.GetUsername() == username);
         }
     }
 }
