@@ -34,7 +34,7 @@ export class GroupCreateMenu extends Component {
 
             const userData = responseData.map(user => ({
                 id: user.id,
-                name: user.name
+                username: user.username
             }));
 
             this.setState({ users: userData});
@@ -43,7 +43,7 @@ export class GroupCreateMenu extends Component {
         }
     }
 
-    handleMemberGet = async () => {
+    handleMemberGet = async () => { //TODO: Group member fetching
         try {
             const response = await fetch(`http://localhost:5268/api/group/groupmembers/${this.state.userSearch}`);
             if (!response.ok) {

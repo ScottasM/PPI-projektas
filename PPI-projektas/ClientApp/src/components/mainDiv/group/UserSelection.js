@@ -21,7 +21,7 @@ export class UserSelection extends Component {
                     onChange={this.props.handleUserSearch}
                 />
                 <div className="scroll-container">
-                    {this.props.users.map((user, index) => (
+                    {this.props.users.map((user) => (
                         <div key={user.id} className="scroll-item">
                             {user.name}
                         </div>

@@ -33,9 +33,17 @@ public class GroupService
     {
 
         // var owner = FindObjectById(ownerId, DataHandler.Instance.AllUsers);
+
+        var members = new List<User>();
+        for (var i = 0; i < 3; i++)
+        {
+            var user = new User($"User + {i}", " ", " ");
+            DataHandler.Create(user);
+            members.Add(user);
+        }
         
         // var group = new Group(groupName, owner);
-        var group = new Group(groupName, new User());
+        var group = new Group(groupName, new User(), members);
         DataHandler.Create(group);
 
         return group.Id;
