@@ -12,7 +12,7 @@ export class NoteViewer extends Component {
             <button onClick={this.props.toggleEditor}>
                 Edit
             </button>
-            <button onClick={this.props.toggleNote}>
+            <button onClick={this.props.exitNote}>
                 Exit
             </button>
             <br/>
