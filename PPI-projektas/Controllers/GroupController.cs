@@ -22,7 +22,7 @@ namespace PPI_projektas.Controllers
             return Ok(groupData);
         }
 
-        [HttpGet("/groupmembers/{groupId:guid}")]
+        [HttpGet("group-members/{groupId:guid}")]
         public IActionResult GetGroupMembers(Guid? groupId)
         {
             if (groupId == null) return BadRequest("InvalidData");

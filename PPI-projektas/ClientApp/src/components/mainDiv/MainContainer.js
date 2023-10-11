@@ -21,7 +21,7 @@ export class MainContainer extends Component {
     }
 
     componentDidUpdate(prevProps) {
-        if (this.props.toggledGroupId !== prevProps.toggledGroupId || this.props.displayGroupEditMenu !== prevProps.displayGroupEditMenu) {
+        if (this.props.toggledGroup !== prevProps.toggledGroup || this.props.displayGroupEditMenu !== prevProps.displayGroupEditMenu) {
             if(this.props.displayGroupEditMenu){
                 this.setState(() => ({
                     groupConfigMenuType: 'edit'
@@ -77,6 +77,7 @@ export class MainContainer extends Component {
                 {this.state.displayGroupCreateMenu && 
                     <GroupCreateMenu 
                         configType = {this.state.groupConfigMenuType}
+                        toggledGroup={this.props.toggledGroup}
                         fetchGroupList={this.props.fetchGroupList} toggleGroupCreateMenu={this.toggleGroupConfigMenu} />
                 }
                         

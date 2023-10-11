@@ -57,7 +57,8 @@ export class Layout extends Component {
           <SideNav fetchGroupList={this.fetchGroupList} toggleGroupEditMenu={this.toggleGroupEditMenu}
                    groups={this.state.groups}/>
           <MainContainer fetchGroupList={this.fetchGroupList} toggleGroupEditMenu={this.toggleGroupEditMenu}
-                         toggledGroupId={this.state.toggledGroupId} displayGroupEditMenu={this.state.displayGroupEditMenu}/>
+                         toggledGroup={this.state.groups.find(group => group.id === this.state.toggledGroupId)}
+                         displayGroupEditMenu={this.state.displayGroupEditMenu}/>
       </div>
     );
   }
