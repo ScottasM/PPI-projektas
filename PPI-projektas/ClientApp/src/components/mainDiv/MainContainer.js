@@ -43,6 +43,11 @@ export class MainContainer extends Component {
         if (!(this.state.displayGroupCreateMenu)) {
             this.setState({ displayLoginMenu: false, displaySignInMenu: false })
         }
+        else{
+            this.setState({
+                groupConfigMenuType: 'create',
+            })
+        }
         
         this.setState((prevState) => ({
                 displayGroupCreateMenu: !prevState.displayGroupCreateMenu,

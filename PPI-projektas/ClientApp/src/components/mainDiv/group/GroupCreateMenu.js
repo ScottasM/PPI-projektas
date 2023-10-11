@@ -23,6 +23,12 @@ export class GroupCreateMenu extends Component {
                 this.handleMemberGet();
             });
         }
+        else{
+            this.setState({
+                groupName: '',
+                members: [],
+            })
+        }
     }
 
     handleInputChange = (event) => {
@@ -116,8 +122,7 @@ export class GroupCreateMenu extends Component {
     }
     
     render() {
-        const { groupName } = this.state.groupName;
-        const { userSearch } = this.state.userSearch;
+        const { groupName, userSearch } = this.state;
         
         return (
             <div className="groupCreateMenu position-absolute translate-middle text-white">
@@ -139,7 +144,7 @@ export class GroupCreateMenu extends Component {
                         handleUserSearch={this.handleUserSearch} userSearch={this.userSearch} 
                         users={this.state.users} members={this.state.members}/>
                     <br />
-                    <input type="submit" name="createButton" value="Create" />
+                    <input type="submit" name="createButton" value={this.props.configType.charAt(0).toUpperCase() + this.props.configType.slice(1)} />
                 </form>
             </div>
         );
