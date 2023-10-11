@@ -4,12 +4,12 @@ using PPI_projektas.Utils;
 
 namespace PPI_projektas.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
+    [Route("api/[controller]")]
     public class UserController : ControllerBase
     {
 
-        [HttpGet]
+        [HttpGet("{name}")]
         public IActionResult Get(string name)
         {
             if (name == null) return BadRequest("Invalid Data");
@@ -24,12 +24,12 @@ namespace PPI_projektas.Controllers
             return Ok(users);
         }
 
-        [HttpPost]
+        [HttpPost("createuser")]
         public IActionResult CreateUser([FromBody] UserCreateData userData)
         {
             if(userData == null) return BadRequest("Invalid Data");
            
-            var user = new User(userData.Username, userData.Password, userData.Email);
+            var user = new User(userData.Username, userData.Password);
             DataHandler.Create(user);
 
             return CreatedAtAction("CreateUser", user.Id);

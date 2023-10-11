@@ -20,13 +20,16 @@ export class GroupCreateMenu extends Component {
     };
     
     handleUserSearch = (event) => {
-        this.setState({userSearch: event.target.value });
-        this.handleUserGet();
+        this.setState({userSearch: event.target.value }, () => {
+            if(this.state.userSearch){
+                this.handleUserGet();
+            }
+        });
     }
     
     handleUserGet = async () => {
         try {
-            const response = await fetch(`http://localhost:5268/api/user/getusersbysearch/${this.state.userSearch}`);
+            const response = await fetch(`http://localhost:5268/api/user/${this.state.userSearch}`);
             if (!response.ok) {
                 throw new Error('Network response was not ok');
             }
@@ -34,7 +37,7 @@ export class GroupCreateMenu extends Component {
 
             const userData = responseData.map(user => ({
                 id: user.id,
-                name: user.name
+                username: user.username
             }));
 
             this.setState({ users: userData});
@@ -43,7 +46,7 @@ export class GroupCreateMenu extends Component {
         }
     }
 
-    handleMemberGet = async () => {
+    handleMemberGet = async () => { //TODO: Group member fetching
         try {
             const response = await fetch(`http://localhost:5268/api/group/groupmembers/${this.state.userSearch}`);
             if (!response.ok) {

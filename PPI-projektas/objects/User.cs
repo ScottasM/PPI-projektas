@@ -1,41 +1,51 @@
 ﻿using PPI_projektas.objects.abstractions;
 using System.Text.Json.Serialization;
+using PPI_projektas.Utils;
 
 namespace PPI_projektas.objects;
 
 public class User : Entity
 {
-    public string _username;
+    [JsonInclude] public string Username;
     private readonly string _password;
     private readonly string _email;
 
 
-    [JsonIgnore] public List<Note> CreatedNotes;
+    [JsonIgnore] public List<Note> CreatedNotes = new();
     [JsonInclude] public List<Guid> CreatedNotesGuids;
 
-    [JsonIgnore] public List<Note> FavoriteNotes;
+    [JsonIgnore] public List<Note> FavoriteNotes = new();
     [JsonInclude] public List<Guid> FavoriteNotesGuids;
     
-    [JsonIgnore] public List<Group> Groups;
+    [JsonIgnore] public List<Group> Groups = new();
     [JsonInclude] public List<Guid> GroupsGuids;
 
     public User () {} // For deserialization
     
-    public User(string name, string password, string email)
+    public User(string name, string password, bool createGUID = true) : base(createGUID)
     {
-        _username = name;
+        Username = name;
         _password = password;
-        _email = email;
-        CreatedNotes = new List<Note>();
-        FavoriteNotes = new List<Note>();
         FavoriteNotesGuids = new List<Guid>();
         CreatedNotesGuids = new List<Guid>();
         GroupsGuids = new List<Guid>();
     }
 
-    public string GetUsername() => _username;
-    public void SetUsername(string name) => _username = name;
+    public string GetUsername() => Username;
+    public void SetUsername(string name) => Username = name;
 
+    public string GetPassword() => _password;
+
+    public void LoadCreatedNotes()
+    {
+        foreach (var id in CreatedNotesGuids)
+        {
+            var note = DataHandler.Instance.AllNotes.Find(note => note.Id == id);
+            if (note != null) CreatedNotes.Add(note);
+            else CreatedNotesGuids.Remove(id);
+        }
+    }
+    
     public void AddCreatedNote(Note note)
     {
         CreatedNotes.Add(note);
@@ -45,6 +55,16 @@ public class User : Entity
     {
         CreatedNotes.Remove(note);
         CreatedNotesGuids.Remove(note.Id);
+    }
+    
+    public void LoadFavoriteNotes()
+    {
+        foreach (var id in FavoriteNotesGuids)
+        {
+            var note = DataHandler.Instance.AllNotes.Find(note => note.Id == id);
+            if (note != null) FavoriteNotes.Add(note);
+            else FavoriteNotesGuids.Remove(id);
+        }
     }
 
     public void AddFavoriteNote(Note note)
@@ -58,6 +78,16 @@ public class User : Entity
         FavoriteNotesGuids.Remove(note.Id);
     }
 
+    public void LoadGroups()
+    {
+        foreach (var id in GroupsGuids)
+        {
+            var group = DataHandler.Instance.AllGroups.Find(group => group.Id == id);
+            if (group != null) Groups.Add(group);
+            else GroupsGuids.Remove(id);
+        }
+    }
+    
     public void AddGroup(Group group)
     {
         Groups.Add(group);
