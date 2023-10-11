@@ -23,15 +23,15 @@ export class UserSelection extends Component {
                 <div className="scroll-container">
                     {this.props.users.map((user) => (
                         <div key={user.id} className="scroll-item">
-                            {user.name}
+                            <p>{user.username}</p>
                         </div>
                     ))}
                 </div>
                 <p>Group Members</p>
                 <div className="scroll-container">
-                    {this.props.members.map((member, index) => (
+                    {this.props.members.map((member) => (
                         <div key={member.id} className="scroll-item">
-                            {member.name}
+                            {member.username}
                         </div>
                     ))}
                 </div>
