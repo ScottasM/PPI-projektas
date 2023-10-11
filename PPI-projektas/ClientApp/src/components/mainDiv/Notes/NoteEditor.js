@@ -32,6 +32,9 @@ export class NoteEditor extends Component {
         })
             .then((response) => {
                 if (!response.ok) {
+                    this.setState({
+                        showNotSavedMessage: true
+                    });
                     throw new Error('Network response was not ok');
                 }
                 else
@@ -49,7 +52,7 @@ export class NoteEditor extends Component {
         if (this.state.saved)
             this.props.transferChanges(this.state.name, this.state.tags, this.state.text);
         else if (this.state.showNotSavedMessage)
-            this.props.toggleEditor();
+            this.props.closeEditor();
         else
             this.setState({
                 showNotSavedMessage: true
@@ -58,12 +61,14 @@ export class NoteEditor extends Component {
     
     handleNameChange = (event) => {
         this.setState({
+            saved: false,
             name: event.target.value
         })
     }
 
     handleTextChanged = (event) => {
         this.setState({
+            saved: false,
             text: event.target.value
         })
     }
@@ -112,7 +117,7 @@ export class NoteEditor extends Component {
             <button onClick={this.handleExit}>
                 Exit
             </button>
-            {this.state.showNotSavedMessage && <h2>
+            {this.state.showNotSavedMessage && <h2 color="red">
                 Changes weren't saved!
             </h2>}
             <br/>

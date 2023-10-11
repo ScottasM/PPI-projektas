@@ -59,14 +59,14 @@ export class NoteHub extends Component {
                     tags={this.state.tags}
                     text={this.state.text}
                     exitNote={this.props.exitNote}
-                    toggleEditor={this.state.toggleEditor}
+                    openEditor={this.state.toggleEditor}
                 />}
                 {this.state.showEditor && <NoteEditor
                     name={this.state.name}
                     tags={this.state.tags}
                     text={this.state.text}
                     transferChanges={this.transferChanges}
-                    toggleEditor={this.toggleEditor}
+                    closeEditor={this.toggleEditor}
                 />}
             </div>
         )

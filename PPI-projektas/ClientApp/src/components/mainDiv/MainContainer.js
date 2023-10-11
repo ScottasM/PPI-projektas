@@ -71,7 +71,7 @@ export class MainContainer extends Component {
         return (
             <div className="bg-white">
                 <CreatingButtons toggleMenu={this.toggleGroupCreateMenu}/>
-                {!this.state.showNote && <NoteList openNote={this.openNote}/>}
+                {!this.state.showNote && <NoteList notes={this.state.notes} openNote={this.openNote}/>}
                 {this.state.showNote && <NoteHub id={this.state.id} exitNote={this.exitNote}/>}
                 {this.state.displayGroupCreateMenu && <GroupCreateMenu fetchGroupList={this.props.fetchGroupList} toggleGroupCreateMenu={this.toggleGroupCreateMenu} />}
             </div>
