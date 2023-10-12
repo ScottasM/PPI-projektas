@@ -22,14 +22,9 @@ public class User : Entity
 
     public User () {} // For deserialization
 
-    public User(string name, string password, string email, bool createGUID = true) : base(createGUID)
+    public User(string name, string password, string email, bool createGUID = true) : this(name, password, createGUID)
     {
-        Username = name;
-        _password = password;
         _email = email;
-        FavoriteNotesGuids = new List<Guid>();
-        CreatedNotesGuids = new List<Guid>();
-        GroupsGuids = new List<Guid>();
     }
     
     public User(string name, string password, bool createGUID = true) : base(createGUID)
