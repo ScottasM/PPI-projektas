@@ -21,6 +21,16 @@ public class User : Entity
     [JsonInclude] public List<Guid> GroupsGuids;
 
     public User () {} // For deserialization
+
+    public User(string name, string password, string email)
+    {
+        Username = name;
+        _password = password;
+        _email = email;
+        FavoriteNotesGuids = new List<Guid>();
+        CreatedNotesGuids = new List<Guid>();
+        GroupsGuids = new List<Guid>();
+    }
     
     public User(string name, string password, bool createGUID = true) : base(createGUID)
     {
