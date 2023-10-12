@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import '../LoginWindow.css'
+import '../../LoginWindow.css'
 
 export class UserSignInMenu extends Component {
     static displayName = UserSignInMenu.name;
@@ -26,7 +26,44 @@ export class UserSignInMenu extends Component {
     };
 
     handleSubmit = (event) => {
-        //to do
+        event.preventDefault();
+        const { username, email, password } = this.state;
+
+        this.handlePost(username, email, password)
+
+        this.setState({
+            username: '',
+            email: '',
+            password: '',
+        });
+    }
+
+    async handlePost(username, email, password) {
+
+        const userData = {
+            Username: username,
+            Email: email,
+            Password: password,
+            OwnerId: '00000000-0000-0000-0000-000000000000',
+        };
+
+        await fetch(`http://localhost:5268/api/user/postuser`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(userData),
+        })
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+            })
+            .catch((error) => {
+                console.error('There was a problem with the fetch operation:', error);
+            });
+
+        this.props.toggleMenu();
     };
 
     render() {

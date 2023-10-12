@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
-using PPI_projektas.objects;
-using PPI_projektas.Utils;
+using PPI_projektas.Exceptions;
+using PPI_projektas.Services;
 
 namespace PPI_projektas.Controllers
 {
@@ -12,14 +12,11 @@ namespace PPI_projektas.Controllers
         [HttpGet("{name}")]
         public IActionResult Get(string name)
         {
-            if (name == null) return BadRequest("Invalid Data");
+            var userService = new UserService();
+            if (!userService.ValidateData(name)) return BadRequest("Invalid Data");
 
-            var users = DataHandler.Instance.AllUsers
-                .Where(user => user.GetUsername().Contains(name))
-                .Select(user => new SimpleUserData(user.Id, user.GetUsername()))
-                .ToList();
-
-            if (users == null) return BadRequest("No users found");
+            var users = userService.GetUsersByName(name);
+            if (!userService.ValidateData(users)) return BadRequest("No users found");
 
             return Ok(users);
         }
@@ -27,42 +24,29 @@ namespace PPI_projektas.Controllers
         [HttpPost("createuser")]
         public IActionResult CreateUser([FromBody] UserCreateData userData)
         {
-            if(userData == null) return BadRequest("Invalid Data");
-           
-            var user = new User(userData.Username, userData.Password);
-            DataHandler.Create(user);
+            var userService = new UserService();
+            if (!userService.ValidateData(userData)) return BadRequest("Invalid Data");
 
-            return CreatedAtAction("CreateUser", user.Id);
+            var userGuidId = userService.CreateUser(userData);
+
+            return CreatedAtAction("CreateUser", userGuidId);
         }
 
         [HttpDelete("delete/{userId:guid}")]
-        public IActionResult Delete(Guid userId)
+        public IActionResult Delete(Guid id)
         {
-            var user = DataHandler.Instance.AllUsers.Find(user => user.Id == userId);
-            if (user == null) return BadRequest("User does not exist");
-            DataHandler.Delete(user);
-
-            return NoContent();
-        }
-    }
-
-    public record UserCreateData
-    {
-        public string Username { get; set; }
-        public string Password { get; set; }
-        public string Email { get; set; }
-        public Guid UserId { get; set; }
-    }
-
-    //to be moved to user services
-    public struct SimpleUserData
-    {
-        public Guid Id { get; set; }
-        public string Username { get; set; }
-        public SimpleUserData(Guid id, string name)
-        {
-            Id = id;
-            Username = name;
+            var userService = new UserService();
+            try
+            {
+                var userGuidId = userService.DeleteUser(id);
+                return NoContent();
+            }
+            catch (ObjectDoesNotExistException)
+            {
+                return NotFound();
+            }  
         }
     }
 }
+
+

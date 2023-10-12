@@ -1,11 +1,10 @@
 import React, { Component } from 'react';
 
 import { GroupCreateMenu } from "./group/GroupCreateMenu";
-import { UserLoginMenu } from "./UserLoginMenu";
-import { UserSignInMenu } from "./UserSignInMenu";
+import { UserLoginMenu } from "./login/UserLoginMenu";
+import { UserSignInMenu } from "./login/UserSignInMenu";
 import { CreatingButtons } from "./CreatingButtons";
-import { CreatingLoginButtons } from "./CreatingLoginButtons";
-import { CreatingSignInButtons } from "./CreatingSignInButtons";
+import { CreatingLoginButtons } from "./login/CreatingLoginButtons";
 
 export class MainContainer extends Component {
     static displayName = MainContainer.name;
@@ -86,10 +85,10 @@ export class MainContainer extends Component {
                         fetchGroupList={this.props.fetchGroupList} toggleGroupCreateMenu={this.toggleGroupConfigMenu} />
                 }
                         
-                <CreatingSignInButtons toggleMenu={this.toggleSignInMenu} />
-                {this.state.displaySignInMenu && <UserSignInMenu />}
+                <CreatingLoginButtons toggleMenu={this.toggleSignInMenu} buttonName={{name: "Sign In"}} />
+                {this.state.displaySignInMenu && <UserSignInMenu toggleMenu={this.toggleSignInMenu}/>}
 
-                <CreatingLoginButtons toggleMenu={this.toggleLoginMenu} />
+                <CreatingLoginButtons toggleMenu={this.toggleLoginMenu} buttonName={{name: "Login"}} />
                 {this.state.displayLoginMenu && <UserLoginMenu />}
 
             </div>
