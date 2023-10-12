@@ -32,7 +32,7 @@ namespace PPI_projektas.Controllers
             return CreatedAtAction("CreateUser", userGuidId);
         }
 
-        [HttpDelete("delete/{userId:guid}")]
+        [HttpDelete("delete/{userId:id}")]
         public IActionResult Delete(Guid id)
         {
             var userService = new UserService();
