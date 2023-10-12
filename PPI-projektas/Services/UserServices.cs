@@ -8,8 +8,7 @@ public class UserService
 {
     public bool ValidateData(string data)
     {
-        if (String.IsNullOrEmpty(data)) return false;
-        else return true;
+        return !String.IsNullOrEmpty(data);
     }
     public bool ValidateData<T>(List<T> data)
     {
@@ -18,8 +17,7 @@ public class UserService
     }
     public bool ValidateData(UserCreateData data)
     {
-        if(data.Equals(default(UserCreateData))) return false;
-        else return true;
+        return !data.Equals(default(UserCreateData));
     }
 
     public List<SimpleUserData> GetUsersByName(string name)
