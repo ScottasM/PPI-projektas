@@ -73,3 +73,22 @@
 .create-button:active {
     padding-bottom: 10px;
 }
+
+.add-user, .remove-user {
+    aspect-ratio: 1/1;
+    margin-left: 3px;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.add-user {
+    background-color: #68ad32;
+}
+
+.remove-user {
+    background-color: #ee192b;
+}

@@ -14,6 +14,22 @@ export class GroupCreateMenu extends Component {
             members: [],
         };
     }
+    
+    componentDidMount() {
+        if(this.props.configType === 'edit'){
+            this.setState({
+                groupName: this.props.toggledGroup.name,
+            }, () => {
+                this.handleMemberGet();
+            });
+        }
+        else{
+            this.setState({
+                groupName: '',
+                members: [],
+            })
+        }
+    }
 
     handleInputChange = (event) => {
         this.setState({ groupName: event.target.value });
@@ -48,18 +64,18 @@ export class GroupCreateMenu extends Component {
 
     handleMemberGet = async () => { //TODO: Group member fetching
         try {
-            const response = await fetch(`http://localhost:5268/api/group/groupmembers/${this.state.userSearch}`);
+            const response = await fetch(`http://localhost:5268/api/group/group-members/${this.props.toggledGroup.id}`);
             if (!response.ok) {
                 throw new Error('Network response was not ok');
             }
             const responseData = await response.json();
 
-            const userData = responseData.map(user => ({
+            const memberData = responseData.map(user => ({
                 id: user.id,
-                name: user.name
+                username: user.name
             }));
 
-            this.setState({ users: userData});
+            this.setState({ members: memberData});
         } catch (error) {
             console.error('There was a problem with the get operation:', error);
         }
@@ -67,11 +83,14 @@ export class GroupCreateMenu extends Component {
 
     handleSubmit = (event) => {
         event.preventDefault();
-        const { groupName } = this.state;
-        
-        this.handlePost(groupName)
-        
-        this.setState({ groupName: '' });
+        if(event.target.name === 'createButton')
+        {
+            const { groupName } = this.state;
+            
+            this.handlePost(groupName)
+            
+            this.setState({ groupName: '' });
+        }
     };
     
    async handlePost(groupName) {
@@ -103,8 +122,7 @@ export class GroupCreateMenu extends Component {
     }
     
     render() {
-        const { groupName } = this.state.groupName;
-        const { userSearch } = this.state.userSearch;
+        const { groupName, userSearch } = this.state;
         
         return (
             <div className="groupCreateMenu position-absolute translate-middle text-white">
@@ -126,7 +144,7 @@ export class GroupCreateMenu extends Component {
                         handleUserSearch={this.handleUserSearch} userSearch={this.userSearch} 
                         users={this.state.users} members={this.state.members}/>
                     <br />
-                    <input type="submit" value="Create" />
+                    <input type="submit" name="createButton" value={this.props.configType.charAt(0).toUpperCase() + this.props.configType.slice(1)} />
                 </form>
             </div>
         );
