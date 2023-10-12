@@ -76,7 +76,7 @@ export class UserSelection extends Component {
                         <div key={user.id} className="scroll-item">
                             <div className="item-content">
                                 <p>{user.username}</p>
-                                    <button className="add-user rounded-circle">
+                                    <button type="button" className="add-user rounded-circle">
                                         <MdPersonAddAlt/>
                                     </button>
                             </div>
@@ -89,7 +89,7 @@ export class UserSelection extends Component {
                         <div key={member.id} className="scroll-item">
                             <div className="item-content">
                                 <p>{member.username}</p>
-                                <button className="remove-user rounded-circle">
+                                <button type="button" className="remove-user rounded-circle">
                                     <MdOutlinePersonRemove/>
                                 </button>
                             </div>

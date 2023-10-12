@@ -30,8 +30,7 @@ export class Group extends Component {
                     'Content-Type': 'application/json',
                 },
             });
-
-            console.log('Deleted');
+            
             this.props.fetchGroupList();
         } catch (error) {
             console.error('There was a problem with the fetch operation:', error);

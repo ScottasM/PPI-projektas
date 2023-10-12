@@ -83,14 +83,10 @@ export class GroupCreateMenu extends Component {
 
     handleSubmit = (event) => {
         event.preventDefault();
-        if(event.target.name === 'createButton')
-        {
-            const { groupName } = this.state;
-            
-            this.handlePost(groupName)
-            
-            this.setState({ groupName: '' });
-        }
+
+        const { groupName } = this.state;
+        this.handlePost(groupName)
+        this.setState({ groupName: '' });
     };
     
    async handlePost(groupName) {
