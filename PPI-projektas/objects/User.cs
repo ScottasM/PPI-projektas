@@ -22,7 +22,7 @@ public class User : Entity
 
     public User () {} // For deserialization
 
-    public User(string name, string password, string email)
+    public User(string name, string password, string email, bool createGUID = true) : base(createGUID)
     {
         Username = name;
         _password = password;
