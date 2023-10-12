@@ -47,7 +47,7 @@ export class UserSignInMenu extends Component {
             OwnerId: '00000000-0000-0000-0000-000000000000',
         };
 
-        await fetch(`http://localhost:5268/api/user/postuser`, {
+        await fetch(`http://localhost:5268/api/user/createuser`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
