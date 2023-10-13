@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { Container } from 'reactstrap';
-import { NavMenu } from './NavMenu';
 import { SideNav } from './SideNav';
 import {MainContainer} from "./mainDiv/MainContainer";
 
@@ -41,9 +40,9 @@ export class Layout extends Component {
             }
             const responseData = await response.json();
 
-            const groupData = responseData.groups.map(group => ({
-                name: group.name,
-                id: group.id
+            const groupData = responseData.map(group => ({
+                id: group.id,
+                name: group.name
             }));
             
             this.setState({ groups: groupData });
@@ -55,8 +54,11 @@ export class Layout extends Component {
     render() {
     return (
       <div>
-          <SideNav fetchGroupList={this.fetchGroupList} groups={this.state.groups}/>
-          <MainContainer fetchGroupList={this.fetchGroupList} toggledGroupId={this.state.toggledGroupId}/>
+          <SideNav fetchGroupList={this.fetchGroupList} toggleGroupEditMenu={this.toggleGroupEditMenu}
+                   groups={this.state.groups}/>
+          <MainContainer fetchGroupList={this.fetchGroupList} toggleGroupEditMenu={this.toggleGroupEditMenu}
+                         toggledGroup={this.state.groups.find(group => group.id === this.state.toggledGroupId)}
+                         displayGroupEditMenu={this.state.displayGroupEditMenu}/>
       </div>
     );
   }
