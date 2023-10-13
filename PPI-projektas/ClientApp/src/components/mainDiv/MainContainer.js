@@ -9,9 +9,13 @@ export class MainContainer extends Component {
 
     constructor(props) {
         super(props);
-        this.setState({
-            mounted: false
-        });
+    }
+    
+    state = {
+        mounted: false,
+        notes: [],
+        displayGroupCreateMenu: false,
+        showNote: false
     }
     
     componentDidMount() {
@@ -25,27 +29,26 @@ export class MainContainer extends Component {
     
     fetchNotes = async () => {
         try {
-            const response = fetch('http://localhost:5268/api/notes/');
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            const responseData = await response.json();
-            const noteData = responseData.notes.map(note => ({
-                name: note.name, 
-                id: note.id
-            }));
-            this.setState({
-                notes: noteData
-            })
-        } catch (error) {
-            console.error('There was a problem with the fetch operation:', error);
+            fetch('http://localhost:5268/api/note')
+                .then(async response => {
+                    if (!response.ok)
+                        throw new Error(`Network response was not ok`);
+                    return await response.json();
+                })
+                .then(data => {
+                    const notes = data.map(note => ({
+                        name: note.name,
+                        id: note.id
+                    }));
+                    this.setState({
+                        notes: notes
+                    });
+                })
+        }
+        catch (error) { 
+                console.error('There was a problem with the fetch operation:', error);
         }
     }
-
-    state = {
-        displayGroupCreateMenu: false,
-        showNote: false
-    };
     
     toggleGroupCreateMenu = () => {
         this.setState((prevState) => ({
@@ -53,16 +56,16 @@ export class MainContainer extends Component {
         }));
     }
     
-    exitNote = () => {
+    openNote = id => {
         this.setState(prevState => ({
-            showNote: !prevState.showNote,
-            noteId: ''
+            id: id,
+            showNote: !prevState.showNote
         }));
     }
     
-    openNote = id => {
+    exitNote = () => {
         this.setState(prevState => ({
-            noteId: id,
+            id: '',
             showNote: !prevState.showNote
         }));
     }
@@ -71,8 +74,8 @@ export class MainContainer extends Component {
         return (
             <div className="bg-white">
                 <CreatingButtons toggleMenu={this.toggleGroupCreateMenu}/>
-                {!this.state.showNote && <NoteList notes={this.state.notes} openNote={this.openNote}/>}
-                {this.state.showNote && <NoteHub id={this.state.id} exitNote={this.exitNote}/>}
+                {this.state.notes == null ? <h2>No notes found.</h2> : !this.state.showNote && <NoteList notes={this.state.notes} openNote={this.openNote}/>}
+                {this.state.showNote && <NoteHub noteId={this.state.id} exitNote={this.exitNote}/>}
                 {this.state.displayGroupCreateMenu && <GroupCreateMenu fetchGroupList={this.props.fetchGroupList} toggleGroupCreateMenu={this.toggleGroupCreateMenu} />}
             </div>
         );

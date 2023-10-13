@@ -1,5 +1,5 @@
 import React, { Component }  from 'react';
-import './NoteEditor.css';
+import './NoteHub.css';
 import {TagList} from "../../TagList";
 
 export class NoteEditor extends Component {
@@ -21,6 +21,7 @@ export class NoteEditor extends Component {
             AuthorGuid: '0f8fad5b-d9cb-469f-a165-70867728950e', // temporary static user id
             Tags: this.state.tags,
             Text: this.state.text,
+            Id: this.props.noteId
         };
 
         await fetch('http://localhost:5268/api/note/updatenote', { // temporary localhost api url
@@ -43,9 +44,8 @@ export class NoteEditor extends Component {
                         showNotSavedMessage: false
                     });
             })
-            .catch((error) => {
-                console.error('There was a problem with the fetch operation:', error);
-            });
+            .catch((error) => 
+                console.error('There was a problem with the fetch operation:', error));
     }
     
     handleExit = () => {

@@ -16,8 +16,8 @@ namespace PPI_projektas.Controllers
             return Ok(new NoteService().GetNotes());
         }
 
-        [HttpGet]
-        public IActionResult Get(Guid id)
+        [HttpGet("open")]
+        public IActionResult OpenNote([FromBody] Guid id)
         {
             return Ok(new NoteService().GetNote(id));
         }

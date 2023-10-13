@@ -1,8 +1,9 @@
-﻿import React, {Component} from 'react'
+﻿import React, {Component} from 'react';
+import './NoteDisplay.css'
 
 class NoteDisplay extends Component {
     constructor(props) {
-        super(props)
+        super(props);
     }
     
     handleOpenNote = () => {
@@ -12,7 +13,7 @@ class NoteDisplay extends Component {
     render() {
         return (
             <li>
-                <h2 onClick={this.handleOpenNote}>{this.state.name}</h2>
+                <h2 onClick={this.handleOpenNote}>{this.props.name}</h2>
             </li>
         )
     }
@@ -25,7 +26,7 @@ export class NoteList extends Component {
     
     render() {
         return (
-            <div>
+            <div className='noteDisplay'>
                 <ul>
                     {this.props.notes.map(note => (
                         <NoteDisplay name={note.name} id={note.id} openNote={this.props.openNote}/>
