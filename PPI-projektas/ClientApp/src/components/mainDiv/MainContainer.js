@@ -15,6 +15,7 @@ export class MainContainer extends Component {
         mounted: false,
         notes: [],
         displayGroupCreateMenu: false,
+        noteId: '',
         showNote: false
     }
     
@@ -58,14 +59,14 @@ export class MainContainer extends Component {
     
     openNote = id => {
         this.setState(prevState => ({
-            id: id,
+            noteId: id,
             showNote: !prevState.showNote
         }));
     }
     
     exitNote = () => {
         this.setState(prevState => ({
-            id: '',
+            noteId: '',
             showNote: !prevState.showNote
         }));
     }
@@ -75,7 +76,7 @@ export class MainContainer extends Component {
             <div className="bg-white">
                 <CreatingButtons toggleMenu={this.toggleGroupCreateMenu}/>
                 {this.state.notes == null ? <h2>No notes found.</h2> : !this.state.showNote && <NoteList notes={this.state.notes} openNote={this.openNote}/>}
-                {this.state.showNote && <NoteHub noteId={this.state.id} exitNote={this.exitNote}/>}
+                {this.state.showNote && <NoteHub noteId={this.state.noteId} exitNote={this.exitNote}/>}
                 {this.state.displayGroupCreateMenu && <GroupCreateMenu fetchGroupList={this.props.fetchGroupList} toggleGroupCreateMenu={this.toggleGroupCreateMenu} />}
             </div>
         );

@@ -7,7 +7,7 @@ export class TagList extends Component {
 
     render() {
         return <div>
-            {this.props.tags.count > 0 ? this.props.tags.map(tag =>
+            {this.props.tags.length > 0 ? this.props.tags.map(tag =>
                 <div className="inLineTag">{tag}</div>
             ) : <br/>}
         </div>
