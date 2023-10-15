@@ -7,9 +7,9 @@ export class NoteHub extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            name: '',
-            tags: [],
-            text: '',
+            noteName: '',
+            noteTags: [],
+            noteText: '',
             mounted: false,
             showEditor: false
         };
@@ -34,9 +34,9 @@ export class NoteHub extends Component {
                 })
                 .then(note => {
                     this.setState({
-                        name: note.name,
-                        tags: note.tags,
-                        text: note.text
+                        noteName: note.name,
+                        noteTags: note.tags,
+                        noteText: note.text
                     });
                 });
         }
@@ -47,9 +47,9 @@ export class NoteHub extends Component {
     
     transferChanges = (name, tags, text) => {
         this.setState({
-            name: name,
-            tags: tags,
-            text: text
+            noteName: name,
+            noteTags: tags,
+            noteText: text
         })
     } 
     
@@ -65,18 +65,18 @@ export class NoteHub extends Component {
             <div className='noteHub'>
                 {this.state.showEditor ?
                     <NoteEditor
-                        name={this.state.name}
-                        tags={this.state.tags}
-                        text={this.state.text}
+                        noteName={this.state.noteName}
+                        noteTags={this.state.noteTags}
+                        noteText={this.state.noteText}
                         noteId={this.props.noteId}
                         transferChanges={this.transferChanges}
                         closeEditor={this.toggleEditor}
                     /> 
                     :
                         <NoteViewer
-                            name={this.state.name}
-                            tags={this.state.tags}
-                            text={this.state.text}
+                            noteName={this.state.noteName}
+                            noteTags={this.state.noteTags}
+                            noteText={this.state.noteText}
                             exitNote={this.props.exitNote}
                             openEditor={this.toggleEditor}
                         />
