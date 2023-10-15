@@ -8,7 +8,7 @@ export class NoteViewer extends Component {
     
     render() {
         return <div>
-            <h2>{this.props.noteName}</h2>
+            <h2>{this.props.name}</h2>
             <button onClick={this.props.openEditor}>
                 Edit
             </button>
@@ -16,9 +16,9 @@ export class NoteViewer extends Component {
                 Exit
             </button>
             <br/>
-            <TagList tags={this.props.noteTags}/>
+            <TagList tags={this.props.tags}/>
             <br/>
-            <p>{this.props.noteText}</p>
+            <p>{this.props.text}</p>
         </div>
     }
 }
