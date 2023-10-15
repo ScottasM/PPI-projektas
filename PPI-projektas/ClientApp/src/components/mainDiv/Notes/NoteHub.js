@@ -27,7 +27,7 @@ export class NoteHub extends Component {
 
     fetchNote = async () => {
         try {
-            await fetch(`http://localhost:5268/api/note/open?id=${this.props.noteId}`,)
+            await fetch(`http://localhost:5268/api/note/open/${this.props.noteId}`,)
                 .then(async response => {
                     if (!response.ok)
                         throw new Error('Network response was not ok');

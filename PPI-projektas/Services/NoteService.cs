@@ -13,20 +13,23 @@ public class NoteService
             .ToList();
     }
 
-    public Note GetNote(Guid id)
+    public OpenedNoteData GetNote(Guid id)
     {
         var note = DataHandler.Instance.AllNotes
             .Find(note => note.Id == id);
         if (note == null) throw new ObjectDoesNotExistException(id);
-
-        return note;
+        
+        return new OpenedNoteData(note.Name, note.Tags, note.Text);
     }
 
     public void UpdateNote(Guid id, string name, List<string> tags, string text)
     {
-        var note = GetNote(id);
-        if (note.Name != name) note.Name = name;
-        if (note.Tags != tags) note.Tags = tags;
+        var note = DataHandler.Instance.AllNotes
+            .Find(note => note.Id == id);
+        if (note == null) throw new ObjectDoesNotExistException(id);
+        
+        note.Name = name;
+        note.Tags = tags;
         note.Text = text;
     }
 
@@ -40,6 +43,22 @@ public class NoteService
         {
             Name = name;
             Id = id;
+        }
+    }
+
+    public struct OpenedNoteData
+    {
+        public string Name { get; set; }
+        
+        public List<string> Tags { get; set; }
+
+        public string Text { get; set; }
+
+        public OpenedNoteData(string name, List<string> tags, string text)
+        {
+            Name = name;
+            Tags = tags;
+            Text = text;
         }
     }
 }
