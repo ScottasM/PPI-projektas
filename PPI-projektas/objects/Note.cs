@@ -13,7 +13,7 @@ public class Note : Entity
 
 	public List<string> Tags { get; set; }
 	
-	public string Text;
+	[JsonInclude] public string Text;
 	
 	public Note () {} // For deserialization
 
