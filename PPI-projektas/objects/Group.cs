@@ -4,7 +4,7 @@ using PPI_projektas.Utils;
 
 namespace PPI_projektas.objects;
 
-public class Group : Entity
+public class Group : Entity, IComparable<Group>
 {
 
     public string Name { get; set; }
@@ -30,6 +30,10 @@ public class Group : Entity
         MembersGuid = new List<Guid>();
     }
     
+    public int CompareTo(Group anotherGroup)
+    {
+        return String.Compare(Name, anotherGroup.Name);
+    }
 
     public Group(string name, User owner, List<User> members) : this(name, owner)
     {
