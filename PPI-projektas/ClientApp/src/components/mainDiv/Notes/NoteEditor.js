@@ -101,8 +101,7 @@ export class NoteEditor extends Component {
     }
 
     render() {
-        const { name } = this.state.noteName;
-        const { tags } = this.state.noteTags;
+        const { name } = this.state.name;
         const { tag } = this.state.tag;
         const { text } = this.state.noteText;
 
@@ -121,7 +120,7 @@ export class NoteEditor extends Component {
                 Changes weren't saved!
             </h2>}
             <br/>
-            <TagList tags={tags}/>
+            <TagList tags={this.state.tags}/>
             <input type='text' width='50px' id='tag-name' name='tag-name' value={tag} onChange={this.handleTagChanged}>
                 {tag}
             </input>
