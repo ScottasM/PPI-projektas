@@ -7,7 +7,7 @@ export class NoteDisplayElement extends Component {
     }
 
     handleOpenNote = () => {
-        this.props.openNote(this.props.id);
+        this.props.openNote(this.props.noteId);
     }
 
     render() {

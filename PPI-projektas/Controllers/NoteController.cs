@@ -22,10 +22,10 @@ namespace PPI_projektas.Controllers
             return Ok(new NoteService().GetNote(id));
         }
 
-        [HttpPost("updateNote")]
-        public IActionResult UpdateNote([FromBody] Note noteData)
+        [HttpPost("updateNote/{noteId}")]
+        public IActionResult UpdateNote(Guid noteId, [FromBody] Note noteData)
         {
-            new NoteService().UpdateNote(noteData.Id, noteData.Name, noteData.Tags, noteData.Text);
+            new NoteService().UpdateNote(noteId, noteData.AuthorGuid, noteData.Name, noteData.Tags, noteData.Text);
             return Ok();
         }
     }

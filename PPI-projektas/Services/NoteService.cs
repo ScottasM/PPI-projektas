@@ -22,11 +22,12 @@ public class NoteService
         return new OpenedNoteData(note.Name, note.Tags, note.Text);
     }
 
-    public void UpdateNote(Guid id, string name, List<string> tags, string text)
+    public void UpdateNote(Guid noteId, Guid authorId, string name, List<string> tags, string text)
     {
         var note = DataHandler.Instance.AllNotes
-            .Find(note => note.Id == id);
-        if (note == null) throw new ObjectDoesNotExistException(id);
+            .Find(note => note.Id == noteId);
+        if (note == null) throw new ObjectDoesNotExistException(noteId);
+        if (note.AuthorGuid != authorId) throw new UnauthorizedAccessException("USER-NOT-AUTHOR");
         
         note.Name = name;
         note.Tags = tags;

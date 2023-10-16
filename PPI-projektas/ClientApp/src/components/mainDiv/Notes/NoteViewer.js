@@ -16,7 +16,7 @@ export class NoteViewer extends Component {
                 Exit
             </button>
             <br/>
-            <TagList tags={this.props.noteTags}/>
+            <TagList noteTags={this.props.noteTags}/>
             <br/>
             <p>{this.props.noteText}</p>
         </div>

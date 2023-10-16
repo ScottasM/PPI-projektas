@@ -39,7 +39,7 @@ export class MainContainer extends Component {
                 .then(data => {
                     const notes = data.map(note => ({
                         name: note.name,
-                        noteId: note.id
+                        id: note.id
                     }));
                     this.setState({
                         notes: notes

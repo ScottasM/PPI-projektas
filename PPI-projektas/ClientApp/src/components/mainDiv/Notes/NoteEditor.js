@@ -17,14 +17,13 @@ export class NoteEditor extends Component {
 
     handlePost = async () => {
         const noteData = {
-            Name: this.state.noteName,
             AuthorGuid: '0f8fad5b-d9cb-469f-a165-70867728950e', // temporary static user id
+            Name: this.state.noteName,
             Tags: this.state.noteTags,
-            Text: this.state.noteText,
-            Id: this.props.noteId
+            Text: this.state.noteText
         };
 
-        await fetch('http://localhost:5268/api/note/updatenote', { // temporary localhost api url
+        await fetch(`http://localhost:5268/api/note/updatenote/${this.props.noteId}`, { // temporary localhost api url
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -50,7 +49,10 @@ export class NoteEditor extends Component {
     
     handleExit = () => {
         if (this.state.saved)
+        {
             this.props.transferChanges(this.state.noteName, this.state.noteTags, this.state.noteText);
+            this.props.closeEditor();
+        }
         else if (this.state.showNotSavedMessage)
             this.props.closeEditor();
         else
@@ -74,15 +76,17 @@ export class NoteEditor extends Component {
     }
     
     handleTagChanged = (event) => {
-        this.state.setState({
-            saved: false,
+        this.setState({
             tag: event.target.value
         })
     }
 
     handleDeleteTag = () => {
-        const newTags = this.props.noteTags
-        newTags.filter(tag => tag !== this.state.tag)
+        const index = this.state.noteTags.indexOf(this.state.tag);
+        if (index === -1)
+            return;
+        const newTags = this.props.noteTags;
+        newTags.splice(index, 1)
         this.setState({
             noteTags: newTags, 
             saved: false,
@@ -101,14 +105,8 @@ export class NoteEditor extends Component {
     }
 
     render() {
-        const { name } = this.state.name;
-        const { tag } = this.state.tag;
-        const { text } = this.state.noteText;
-
         return <div className='note-editor'>
-            <input type='text' width='50px' id='note-name' name='note-name' onChange={this.handleNameChange} value={name}>
-                {name}
-            </input>
+            <input type='text' width='50px' id='note-name' name='note-name' onChange={this.handleNameChange} value={this.state.noteName}/>
             <br/>
             <button onClick={this.handlePost}>
                 Save
@@ -120,10 +118,8 @@ export class NoteEditor extends Component {
                 Changes weren't saved!
             </h2>}
             <br/>
-            <TagList tags={this.state.tags}/>
-            <input type='text' width='50px' id='tag-name' name='tag-name' value={tag} onChange={this.handleTagChanged}>
-                {tag}
-            </input>
+            <TagList noteTags={this.state.noteTags}/>
+            <input type='text' width='50px' id='tag-name' name='tag-name' value={this.state.tag} onChange={this.handleTagChanged}/>
             <br/>
             <button onClick={this.handleDeleteTag}>
                 Delete tag
@@ -132,9 +128,7 @@ export class NoteEditor extends Component {
                 Add tag
             </button>
             <br/>
-            <textarea name='noteText' rows='20' cols='30' onChange={this.handleTextChanged}>
-                {text}
-            </textarea>
+            <textarea name='noteText' rows='20' cols='30' value={this.state.noteText} onChange={this.handleTextChanged}/>
         </div>
     }
 }
