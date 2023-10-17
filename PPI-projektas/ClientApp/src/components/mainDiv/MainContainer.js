@@ -65,6 +65,7 @@ export class MainContainer extends Component {
     }
     
     exitNote = () => {
+        this.fetchNotes();
         this.setState(prevState => ({
             noteId: '',
             showNote: !prevState.showNote
