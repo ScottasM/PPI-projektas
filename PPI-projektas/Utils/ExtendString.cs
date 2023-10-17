@@ -39,6 +39,8 @@ namespace PPI_projektas.Utils
 
 
         // returns null if the string is good to go, and error message if it is not.
+
+        // example : password.ValidateString(checkProfanity:true, minLength:8, checkCommonPasswords:true);
         public static string? ValidateString(this string str, 
             bool checkProfanity = true, 
             bool checkSpecialCharacters = false, 
@@ -46,6 +48,8 @@ namespace PPI_projektas.Utils
             int maxLength = 0, 
             bool checkCommonPasswords = false) 
         {
+
+            
             if (checkProfanity) {
                 if (profanityFilter.Any(s => str.Contains(s)))
                     return "Not nice :(";
