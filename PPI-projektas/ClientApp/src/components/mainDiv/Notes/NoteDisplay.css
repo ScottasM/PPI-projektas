@@ -1,0 +1,9 @@
+﻿.noteDisplay {
+    margin-left: 75px;
+}
+
+.noteList {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}

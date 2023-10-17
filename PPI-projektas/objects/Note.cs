@@ -6,22 +6,27 @@ namespace PPI_projektas.objects;
 
 public class Note : Entity, IComparable<Note>
 {
+	public string Name { get; set; }
+
 	[JsonIgnore] public User Author;
 
 	[JsonInclude] public Guid AuthorGuid;
-    [JsonInclude] public string text;
-
+  
 	public List<string> Tags { get; set; }
 	
-	public Note () {} // For deserialization
+	[JsonInclude] public string Text;
 	
-	public Note(User author,bool createGUID = true) : base(createGUID)
-    {
+	public Note () {} // For deserialization
+
+	public Note(User author, bool createGUID = true) : base(createGUID)
+  {
+    Name = "";
 		Author = author;
 		AuthorGuid = author.Id;
 		Tags = new List<string>();
+		Text = "";
 	}
-
+  
     public int CompareTo(Note otherNote)
     {
         int tagComparison = Tags.Count.CompareTo(otherNote.Tags.Count);
@@ -40,5 +45,4 @@ public class Note : Entity, IComparable<Note>
 
         return 0;
     }
-
 }
