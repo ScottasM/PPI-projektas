@@ -6,6 +6,9 @@ namespace PPI_projektas.Utils
 {
     public class SaveHandler
     {
+
+        
+
         private Dictionary<Type, string> _filePaths = new Dictionary<Type, string>(3) {
             {typeof(User),"Users.txt"},
             {typeof(Group),"Groups.txt"},

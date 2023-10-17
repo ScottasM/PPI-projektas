@@ -48,36 +48,25 @@ namespace PPI_projektas.Utils
             int maxLength = 0, 
             bool checkCommonPasswords = false) 
         {
-
-            
-            if (checkProfanity) {
+            if (checkProfanity) 
                 if (profanityFilter.Any(s => str.Contains(s)))
                     return "Not nice :(";
-            }
-
-            if (checkCommonPasswords) {
+            
+            if (checkCommonPasswords) 
                 if (commonPasswords.Any(s => str.Contains(s)))
                     return "Really? This? Too easy to guess";
-            }
-
-            if (checkSpecialCharacters) {
+            
+            if (checkSpecialCharacters) 
                 if (!Regex.IsMatch(str, pattern))
                     return "You can't use special characters here.";
-            }
-
-            if(minLength > 0) {
-                if(str.Length <  minLength) {
+            
+            if(minLength > 0) 
+                if(str.Length <  minLength) 
                     return $"Minimum length is : {minLength}";
-                }
-            }
-
-            if(maxLength > 0) {
-                if(str.Length > maxLength) {
+                
+            if(maxLength > 0) 
+                if(str.Length > maxLength) 
                     return $"Maximum length is : {maxLength}";
-                }
-            }
-
-
             return null;
         }
     }
