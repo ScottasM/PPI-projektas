@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import '../Group.css'
 
 export class GroupCreateMenu extends Component {
-    static disiplayName = GroupCreateMenu.name;
+    static displayName = GroupCreateMenu.name;
 
     constructor(props) {
         super(props);
