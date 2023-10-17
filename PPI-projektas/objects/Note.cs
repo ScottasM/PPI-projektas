@@ -11,7 +11,7 @@ public class Note : Entity, IComparable<Note>
 	[JsonInclude] public Guid AuthorGuid;
     [JsonInclude] public string text;
 
-	public List<string> Tags { get; set; }
+	public List<string> Tags { get; set; } 
 	
 	public Note () {} // For deserialization
 	

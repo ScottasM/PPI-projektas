@@ -12,9 +12,6 @@ namespace PPI_projektas.Utils
             {typeof(Note),"Notes.txt"}
         };
 
-
-
-        
         private string? SerializeList<T>(List<T> obj)
         {
             try {

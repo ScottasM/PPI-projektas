@@ -4,6 +4,7 @@ namespace PPI_projektas.Utils
 {
     public class DataHandler
     {
+
         public static DataHandler Instance;
 
         public List<User> AllUsers = new List<User>();
