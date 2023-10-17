@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import {CreateNewGroup} from "./CreateNewGroup";
+import {CreateNewGroup} from "./group/CreateNewGroup";
 import './buttons.css'
 
 export class CreatingButtons extends Component {

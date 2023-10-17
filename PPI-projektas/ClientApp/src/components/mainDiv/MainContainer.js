@@ -1,8 +1,11 @@
 import React, { Component } from 'react';
-import {GroupCreateMenu} from "./GroupCreateMenu";
-import {CreatingButtons} from "./CreatingButtons";
-import {NoteDisplay} from "./Notes/NoteDisplay";
+import { NoteDisplay } from "./Notes/NoteDisplay";
 import {NoteHub} from "./Notes/NoteHub";
+import { GroupCreateMenu } from "./group/GroupCreateMenu";
+import { UserLoginMenu } from "./login/UserLoginMenu";
+import { UserSignInMenu } from "./login/UserSignInMenu";
+import { CreatingButtons } from "./CreatingButtons";
+import { CreatingLoginButtons } from "./login/CreatingLoginButtons";
 
 export class MainContainer extends Component {
     static displayName = MainContainer.name;
@@ -13,9 +16,12 @@ export class MainContainer extends Component {
     
     state = {
         mounted: false,
-        notes: [],
         displayGroupCreateMenu: false,
+        groupConfigMenuType: 'create',
+        displayLoginMenu: false,
+        displaySignInMenu: false,
         noteId: '',
+        notes: [],
         showNote: false
     }
     
@@ -26,6 +32,25 @@ export class MainContainer extends Component {
                mounted: true
            });
        }
+    }
+
+    componentDidUpdate(prevProps) {
+        if (this.props.toggledGroup !== prevProps.toggledGroup || this.props.displayGroupEditMenu !== prevProps.displayGroupEditMenu) {
+            if(this.props.displayGroupEditMenu){
+                this.setState(() => ({
+                    groupConfigMenuType: 'edit'
+                    }), () => {
+                        this.toggleGroupConfigMenu();
+                });
+            }
+            else {
+                this.setState(() => ({
+                    groupConfigMenuType: 'create'
+                }));
+                if(this.state.displayGroupCreateMenu)
+                    this.toggleGroupConfigMenu();
+            }
+        }
     }
     
     fetchNotes = async () => {
@@ -51,10 +76,40 @@ export class MainContainer extends Component {
         }
     }
     
-    toggleGroupCreateMenu = () => {
+    toggleGroupConfigMenu = () => {
+        if (!(this.state.displayGroupCreateMenu)) {
+            this.setState({ displayLoginMenu: false, displaySignInMenu: false })
+        }
+        else{
+            this.setState({
+                groupConfigMenuType: 'create',
+            })
+        }
+        
         this.setState((prevState) => ({
-            displayGroupCreateMenu: !prevState.displayGroupCreateMenu,
+                displayGroupCreateMenu: !prevState.displayGroupCreateMenu,
+            }));
+    }
+
+    toggleLoginMenu = () => {
+        if (!(this.state.displayLoginMenu)) {
+            this.setState({ displayGroupCreateMenu: false, displaySignInMenu: false })
+        }
+
+        this.setState((prevState) => ({
+            displayLoginMenu: !prevState.displayLoginMenu,
         }));
+    }
+
+    toggleSignInMenu = () => {
+        if (!(this.state.displaySignInMenu)) {
+            this.setState({ displayGroupCreateMenu: false, displayLoginMenu: false })
+        }
+
+        this.setState((prevState) => ({
+            displaySignInMenu: !prevState.displaySignInMenu,
+        }));
+ 
     }
     
     openNote = id => {
@@ -75,10 +130,24 @@ export class MainContainer extends Component {
     render() {
         return (
             <div className="bg-white">
-                <CreatingButtons toggleMenu={this.toggleGroupCreateMenu}/>
+                <CreatingButtons toggleMenu={this.toggleGroupConfigMenu}/>
+                {this.state.displayGroupCreateMenu && 
+                    <GroupCreateMenu 
+                        configType = {this.state.groupConfigMenuType}
+                        toggledGroup={this.props.toggledGroup}
+                        fetchGroupList={this.props.fetchGroupList} toggleGroupCreateMenu={this.toggleGroupConfigMenu} />
+                }
+                        
+                <CreatingLoginButtons toggleMenu={this.toggleSignInMenu} buttonName={{name: "Sign In"}} />
+                {this.state.displaySignInMenu && <UserSignInMenu toggleMenu={this.toggleSignInMenu}/>}
+
+                <CreatingLoginButtons toggleMenu={this.toggleLoginMenu} buttonName={{name: "Login"}} />
+                {this.state.displayLoginMenu && <UserLoginMenu />}
+
                 {this.state.notes == null || this.state.notes.length === 0 ? <p>No notes found.</p> : !this.state.showNote && <NoteDisplay notes={this.state.notes} openNote={this.openNote}/>}
                 {this.state.showNote && <NoteHub noteId={this.state.noteId} exitNote={this.exitNote}/>}
                 {this.state.displayGroupCreateMenu && <GroupCreateMenu fetchGroupList={this.props.fetchGroupList} toggleGroupCreateMenu={this.toggleGroupCreateMenu} />}
+
             </div>
         );
     }
