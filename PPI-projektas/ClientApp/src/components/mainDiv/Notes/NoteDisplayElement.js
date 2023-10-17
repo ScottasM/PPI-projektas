@@ -6,14 +6,10 @@ export class NoteDisplayElement extends Component {
         super(props);
     }
 
-    handleOpenNote = () => {
-        this.props.openNote(this.props.noteId);
-    }
-
     render() {
         return (
             <li>
-                <p className='noteDisplayElement' onClick={this.handleOpenNote}>{this.props.noteName}</p>
+                <p className='noteDisplayElement' onClick={() => this.props.openNote(this.props.noteId)}>{this.props.noteName}</p>
             </li>
         )
     }
