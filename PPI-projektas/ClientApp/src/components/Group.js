@@ -30,8 +30,7 @@ export class Group extends Component {
                     'Content-Type': 'application/json',
                 },
             });
-
-            console.log('Deleted');
+            
             this.props.fetchGroupList();
         } catch (error) {
             console.error('There was a problem with the fetch operation:', error);
@@ -50,7 +49,7 @@ export class Group extends Component {
                     <div className="context-menu">
                         <ul>
                             <li>
-                                <button className="context-button">Edit</button>
+                                <button className="context-button" onClick={() => this.props.toggleGroupEditMenu(this.props.groupId)}>Edit</button>
                             </li>
                             <li>
                                 <button className="context-button" onClick={this.handleDelete}>Delete</button>
