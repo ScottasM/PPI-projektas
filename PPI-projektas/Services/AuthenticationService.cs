@@ -1,41 +1,38 @@
-﻿using System;
-using System.Runtime.CompilerServices;
-using System.Security.Cryptography;
+﻿using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
 using PPI_projektas.objects;
 using PPI_projektas.Utils;
-using System.Linq;
 
 namespace PPI_projektas.Services
 {
     public class AuthReturn
     {
-        public User? user;
-        public bool success;
-        public string? errorMessage;
+        public User? User;
+        public bool Success;
+        public string? ErrorMessage;
 
         public AuthReturn(User? user, bool success = true, string errorMessage = "")
         {
-            this.user = user;
-            this.success = success;
-            this.errorMessage = errorMessage;
+            User = user;
+            Success = success;
+            ErrorMessage = errorMessage;
         }
     }
     public class AuthenticationService
     {
         public AuthReturn TryRegister(string name, string password)
         {
-            string hashedPassword = hash(password);
+            var hashedPassword = Hash(password);
 
             if (DataHandler.userExists(name))
                 return new AuthReturn(null, false, "User already exists.");
 
-            Regex validateGuidRegex = new Regex("^(?=.*?[a-zA-Z])(?=.*?[0-9]).{8,}$"); // atleast one letter, atleast one number and atleast 8 characters long
+            var validateGuidRegex = new Regex("^(?=.*?[a-zA-Z])(?=.*?[0-9]).{8,}$"); // at least one letter, at least one number and at least 8 characters long
             if (!validateGuidRegex.IsMatch("-Secr3t."))
-                return new AuthReturn(null, false, "Invalid password format. Ensure atleast 1 letter, 1 number and total length of atleast 8 characters");
+                return new AuthReturn(null, false, "Invalid password format. Ensure at least 1 letter, 1 number and total length of at least 8 characters");
 
-            User newUser = new User(name,password);
+            var newUser = new User(name,password);
             DataHandler.Create(newUser);
 
             return new AuthReturn(newUser,true);
@@ -43,27 +40,26 @@ namespace PPI_projektas.Services
 
         public AuthReturn TryLogin(string name,string password)
         {
-            User? user = DataHandler.userExistsObject(name);
+            var user = DataHandler.userExistsObject(name);
             if (user == null)
                 return new AuthReturn(null, false, "User with such username not found.");
 
-            string hashedPassword = hash(password);
-            if (hashedPassword != user.GetPassword())
-                return new AuthReturn(null, false, "Password is incorrect");
-
-            return new AuthReturn(user, true);
+            var hashedPassword = Hash(password);
+            return hashedPassword != user.GetPassword() ? 
+                new AuthReturn(null, false, "Password is incorrect") 
+                : new AuthReturn(user, true);
         }
 
 
-        private string hash(string str)
+        private string Hash(string str)
         {
 
-            byte[] inputBytes = Encoding.UTF8.GetBytes(str);
+            var inputBytes = Encoding.UTF8.GetBytes(str);
 
-            using (SHA256 sha256 = SHA256.Create()) {
-                byte[] hashBytes = sha256.ComputeHash(inputBytes);
+            using (var sha256 = SHA256.Create()) {
+                var hashBytes = sha256.ComputeHash(inputBytes);
 
-                string hashString = BitConverter.ToString(hashBytes).Replace("-", "").ToLower();
+                var hashString = BitConverter.ToString(hashBytes).Replace("-", "").ToLower();
                 return hashString;
             }
         }

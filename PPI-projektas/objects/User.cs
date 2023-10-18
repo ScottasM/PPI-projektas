@@ -21,19 +21,19 @@ public class User : Entity
     [JsonInclude] public List<Guid> GroupsGuids;
 
     public User () {} // For deserialization
-
-    public User(string name, string password, string email, bool createGUID = true) : this(name, password, createGUID)
-    {
-        _email = email;
-    }
     
-    public User(string name, string password, bool createGUID = true) : base(createGUID)
+    public User(string name, string password, bool createGuid = true) : base(createGuid)
     {
         Username = name;
         _password = password;
         FavoriteNotesGuids = new List<Guid>();
         CreatedNotesGuids = new List<Guid>();
         GroupsGuids = new List<Guid>();
+    }
+    
+    public User(string name, string password, string email, bool createGuid = true) : this(name, password, createGuid)
+    {
+        _email = email;
     }
 
     public string GetUsername() => Username;

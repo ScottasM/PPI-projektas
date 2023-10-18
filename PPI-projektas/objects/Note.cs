@@ -1,6 +1,5 @@
 ﻿using PPI_projektas.objects.abstractions;
 using System.Text.Json.Serialization;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace PPI_projektas.objects;
 
@@ -18,7 +17,7 @@ public class Note : Entity, IComparable<Note>
 	
 	public Note () {} // For deserialization
 
-	public Note(User author, bool createGUID = true) : base(createGUID)
+	public Note(User author, bool createGuid = true) : base(createGuid)
   {
     Name = "";
 		Author = author;
@@ -29,16 +28,16 @@ public class Note : Entity, IComparable<Note>
   
     public int CompareTo(Note otherNote)
     {
-        int tagComparison = Tags.Count.CompareTo(otherNote.Tags.Count);
+        var tagComparison = Tags.Count.CompareTo(otherNote.Tags.Count);
         if (tagComparison != 0) {
             return tagComparison;
         }
 
-        int authorComparison = String.Compare(Author.GetUsername(), otherNote.Author.GetUsername(), StringComparison.OrdinalIgnoreCase);
+        var authorComparison = String.Compare(Author.GetUsername(), otherNote.Author.GetUsername(), StringComparison.OrdinalIgnoreCase);
         if (authorComparison != 0) {
             return authorComparison;
         }
-        int textComparison = String.Compare(Text, otherNote.Text, StringComparison.OrdinalIgnoreCase);
+        var textComparison = String.Compare(Text, otherNote.Text, StringComparison.OrdinalIgnoreCase);
         if (textComparison != 0) {
             return textComparison;
         }

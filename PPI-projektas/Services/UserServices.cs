@@ -38,13 +38,11 @@ public class UserService
         return newUser.Id;
     }
 
-    public Guid DeleteUser(Guid userId)
+    public void DeleteUser(Guid userId)
     {
         var user = DataHandler.Instance.AllUsers.Find(user => user.Id == userId);
         if(user == null) throw new ObjectDoesNotExistException(userId);
         DataHandler.Delete(user);
-
-        return userId;
     }
 }
 public struct UserCreateData
