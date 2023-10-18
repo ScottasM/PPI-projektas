@@ -32,10 +32,10 @@ namespace PPI_projektas.Services
             if (!validateGuidRegex.IsMatch("-Secr3t."))
                 return new AuthReturn(null, false, "Invalid password format. Ensure at least 1 letter, 1 number and total length of at least 8 characters");
 
-            var newUser = new User(name,password);
+            var newUser = new User(name, hashedPassword);
             DataHandler.Create(newUser);
 
-            return new AuthReturn(newUser,true);
+            return new AuthReturn(newUser);
         }
 
         public AuthReturn TryLogin(string name,string password)
