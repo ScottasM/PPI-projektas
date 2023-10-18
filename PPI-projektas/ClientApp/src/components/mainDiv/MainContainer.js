@@ -12,17 +12,16 @@ export class MainContainer extends Component {
 
     constructor(props) {
         super(props);
-    }
-    
-    state = {
-        mounted: false,
-        displayGroupCreateMenu: false,
-        groupConfigMenuType: 'create',
-        displayLoginMenu: false,
-        displaySignInMenu: false,
-        noteId: '',
-        notes: [],
-        showNote: false
+        this.state = {
+            mounted: false,
+            displayGroupCreateMenu: false,
+            groupConfigMenuType: 'create',
+            displayLoginMenu: false,
+            displaySignInMenu: false,
+            noteId: '',
+            notes: [],
+            showNote: false
+        }
     }
     
     componentDidMount() {
@@ -146,7 +145,6 @@ export class MainContainer extends Component {
 
                 {this.state.notes == null || this.state.notes.length === 0 ? <p>No notes found.</p> : !this.state.showNote && <NoteDisplay notes={this.state.notes} openNote={this.openNote}/>}
                 {this.state.showNote && <NoteHub noteId={this.state.noteId} exitNote={this.exitNote}/>}
-                {this.state.displayGroupCreateMenu && <GroupCreateMenu fetchGroupList={this.props.fetchGroupList} toggleGroupCreateMenu={this.toggleGroupCreateMenu} />}
 
             </div>
         );
