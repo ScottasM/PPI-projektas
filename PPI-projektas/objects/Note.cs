@@ -38,7 +38,7 @@ public class Note : Entity, IComparable<Note>
         if (authorComparison != 0) {
             return authorComparison;
         }
-        int textComparison = String.Compare(text, otherNote.text, StringComparison.OrdinalIgnoreCase);
+        int textComparison = String.Compare(Text, otherNote.Text, StringComparison.OrdinalIgnoreCase);
         if (textComparison != 0) {
             return textComparison;
         }

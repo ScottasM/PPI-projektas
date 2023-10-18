@@ -43,18 +43,20 @@ export class NoteEditor extends Component {
                         showNotSavedMessage: false
                     });
             })
-            .catch((error) => 
-                console.error('There was a problem with the fetch operation:', error));
+            .catch((error) => {
+                this.props.changeDisplay(0, error);
+                console.error('There was a problem with the fetch operation:', error);
+            });
     }
     
     handleExit = () => {
         if (this.state.saved)
         {
             this.props.transferChanges(this.state.noteName, this.state.noteTags, this.state.noteText);
-            this.props.closeEditor();
+            this.props.changeDisplay(1, '');
         }
         else if (this.state.showNotSavedMessage)
-            this.props.closeEditor();
+            this.props.changeDisplay(1, '');
         else
             this.setState({
                 showNotSavedMessage: true

@@ -9,7 +9,7 @@ export class NoteViewer extends Component {
     render() {
         return <div>
             <h2>{this.props.noteName}</h2>
-            <button onClick={this.props.openEditor}>
+            <button onClick={() => this.props.changeDisplay(2, '')}>
                 Edit
             </button>
             <button onClick={this.props.exitNote}>
