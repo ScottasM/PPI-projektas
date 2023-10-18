@@ -1,6 +1,7 @@
 using PPI_projektas.Exceptions;
 using PPI_projektas.objects;
 using PPI_projektas.objects.abstractions;
+using PPI_projektas.Services.Response;
 using PPI_projektas.Utils;
 
 namespace PPI_projektas.Services;
@@ -33,17 +34,9 @@ public class GroupService
     {
 
         // var owner = FindObjectById(ownerId, DataHandler.Instance.AllUsers);
-
-        var members = new List<User>();
-        for (var i = 0; i < 3; i++)
-        {
-            var user = new User($"User + {i}", " ");
-            DataHandler.Create(user);
-            members.Add(user);
-        }
         
         // var group = new Group(groupName, owner);
-        var group = new Group(groupName, new User(), members);
+        var group = new Group(groupName, new User());
         DataHandler.Create(group);
 
         return group.Id;
@@ -88,16 +81,5 @@ public class GroupService
         if (obj == null) throw new ObjectDoesNotExistException(objectId);
 
         return obj;
-    }
-
-    public struct ObjectDataItem
-    {
-        public Guid Id { get; set; }
-        public string Name { get; set; }
-        public ObjectDataItem(Guid id, string name)
-        {
-            Id = id;
-            Name = name;
-        }
     }
 }

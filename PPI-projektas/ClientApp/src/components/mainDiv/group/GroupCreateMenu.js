@@ -53,7 +53,7 @@ export class GroupCreateMenu extends Component {
 
             const userData = responseData.map(user => ({
                 id: user.id,
-                username: user.username
+                name: user.name
             }));
 
             this.setState({ users: userData});
@@ -72,7 +72,7 @@ export class GroupCreateMenu extends Component {
 
             const memberData = responseData.map(user => ({
                 id: user.id,
-                username: user.name
+                name: user.name
             }));
 
             this.setState({ members: memberData});

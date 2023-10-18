@@ -76,7 +76,7 @@ export class UserSelection extends Component {
                         //TODO: FIX SCROLLING
                         <div key={user.id} className="scroll-item">
                             <div className="item-content">
-                                <p>{user.username}</p>
+                                <p>{user.name}</p>
                                     <button type="button" className="add-user rounded-circle">
                                         <MdPersonAddAlt/>
                                     </button>
@@ -89,7 +89,7 @@ export class UserSelection extends Component {
                     {this.props.members.map((member) => (
                         <div key={member.id} className="scroll-item">
                             <div className="item-content">
-                                <p>{member.username}</p>
+                                <p>{member.name}</p>
                                 <button type="button" className="remove-user rounded-circle">
                                     <MdOutlinePersonRemove/>
                                 </button>
