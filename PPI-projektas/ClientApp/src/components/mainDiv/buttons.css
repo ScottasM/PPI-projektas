@@ -1,6 +1,14 @@
 .creatingButtonsDiv {
     height: 50px;
     margin-top: 10px;
+    display: inline-block;
+}
+
+.registerButtonsDiv {
+    height: 50px;
+    margin-top: 10px;
+    display: inline-block;
+    float: right;
 }
 
 .create-button {
@@ -64,4 +72,23 @@
 
 .create-button:active {
     padding-bottom: 10px;
+}
+
+.add-user, .remove-user {
+    aspect-ratio: 1/1;
+    margin-left: 3px;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.add-user {
+    background-color: #68ad32;
+}
+
+.remove-user {
+    background-color: #ee192b;
 }

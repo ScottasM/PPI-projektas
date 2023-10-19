@@ -10,9 +10,9 @@ namespace PPI_projektas.Utils
         
 
         private Dictionary<Type, string> _filePaths = new Dictionary<Type, string>(3) {
-            {typeof(User),"Users.txt"},
-            {typeof(Group),"Groups.txt"},
-            {typeof(Note),"Notes.txt"}
+            {typeof(User),"Users.json"},
+            {typeof(Group),"Groups.json"},
+            {typeof(Note),"Notes.json"}
         };
 
         private string? SerializeList<T>(List<T> obj)
@@ -56,11 +56,11 @@ namespace PPI_projektas.Utils
         
         public void SaveObject<T>(T obj) where T : Entity
         {
-            List<T> list = LoadList<T>();
+            var list = LoadList<T>();
             if (list == null)
                 return;
 
-            int index = list.FindIndex(inst => inst.Id == obj.Id) ;
+            var index = list.FindIndex(inst => inst.Id == obj.Id) ;
             list[index] = obj;
 
             SaveList(list);

@@ -12,10 +12,12 @@
 }
 
 .groupCreateMenu {
+    width: 600px;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     background-color: #1899D6;
+    overflow: hidden;
 }
 
 .group-container {
@@ -56,4 +58,43 @@
     padding: 8px 16px;
     color: #000000;
     cursor: pointer;
+}
+
+.scroll-container {
+    height: fit-content;
+    white-space: nowrap;
+    display: inline-block;
+    flex-direction: row;
+
+    transition: transform 0.3s ease;
+    
+    scrollbar-width: none;
+    -webkit-scrollbar-width: none;
+}
+
+.scroll-container::-webkit-scrollbar {
+    display: none;
+}
+
+.scroll-item {
+    flex: 0 0 auto;
+    padding-left: 5px;
+    padding-right: 5px;
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    margin-right: 10px;
+    color: black;
+    white-space: normal;
+    display: inline-block;
+    flex-direction: row;
+}
+
+.item-content {
+    display: flex;
+    align-items: center;
+}
+
+.item-content p {
+    margin: 0;
+    flex: 1;
 }

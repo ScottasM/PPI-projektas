@@ -7,9 +7,9 @@ namespace PPI_projektas.Utils
 
         public static DataHandler Instance;
 
-        public List<User> AllUsers = new List<User>();
-        public List<Group> AllGroups = new List<Group>();
-        public List<Note> AllNotes = new List<Note>();
+        public List<User> AllUsers = new();
+        public List<Group> AllGroups = new();
+        public List<Note> AllNotes = new();
 
         private SaveHandler _saveHandler;
 
@@ -41,18 +41,18 @@ namespace PPI_projektas.Utils
 
 
             // assign loaded guids to actual objects
-            foreach(Group group in AllGroups) {
+            foreach(var group in AllGroups) {
                 group.Owner = AllUsers.Find(inst => inst.Id == group.OwnerGuid);
 
-                foreach (Guid guid in group.MembersGuid) group.AddUser(AllUsers.Find(inst => inst.Id == guid));
-                foreach (Guid guid in group.NotesGuid) group.AddNote(AllNotes.Find(inst => inst.Id == guid));
+                group.LoadMembers();
+                group.LoadNotes();
             }
-            foreach(User user in AllUsers) {
-                foreach (Guid guid in user.CreatedNotesGuids) user.AddCreatedNote(AllNotes.Find(inst => inst.Id == guid));
-                foreach (Guid guid in user.FavoriteNotesGuids) user.AddCreatedNote(AllNotes.Find(inst => inst.Id == guid));
-                foreach (Guid guid in user.GroupsGuids) user.AddGroup(AllGroups.Find(inst => inst.Id == guid));
+            foreach(var user in AllUsers) {
+                user.LoadCreatedNotes();
+                user.LoadFavoriteNotes();
+                user.LoadGroups();
             }
-            foreach (Note note in AllNotes) note.Author = AllUsers.Find(inst => inst.Id == note.AuthorGuid);
+            foreach (var note in AllNotes) note.Author = AllUsers.Find(inst => inst.Id == note.AuthorGuid);
 
             _state = FileState.Ready;
 
@@ -77,7 +77,6 @@ namespace PPI_projektas.Utils
 
                 _state = FileState.Ready;
             }
-
         }
 
         public static void Create<T>(T obj) 
@@ -88,14 +87,17 @@ namespace PPI_projektas.Utils
             if (obj is Group) {
                 var obje = obj as Group;
                 Instance.AllGroups.Add(obje);
+                Instance._saveHandler.SaveList(Instance.AllGroups);
             }
             else if (obj is User) {
                 var obje = obj as User;
                 Instance.AllUsers.Add(obje);
+                Instance._saveHandler.SaveList(Instance.AllUsers);
             }
             else if (obj is Note) {
                 var obje = obj as Note;
                 Instance.AllNotes.Add(obje);
+                Instance._saveHandler.SaveList(Instance.AllNotes);
             }
         }
 
@@ -106,15 +108,28 @@ namespace PPI_projektas.Utils
             if (obj is Group) {
                 var obje = obj as Group;
                 Instance.AllGroups.Remove(obje);
+                Instance._saveHandler.SaveList(Instance.AllGroups);
             }
             else if (obj is User) {
                 var obje = obj as User;
                 Instance.AllUsers.Remove(obje);
+                Instance._saveHandler.SaveList(Instance.AllUsers);
             }
             else if (obj is Note) {
                 var obje = obj as Note;
                 Instance.AllNotes.Remove(obje);
+                Instance._saveHandler.SaveList(Instance.AllNotes);
             }
+        }
+
+        public static bool userExists(string username)
+        {
+            return Instance.AllUsers.Any(inst => inst.GetUsername() == username);
+        }
+
+        public static User? userExistsObject(string username)
+        {
+            return Instance.AllUsers.Find(inst => inst.GetUsername() == username);
         }
     }
 }

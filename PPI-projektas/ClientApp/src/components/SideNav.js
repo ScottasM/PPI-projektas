@@ -16,7 +16,9 @@ export class SideNav extends Component {
         return (
             <nav className="sidenav">
                 {this.props.groups.map((group, index) => (
-                    <Group fetchGroupList={this.props.fetchGroupList} groupId={group.id} key={group.id} groupInitials={group.name.substring(0, 3)} />
+                    <Group 
+                        fetchGroupList={this.props.fetchGroupList} toggleGroupEditMenu={this.props.toggleGroupEditMenu}
+                        groupId={group.id} key={group.id} groupInitials={group.name.substring(0, 3)} />
                 ))}
                 <div className="settings-div position-absolute">
                     <IconContext.Provider value={{ size: "2em" }}>
