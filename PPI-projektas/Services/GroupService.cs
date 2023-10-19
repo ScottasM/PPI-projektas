@@ -32,7 +32,6 @@ public class GroupService
     
     public Guid CreateGroup(Guid ownerId, string groupName)
     {
-
         // var owner = FindObjectById(ownerId, DataHandler.Instance.AllUsers);
         
         // var group = new Group(groupName, owner);
