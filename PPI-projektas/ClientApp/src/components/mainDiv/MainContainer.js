@@ -15,7 +15,7 @@ export class MainContainer extends Component {
         super(props);
     }
     
-    this.state = {
+    state = {
         displayGroupCreateMenu: false,
         groupConfigMenuType: 'create',
         displayLoginMenu: false,

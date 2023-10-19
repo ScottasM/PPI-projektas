@@ -17,7 +17,7 @@ namespace PPI_projektas.Controllers
             return Ok(new NoteService().GetNotes());
         }
 
-        [HttpGet("open/{noteId:guid}")]
+        [HttpGet("openNote/{noteId:guid}")]
         public IActionResult OpenNote(Guid noteId)
         {
             try

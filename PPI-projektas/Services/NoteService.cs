@@ -1,4 +1,5 @@
 ﻿using PPI_projektas.Exceptions;
+using PPI_projektas.objects;
 using PPI_projektas.Services.Response;
 using PPI_projektas.Utils;
 
@@ -36,7 +37,7 @@ public class NoteService
         var note = DataHandler.Instance.AllNotes
             .Find(note => note.Id == noteId);
         
-        if (note == null) throw new ObjectDoesNotExistException(noteId);
+        if (note == null) throw new ObjectDoesNotExistException();
         if (note.AuthorId != userId) throw new UnauthorizedAccessException();
         
         note.Name = name;
