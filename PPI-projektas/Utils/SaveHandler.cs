@@ -6,15 +6,15 @@ namespace PPI_projektas.Utils
 {
     public class SaveHandler
     {
+
+        
+
         private Dictionary<Type, string> _filePaths = new Dictionary<Type, string>(3) {
             {typeof(User),"Users.json"},
             {typeof(Group),"Groups.json"},
             {typeof(Note),"Notes.json"}
         };
 
-
-
-        
         private string? SerializeList<T>(List<T> obj)
         {
             try {

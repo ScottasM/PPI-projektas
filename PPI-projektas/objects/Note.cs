@@ -10,9 +10,11 @@ public class Note : Entity, IComparable<Note>
 	[JsonIgnore] public User Author;
 
 	[JsonInclude] public Guid AuthorGuid;
-  
-	public List<string> Tags { get; set; }
-	
+
+  [JsonInclude] public string text;
+
+	public List<string> Tags { get; set; } 
+
 	[JsonInclude] public string Text;
 	
 	public Note () {} // For deserialization
