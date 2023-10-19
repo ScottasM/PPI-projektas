@@ -52,9 +52,9 @@ public class Group : Entity, IComparable<Group>
         }
     }
     
-    public void CreateNote(User author)
+    public void CreateNote(Guid authorId)
     {
-        var newNote = new Note(author);
+        var newNote = new Note(authorId);
         Notes.Add(newNote);
     }
     

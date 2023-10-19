@@ -1,5 +1,6 @@
 ﻿using System.Dynamic;
 using Microsoft.AspNetCore.Mvc;
+using PPI_projektas.Exceptions;
 using PPI_projektas.objects;
 using PPI_projektas.Services;
 
@@ -16,17 +17,59 @@ namespace PPI_projektas.Controllers
             return Ok(new NoteService().GetNotes());
         }
 
-        [HttpGet("open/{id}")]
-        public IActionResult OpenNote(Guid id)
+        [HttpGet("openNote/{noteId}")]
+        public IActionResult OpenNote(Guid noteId)
         {
-            return Ok(new NoteService().GetNote(id));
+            try
+            {
+                return Ok(new NoteService().GetNote(noteId));
+            }
+            catch (ObjectDoesNotExistException)
+            {
+                return NotFound();
+            }
+        }
+
+        [HttpPost("createNote")]
+        public IActionResult CreateNote([FromBody] Guid authorId)
+        {
+            return CreatedAtAction("CreateNote",new NoteService().CreateNote(authorId));
         }
 
         [HttpPost("updateNote/{noteId}")]
         public IActionResult UpdateNote(Guid noteId, [FromBody] Note noteData)
         {
-            new NoteService().UpdateNote(noteId, noteData.AuthorGuid, noteData.Name, noteData.Tags, noteData.Text);
-            return Ok();
+            try
+            {
+                new NoteService().UpdateNote(noteId, noteData.AuthorId, noteData.Name, noteData.Tags, noteData.Text);
+                return Ok();
+            }
+            catch (ObjectDoesNotExistException)
+            {
+                return NotFound();
+            }
+            catch (UnauthorizedAccessException)
+            {
+                return Unauthorized();
+            }
+        }
+
+        [HttpDelete("deleteNote/{noteId}")]
+        public IActionResult DeleteNote(Guid noteId, [FromBody] Guid authorId)
+        {
+            try
+            {
+                new NoteService().DeleteNote(noteId, authorId);
+                return NoContent();
+            }
+            catch (ObjectDoesNotExistException)
+            {
+                return NotFound();
+            }
+            catch (UnauthorizedAccessException)
+            {
+                return Unauthorized();
+            }
         }
     }
 }

@@ -109,10 +109,6 @@ export class MainContainer extends Component {
                 <CreatingLoginButtons toggleMenu={this.toggleLoginMenu} buttonName={{name: "Login"}} />
                 {this.state.displayLoginMenu && <UserLoginMenu />}
                 
-                
-                
-                
-
                 {this.state.displayNote ? <NoteHub display={1} noteId={this.state.noteId} exitNote={this.exitNote}/> : <NoteDisplay openNote={this.openNote}/>}
             </div>
         );

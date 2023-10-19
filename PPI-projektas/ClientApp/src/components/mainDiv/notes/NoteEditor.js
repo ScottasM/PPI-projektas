@@ -10,7 +10,8 @@ export class NoteEditor extends Component {
             noteTags: this.props.noteTags,
             noteText: this.props.noteText,
             saved: true,
-            showNotSavedMessage: false,
+            showNotSavedMessage: true,
+            showDeleteMessage: true,
             tag: ''
         }
     }
@@ -23,7 +24,7 @@ export class NoteEditor extends Component {
             Text: this.state.noteText
         };
 
-        await fetch(`http://localhost:5268/api/note/updatenote/${this.props.noteId}`, { // temporary localhost api url
+        fetch(`http://localhost:5268/api/note/updatenote/${this.props.noteId}`, { // temporary localhost api url
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -32,21 +33,45 @@ export class NoteEditor extends Component {
         })
             .then((response) => {
                 if (!response.ok) {
+                    alert(`Changes weren't saved!`);
                     this.setState({
-                        showNotSavedMessage: true
+                        showNotSavedMessage: false
                     });
                     throw new Error('Network response was not ok');
                 }
-                else
-                    this.setState({
-                        saved: true,
-                        showNotSavedMessage: false
-                    });
+                this.setState({
+                    saved: true,
+                    showNotSavedMessage: false
+                });
             })
-            .catch((error) => {
-                this.props.changeDisplay(0, error);
-                console.error('There was a problem with the fetch operation:', error);
+            .catch((error) =>
+                console.error('There was a problem with the fetch operation:', error));
+    }
+    
+    handleDelete = async () => {
+        if (this.state.showDeleteMessage) {
+            alert(`You're about to delete this note.`)
+            this.setState({
+                showDeleteMessage: false
             });
+        }
+            
+        fetch(`http://localhost:5268/api/note/updatenote/${this.props.noteId}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                AuthorGuid: '0f8fad5b-d9cb-469f-a165-70867728950e'
+            })
+        })
+            .then(response => {
+                if (!response.ok)
+                    throw new Error('Network response was not ok');
+                this.props.exitNote();
+            })
+            .catch(error => 
+                console.log('There was a problem with the fetch operation:', error));
     }
     
     handleExit = () => {
@@ -55,25 +80,31 @@ export class NoteEditor extends Component {
             this.props.transferChanges(this.state.noteName, this.state.noteTags, this.state.noteText);
             this.props.changeDisplay(1, '');
         }
-        else if (this.state.showNotSavedMessage)
-            this.props.changeDisplay(1, '');
-        else
+        else if (this.state.showNotSavedMessage) {
+            alert(`Changes weren't saved!`);
             this.setState({
-                showNotSavedMessage: true
+                showNotSavedMessage: false
             });
+        }
+        else
+            this.props.changeDisplay(1, '');
     }
     
     handleNameChange = (event) => {
         this.setState({
+            noteName: event.target.value,
             saved: false,
-            noteName: event.target.value
+            showNotSavedMessage: true,
+            showDeleteMessage: true
         })
     }
 
     handleTextChanged = (event) => {
         this.setState({
+            noteText: event.target.value,
             saved: false,
-            noteText: event.target.value
+            showNotSavedMessage: true,
+            showDeleteMessage: true
         })
     }
     
@@ -90,9 +121,11 @@ export class NoteEditor extends Component {
         const newTags = this.props.noteTags;
         newTags.splice(index, 1)
         this.setState({
-            noteTags: newTags, 
+            noteTags: newTags,
+            tag: '',
             saved: false,
-            tag: ''
+            showNotSavedMessage: true,
+            showDeleteMessage: true
         })
     }
 
@@ -101,8 +134,10 @@ export class NoteEditor extends Component {
         newTags.push(this.state.tag);
         this.setState({
             noteTags: newTags,
+            tag: '',
             saved: false,
-            tag: ''
+            showNotSavedMessage: true,
+            showDeleteMessage: true
         })
     }
 
@@ -116,9 +151,9 @@ export class NoteEditor extends Component {
             <button onClick={this.handleExit}>
                 Exit
             </button>
-            {this.state.showNotSavedMessage && <h2 color="red">
-                Changes weren't saved!
-            </h2>}
+            <button onClick={this.handleDelete}>
+                Delete
+            </button>
             <br/>
             <TagList noteTags={this.state.noteTags}/>
             <input type='text' width='50px' id='tag-name' name='tag-name' value={this.state.tag} onChange={this.handleTagChanged}/>
