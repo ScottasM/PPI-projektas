@@ -70,6 +70,7 @@ export class UserSelection extends Component {
                     value={this.props.userSearch}
                     onChange={this.props.handleUserSearch}
                 />
+                <br/>
                 <div className="scroll-container" ref={this.scrollContainerRef}>
                     {this.props.users.map((user) => (
                         //TODO: FIX SCROLLING
