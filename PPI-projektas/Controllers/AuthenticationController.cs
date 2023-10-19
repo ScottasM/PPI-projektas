@@ -18,16 +18,16 @@ namespace PPI_projektas.Controllers
         {
             service = LazySingleton<AuthenticationService>.Instance;
             
-            AuthReturn authReturn = service.TryRegister(authData.Username, authData.Password);
+            var authReturn = service.TryRegister(authData.Username, authData.Password);
             if(authReturn == null) {
                 return BadRequest("Register failed. Please try again later");
             }
 
-            if (!authReturn.success) {
-                return BadRequest(authReturn.errorMessage);
+            if (!authReturn.Success) {
+                return BadRequest(authReturn.ErrorMessage);
             }
 
-            return CreatedAtAction("Register", new { id = authReturn.user.Id, username = authReturn.user.GetUsername() }, authReturn.user);
+            return CreatedAtAction("Register", new { id = authReturn.User.Id, username = authReturn.User.GetUsername() }, authReturn.User);
         }
 
 
@@ -36,16 +36,16 @@ namespace PPI_projektas.Controllers
         {
             service = LazySingleton<AuthenticationService>.Instance;
 
-            AuthReturn authReturn = service.TryLogin(authData.Username, authData.Password);
+            var authReturn = service.TryLogin(authData.Username, authData.Password);
             if (authReturn == null) {
                 return BadRequest("Login failed. Please try again later");
             }
 
-            if (!authReturn.success) {
-                return BadRequest(authReturn.errorMessage);
+            if (!authReturn.Success) {
+                return BadRequest(authReturn.ErrorMessage);
             }
 
-            return CreatedAtAction("Login", new { id = authReturn.user.Id, username = authReturn.user.GetUsername() }, authReturn.user);
+            return CreatedAtAction("Login", new { id = authReturn.User.Id, username = authReturn.User.GetUsername() }, authReturn.User);
         }
     }
 

@@ -1,5 +1,6 @@
 using PPI_projektas.Exceptions;
 using PPI_projektas.objects;
+using PPI_projektas.Services.Response;
 using PPI_projektas.Utils;
 
 namespace PPI_projektas.Services;
@@ -10,21 +11,20 @@ public class UserService
     {
         return !String.IsNullOrEmpty(data);
     }
-    public bool ValidateData<T>(List<T> data)
+    public bool ValidateData<T>(List<T>? data)
     {
-        if (data == null) return false;
-        else return true;
+        return data != null;
     }
     public bool ValidateData(UserCreateData data)
     {
         return !data.Equals(default(UserCreateData));
     }
 
-    public List<SimpleUserData> GetUsersByName(string name)
+    public List<ObjectDataItem> GetUsersByName(string name)
     {
         var users = DataHandler.Instance.AllUsers
             .Where(user => user.GetUsername().Contains(name))
-            .Select(user => new SimpleUserData(user.Id, user.GetUsername()))
+            .Select(user => new ObjectDataItem(user.Id, user.GetUsername()))
             .ToList();
 
         return users;
@@ -38,24 +38,11 @@ public class UserService
         return newUser.Id;
     }
 
-    public Guid DeleteUser(Guid userId)
+    public void DeleteUser(Guid userId)
     {
         var user = DataHandler.Instance.AllUsers.Find(user => user.Id == userId);
         if(user == null) throw new ObjectDoesNotExistException(userId);
         DataHandler.Delete(user);
-
-        return userId;
-    }
-
-    public struct SimpleUserData
-    {
-        public Guid Id { get; set; }
-        public string Username { get; set; }
-        public SimpleUserData(Guid id, string name)
-        {
-            Id = id;
-            Username = name;
-        }
     }
 }
 public struct UserCreateData

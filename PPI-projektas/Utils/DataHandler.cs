@@ -4,6 +4,7 @@ namespace PPI_projektas.Utils
 {
     public class DataHandler
     {
+
         public static DataHandler Instance;
 
         public List<User> AllUsers = new();
@@ -11,6 +12,15 @@ namespace PPI_projektas.Utils
         public List<Note> AllNotes = new();
 
         private SaveHandler _saveHandler;
+
+        enum FileState
+        {
+            Ready,
+            Saving,
+            Reading
+        }
+
+        private FileState _state = FileState.Ready;
 
         public DataHandler()
         {
@@ -21,6 +31,9 @@ namespace PPI_projektas.Utils
             #endregion
 
             _saveHandler = LazySingleton<SaveHandler>.Instance;
+
+
+            _state = FileState.Reading;
 
             AllUsers = _saveHandler.LoadList<User>();
             AllNotes = _saveHandler.LoadList<Note>();
@@ -34,11 +47,13 @@ namespace PPI_projektas.Utils
                 group.LoadMembers();
                 group.LoadNotes();
             }
-            foreach(User user in AllUsers) {
+            foreach(var user in AllUsers) {
                 user.LoadCreatedNotes();
                 user.LoadFavoriteNotes();
                 user.LoadGroups();
             }
+          
+            _state = FileState.Ready;
 
             SaveTimeout(15);
         }
@@ -48,14 +63,22 @@ namespace PPI_projektas.Utils
         {
             while (true) {
                 await Task.Delay(TimeoutSeconds * 1000);
+
+                if(_state != FileState.Ready) { // dont save if we're reading from the files
+                    continue;
+                }
+
+                _state = FileState.Saving;
+
                 _saveHandler.SaveList(AllGroups);
                 _saveHandler.SaveList(AllUsers);
                 _saveHandler.SaveList(AllNotes);
-            }
 
+                _state = FileState.Ready;
+            }
         }
 
-        public static void Create<T>(T obj) // not pretty, but should work
+        public static void Create<T>(T obj) 
         {
             if (obj == null)
                 return;

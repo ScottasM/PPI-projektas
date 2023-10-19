@@ -17,7 +17,7 @@ namespace PPI_projektas.Controllers
             return Ok(new NoteService().GetNotes());
         }
 
-        [HttpGet("openNote/{noteId}")]
+        [HttpGet("open/{noteId:guid}")]
         public IActionResult OpenNote(Guid noteId)
         {
             try
@@ -37,7 +37,7 @@ namespace PPI_projektas.Controllers
             return CreatedAtAction("CreateNote", noteId);
         }
 
-        [HttpPost("updateNote/{noteId}")]
+        [HttpPost("updateNote/{noteId:guid}")]
         public IActionResult UpdateNote(Guid noteId, [FromBody] Note noteData)
         {
             try

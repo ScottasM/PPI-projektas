@@ -1,15 +1,15 @@
 ﻿using PPI_projektas.Exceptions;
-using PPI_projektas.objects;
+using PPI_projektas.Services.Response;
 using PPI_projektas.Utils;
 
 namespace PPI_projektas.Services;
 
 public class NoteService
 {
-    public List<NoteData> GetNotes()
+    public List<ObjectDataItem> GetNotes()
     {
         return DataHandler.Instance.AllNotes
-            .Select(note => new NoteData(note.Name, note.Id))
+            .Select(note => new ObjectDataItem(note.Id, note.Name))
             .ToList();
     }
 
@@ -53,19 +53,6 @@ public class NoteService
         if (note.AuthorId != authorId) throw new UnauthorizedAccessException();
         
         DataHandler.Delete(note);
-    }
-
-    public struct NoteData
-    {
-        public string Name { get; set; }
-
-        public Guid Id { get; set; }
-
-        public NoteData(string name, Guid id)
-        {
-            Name = name;
-            Id = id;
-        }
     }
 
     public struct OpenedNoteData

@@ -1,6 +1,5 @@
 ﻿using PPI_projektas.objects.abstractions;
 using System.Text.Json.Serialization;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace PPI_projektas.objects;
 
@@ -11,7 +10,7 @@ public class Note : Entity, IComparable<Note>
 	public string Name { get; set; }
 
 	public List<string> Tags { get; set; }
-	
+  
 	[JsonInclude] public string Text;
 	
 	public Note () {} // For deserialization

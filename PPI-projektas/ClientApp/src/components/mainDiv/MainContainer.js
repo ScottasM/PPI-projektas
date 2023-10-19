@@ -15,7 +15,7 @@ export class MainContainer extends Component {
         super(props);
     }
     
-    state = {
+    this.state = {
         displayGroupCreateMenu: false,
         groupConfigMenuType: 'create',
         displayLoginMenu: false,
@@ -132,7 +132,6 @@ export class MainContainer extends Component {
                 {this.state.displayLoginMenu && <UserLoginMenu />}
                 
                 <CreatingNotesButton handleCreateNote={this.handleCreateNote} />
-                
                 {this.state.displayNote ? <NoteHub display={this.state.noteHubDisplay} noteId={this.state.noteId} exitNote={this.exitNote} /> : <NoteDisplay openNote={this.openNote} />}
             </div>
         );
