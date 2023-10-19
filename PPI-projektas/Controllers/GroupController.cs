@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using PPI_projektas.Exceptions;
 using PPI_projektas.Services;
+using PPI_projektas.Services.Response;
 
 namespace PPI_projektas.Controllers
 
@@ -15,30 +16,22 @@ namespace PPI_projektas.Controllers
         {
             if (ownerId == null) return BadRequest("InvalidData");
             
-            var groupService = new GroupService();
-
-            var groupData = groupService.GetGroupsByOwner((Guid)ownerId);
-            
-            return Ok(groupData);
+            return Ok(new GroupService().GetGroupsByOwner((Guid) ownerId));
         }
 
         [HttpGet("group-members/{groupId:guid}")]
         public IActionResult GetGroupMembers(Guid? groupId)
         {
             if (groupId == null) return BadRequest("InvalidData");
-
-            List<GroupService.ObjectDataItem> users;
+            
             try
             {
-                var groupService = new GroupService();
-                users = groupService.GetUsersInGroup((Guid)groupId);
+                return Ok(new GroupService().GetUsersInGroup((Guid)groupId));
             }
             catch (ObjectDoesNotExistException)
             {
                 return BadRequest("GROUP-ERROR");
             }
-
-            return Ok(users);
         }
 
         [HttpPost("creategroup")]
@@ -46,19 +39,17 @@ namespace PPI_projektas.Controllers
         {
             if (groupData == null) return BadRequest("InvalidData");
             
-            Guid groupId;
             try
             {
                 var groupService = new GroupService();
-                groupId = groupData.MemberIds == null ? groupService.CreateGroup(groupData.OwnerId, groupData.GroupName)
+                var groupId = groupData.MemberIds == null ? groupService.CreateGroup(groupData.OwnerId, groupData.GroupName)
                     : groupService.CreateGroup(groupData.OwnerId, groupData.GroupName, groupData.MemberIds);
+                return CreatedAtAction("CreateGroup", groupId);
             }
             catch (ObjectDoesNotExistException)
             {
                 return BadRequest("USER-ERROR");
             }
-            
-            return CreatedAtAction("CreateGroup", groupId);
         }
         
         //TODO: group edit POST with route "editgroup"

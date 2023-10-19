@@ -34,12 +34,12 @@ namespace PPI_projektas.Utils
                 group.LoadMembers();
                 group.LoadNotes();
             }
-            foreach(User user in AllUsers) {
+            foreach(var user in AllUsers) {
                 user.LoadCreatedNotes();
                 user.LoadFavoriteNotes();
                 user.LoadGroups();
             }
-            foreach (Note note in AllNotes) note.Author = AllUsers.Find(inst => inst.Id == note.AuthorGuid);
+            foreach (var note in AllNotes) note.Author = AllUsers.Find(inst => inst.Id == note.AuthorGuid);
 
             SaveTimeout(15);
         }
@@ -53,7 +53,6 @@ namespace PPI_projektas.Utils
                 _saveHandler.SaveList(AllUsers);
                 _saveHandler.SaveList(AllNotes);
             }
-
         }
 
         public static void Create<T>(T obj) // not pretty, but should work

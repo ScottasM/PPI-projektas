@@ -38,7 +38,7 @@ namespace PPI_projektas.Controllers
             var userService = new UserService();
             try
             {
-                var userGuidId = userService.DeleteUser(id);
+                userService.DeleteUser(id);
                 return NoContent();
             }
             catch (ObjectDoesNotExistException)
