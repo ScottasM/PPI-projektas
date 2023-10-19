@@ -30,10 +30,11 @@ namespace PPI_projektas.Controllers
             }
         }
 
-        [HttpPost("createNote")]
-        public IActionResult CreateNote([FromBody] Guid authorId)
+        [HttpPost("createNote/{authorId}")]
+        public IActionResult CreateNote(Guid authorId)
         {
-            return CreatedAtAction("CreateNote",new NoteService().CreateNote(authorId));
+            var noteId = new NoteService().CreateNote(authorId);
+            return CreatedAtAction("CreateNote", noteId);
         }
 
         [HttpPost("updateNote/{noteId}")]
@@ -54,12 +55,12 @@ namespace PPI_projektas.Controllers
             }
         }
 
-        [HttpDelete("deleteNote/{noteId}")]
-        public IActionResult DeleteNote(Guid noteId, [FromBody] Guid authorId)
+        [HttpDelete("deleteNote/{noteId}/{userId}")]
+        public IActionResult DeleteNote(Guid noteId, Guid userId)
         {
             try
             {
-                new NoteService().DeleteNote(noteId, authorId);
+                new NoteService().DeleteNote(noteId, userId);
                 return NoContent();
             }
             catch (ObjectDoesNotExistException)

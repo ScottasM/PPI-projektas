@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
-import { NoteDisplay } from "./Notes/NoteDisplay";
-import {NoteHub} from "./Notes/NoteHub";
+import { NoteDisplay } from "./notes/NoteDisplay";
+import { NoteHub } from "./notes/NoteHub";
 import { GroupCreateMenu } from "./group/GroupCreateMenu";
 import { UserLoginMenu } from "./login/UserLoginMenu";
 import { UserSignInMenu } from "./login/UserSignInMenu";
 import { CreatingButtons } from "./CreatingButtons";
 import { CreatingLoginButtons } from "./login/CreatingLoginButtons";
+import { CreatingNotesButton } from "./notes/CreatingNotesButton";
 
 export class MainContainer extends Component {
     static displayName = MainContainer.name;
@@ -20,7 +21,8 @@ export class MainContainer extends Component {
         displayLoginMenu: false,
         displaySignInMenu: false,
         noteId: '',
-        displayNote: false
+        displayNote: false,
+        noteHubDisplay: 1
     }
     
     componentDidUpdate(prevProps) {
@@ -40,6 +42,25 @@ export class MainContainer extends Component {
                     this.toggleGroupConfigMenu();
             }
         }
+    }
+    
+    handleCreateNote = async () => {
+        fetch(`http://localhost:5268/api/note/createNote/0f8fad5b-d9cb-469f-a165-70867728950e`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+            .then(async response => {
+                if (!response.ok)
+                    throw new Error('Network response was not ok');
+                return await response.json();
+            })
+            .then(noteId =>
+                this.openNote(noteId, 2)
+            )
+            .catch(error =>
+                console.error('There was a problem with the fetch operation:', error));
     }
     
     toggleGroupConfigMenu = () => {
@@ -78,9 +99,10 @@ export class MainContainer extends Component {
  
     }
 
-    openNote = id => {
+    openNote = (noteId, display) => {
         this.setState(prevState => ({
-            noteId: id,
+            noteId: noteId,
+            noteHubDisplay: display,
             displayNote: true
         }));
     }
@@ -109,7 +131,9 @@ export class MainContainer extends Component {
                 <CreatingLoginButtons toggleMenu={this.toggleLoginMenu} buttonName={{name: "Login"}} />
                 {this.state.displayLoginMenu && <UserLoginMenu />}
                 
-                {this.state.displayNote ? <NoteHub display={1} noteId={this.state.noteId} exitNote={this.exitNote}/> : <NoteDisplay openNote={this.openNote}/>}
+                <CreatingNotesButton handleCreateNote={this.handleCreateNote} />
+                
+                {this.state.displayNote ? <NoteHub display={this.state.noteHubDisplay} noteId={this.state.noteId} exitNote={this.exitNote} /> : <NoteDisplay openNote={this.openNote} />}
             </div>
         );
     }

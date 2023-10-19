@@ -28,16 +28,16 @@ public class NoteService
         var note = new Note(authorId);
         DataHandler.Create(note);
 
-        return note.AuthorId;
+        return note.Id;
     }
     
-    public void UpdateNote(Guid noteId, Guid authorId, string name, List<string> tags, string text)
+    public void UpdateNote(Guid noteId, Guid userId, string name, List<string> tags, string text)
     {
         var note = DataHandler.Instance.AllNotes
             .Find(note => note.Id == noteId);
         
         if (note == null) throw new ObjectDoesNotExistException(noteId);
-        if (note.AuthorId != authorId) throw new UnauthorizedAccessException();
+        if (note.AuthorId != userId) throw new UnauthorizedAccessException();
         
         note.Name = name;
         note.Tags = tags;

@@ -17,14 +17,19 @@ export class NoteEditor extends Component {
     }
 
     handlePost = async () => {
+        if (this.state.noteName === '')
+            await this.setState({
+                noteName: 'Untitled Note'
+            });
+        
         const noteData = {
-            AuthorGuid: '0f8fad5b-d9cb-469f-a165-70867728950e', // temporary static user id
+            AuthorId: '0f8fad5b-d9cb-469f-a165-70867728950e', // temporary static user id
             Name: this.state.noteName,
             Tags: this.state.noteTags,
             Text: this.state.noteText
         };
 
-        fetch(`http://localhost:5268/api/note/updatenote/${this.props.noteId}`, { // temporary localhost api url
+        fetch(`http://localhost:5268/api/note/updateNote/${this.props.noteId}`, { // temporary localhost api url
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -54,23 +59,18 @@ export class NoteEditor extends Component {
             this.setState({
                 showDeleteMessage: false
             });
-        }
-            
-        fetch(`http://localhost:5268/api/note/updatenote/${this.props.noteId}`, {
+        } else fetch(`http://localhost:5268/api/note/deleteNote/${this.props.noteId}/0f8fad5b-d9cb-469f-a165-70867728950e`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                AuthorGuid: '0f8fad5b-d9cb-469f-a165-70867728950e'
-            })
+            }
         })
             .then(response => {
                 if (!response.ok)
                     throw new Error('Network response was not ok');
                 this.props.exitNote();
             })
-            .catch(error => 
+            .catch(error =>
                 console.log('There was a problem with the fetch operation:', error));
     }
     

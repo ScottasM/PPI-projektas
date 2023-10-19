@@ -23,26 +23,23 @@ export class NoteDisplay extends Component {
     }
 
     fetchNotes = async () => {
-        try {
-            fetch('http://localhost:5268/api/note')
-                .then(async response => {
-                    if (!response.ok)
-                        throw new Error(`Network response was not ok`);
-                    return await response.json();
-                })
-                .then(data => {
-                    const notes = data.map(note => ({
-                        name: note.name,
-                        id: note.id
-                    }));
-                    this.setState({
-                        notes: notes
-                    });
-                })
-        }
-        catch (error) {
-            console.error('There was a problem with the fetch operation:', error);
-        }
+        fetch('http://localhost:5268/api/note')
+            .then(async response => {
+                if (!response.ok)
+                    throw new Error(`Network response was not ok`);
+                return await response.json();
+            })
+            .then(data => {
+                const notes = data.map(note => ({
+                    name: note.name,
+                    id: note.id
+                }));
+                this.setState({
+                    notes: notes
+                });
+            })
+            .catch(error =>
+                console.error('There was a problem with the fetch operation:', error));
     }
 
     render() {
