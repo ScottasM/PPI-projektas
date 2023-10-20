@@ -6,7 +6,11 @@ namespace PPI_projektas.Utils
 {
     public static class ExtendString
     {
-
+        public static bool ContainsCaseInsensitive(this string source, string substring)
+        {
+            return source?.IndexOf(substring, StringComparison.OrdinalIgnoreCase) > -1;
+        }
+        
         private static List<string> profanityFilter = new List<string>() {
             "idiot",
             "ass",
