@@ -41,9 +41,7 @@ namespace PPI_projektas.Controllers
             
             try
             {
-                var groupService = new GroupService();
-                var groupId = groupData.MemberIds == null ? groupService.CreateGroup(groupData.OwnerId, groupData.GroupName)
-                    : groupService.CreateGroup(groupData.OwnerId, groupData.GroupName, groupData.MemberIds);
+                var groupId = new GroupService().CreateGroup(groupData.OwnerId, groupData.GroupName, groupData.MemberIds);
                 return CreatedAtAction("CreateGroup", groupId);
             }
             catch (ObjectDoesNotExistException)
@@ -75,6 +73,6 @@ namespace PPI_projektas.Controllers
     {
         public string GroupName { get; set; }
         public Guid OwnerId { get; set; }
-        public List<Guid>? MemberIds { get; set; }
+        public List<Guid> MemberIds { get; set; }
     }
 }

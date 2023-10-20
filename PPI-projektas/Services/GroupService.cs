@@ -29,17 +29,6 @@ public class GroupService
 
         return users;
     }
-    
-    public Guid CreateGroup(Guid ownerId, string groupName)
-    {
-        // var owner = FindObjectById(ownerId, DataHandler.Instance.AllUsers);
-        
-        // var group = new Group(groupName, owner);
-        var group = new Group(groupName, new User());
-        DataHandler.Create(group);
-
-        return group.Id;
-    }
 
     public Guid CreateGroup(Guid ownerId, string groupName, List<Guid> groupMemberIds)
     {
