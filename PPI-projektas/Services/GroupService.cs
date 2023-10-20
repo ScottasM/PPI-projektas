@@ -51,9 +51,13 @@ public class GroupService
         group.Name = newName;
         
         var newMembers = newMemberIds.Select(id => FindObjectById(id, DataHandler.Instance.AllUsers)).ToList();
-        foreach (var user in newMembers.Where(user => !group.Members.Contains(user))) 
-            group.AddUser(user);
-        foreach (var member in group.Members.Where(member => !newMembers.Contains(member)))
+
+        var membersToAdd = newMembers.Where(user => !group.Members.Contains(user)).ToList();
+        foreach (var member in membersToAdd)
+            group.AddUser(member);
+
+        var membersToRemove = group.Members.Where(member => !newMembers.Contains(member)).ToList();
+        foreach (var member in membersToRemove)
             group.RemoveUser(member);
         
         new SaveHandler().SaveObject(group);
