@@ -83,8 +83,10 @@ export class UserSelection extends Component {
                 id: user.id,
                 name: user.name
             }));
-            
-            userData = userData.filter((el) => !this.props.members.includes(el));
+
+            userData = userData.filter(el =>
+                !this.props.members.some(member => member.id === el.id)
+            );
 
             this.setState({ users: userData});
         } catch (error) {

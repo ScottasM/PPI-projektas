@@ -76,7 +76,6 @@ export class MainContainer extends Component {
     }
     
     toggleGroupConfigMenu = () => {
-        console.log('called');
         if (!(this.state.displayGroupCreateMenu)) {
             this.setState({ displayLoginMenu: false, displaySignInMenu: false })
         }

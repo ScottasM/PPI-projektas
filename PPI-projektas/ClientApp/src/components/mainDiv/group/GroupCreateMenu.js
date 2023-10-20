@@ -61,9 +61,16 @@ export class GroupCreateMenu extends Component {
     handleSubmit = (event) => {
         event.preventDefault();
 
-        const { groupName } = this.state;
-        this.handlePost(groupName)
-        this.setState({ groupName: '' });
+        if(this.state.groupName)
+        {
+            const { groupName } = this.state;
+            this.handlePost(groupName)
+            this.setState({ groupName: '' });
+        }
+        else
+        {
+            alert('Group name must not be empty');
+        }
     };
     
    async handlePost(groupName) {
