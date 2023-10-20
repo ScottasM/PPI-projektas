@@ -70,12 +70,12 @@ export class GroupCreateMenu extends Component {
        
        const groupData = {
            GroupName: groupName,
-           OwnerId: '0f8fad5b-d9cb-469f-a165-70867728950e', // temporary static user id
+           Id: this.props.configType === 'create' ? '0f8fad5b-d9cb-469f-a165-70867728950e' : this.props.toggledGroup.id, // temporary static user id
            MemberIds : this.state.members.map(member => member.id)
        };
 
        await fetch(`http://localhost:5268/api/group/${this.props.configType}group`, { // temporary localhost api url
-           method: 'POST',
+           method: this.props.configType === 'create' ? 'POST' : 'PUT',
            headers: {
                'Content-Type': 'application/json',
            },
@@ -91,7 +91,7 @@ export class GroupCreateMenu extends Component {
            });
 
        this.props.fetchGroupList();
-       this.props.toggleGroupCreateMenu();
+       await this.props.toggleGroupCreateMenu();
     }
     
     render() {

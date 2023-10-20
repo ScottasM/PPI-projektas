@@ -41,7 +41,7 @@ namespace PPI_projektas.Controllers
             
             try
             {
-                var groupId = new GroupService().CreateGroup(groupData.OwnerId, groupData.GroupName, groupData.MemberIds);
+                var groupId = new GroupService().CreateGroup(groupData.Id, groupData.GroupName, groupData.MemberIds);
                 return CreatedAtAction("CreateGroup", groupId);
             }
             catch (ObjectDoesNotExistException)
@@ -51,6 +51,21 @@ namespace PPI_projektas.Controllers
         }
         
         //TODO: group edit POST with route "editgroup"
+        [HttpPut("editgroup")]
+        public IActionResult EditGroup([FromBody] GroupCreateData? groupData)
+        {
+            if (groupData == null) return BadRequest("InvalidData");
+            
+            try
+            {
+                new GroupService().EditGroup(groupData.Id, groupData.GroupName, groupData.MemberIds);
+                return Ok();
+            }
+            catch (ObjectDoesNotExistException)
+            {
+                return BadRequest("GROUP-ERROR");
+            }
+        }
 
         [HttpDelete("delete/{groupId:guid}")]
         public IActionResult Delete(Guid groupId)
@@ -72,7 +87,7 @@ namespace PPI_projektas.Controllers
     public record GroupCreateData
     {
         public string GroupName { get; set; }
-        public Guid OwnerId { get; set; }
+        public Guid Id { get; set; }
         public List<Guid> MemberIds { get; set; }
     }
 }

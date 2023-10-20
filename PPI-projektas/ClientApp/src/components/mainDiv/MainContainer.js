@@ -14,7 +14,7 @@ export class MainContainer extends Component {
         super(props);
         this.state = {
             mounted: false,
-            displayGroupCreateMenu: false,
+            displayGroupCreateMenu: this.props.displayGroupEditMenu,
             groupConfigMenuType: 'create',
             displayLoginMenu: false,
             displaySignInMenu: false,
@@ -76,13 +76,15 @@ export class MainContainer extends Component {
     }
     
     toggleGroupConfigMenu = () => {
+        console.log('called');
         if (!(this.state.displayGroupCreateMenu)) {
             this.setState({ displayLoginMenu: false, displaySignInMenu: false })
         }
         else{
-            this.setState({
+            this.setState((prevState) => ({
                 groupConfigMenuType: 'create',
-            })
+            }));
+            if(this.props.displayGroupEditMenu) this.props.toggleGroupEditMenu();
         }
         
         this.setState((prevState) => ({

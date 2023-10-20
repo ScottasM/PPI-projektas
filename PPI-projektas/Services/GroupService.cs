@@ -30,7 +30,7 @@ public class GroupService
         return users;
     }
 
-    public Guid CreateGroup(Guid ownerId, string groupName, List<Guid> groupMemberIds)
+    public Guid CreateGroup(Guid ownerId, string groupName, IEnumerable<Guid> groupMemberIds)
     {
         // var owner = FindObjectById(ownerId, DataHandler.Instance.AllUsers);
 
@@ -44,16 +44,19 @@ public class GroupService
     }
     
 
-    public void EditGroup(Guid groupId, string? optionalNewName = null, List<User>? optionalNewUsers = null)
+    public void EditGroup(Guid groupId, string newName, IEnumerable<Guid> newMemberIds)
     {
         var group = FindObjectById(groupId, DataHandler.Instance.AllGroups);
+
+        group.Name = newName;
         
-        if (optionalNewName != null) group.Name = optionalNewName;
-        if (optionalNewUsers != null)
-        {
-            foreach (var user in optionalNewUsers.Where(user => !group.Members.Contains(user)))
-                group.AddUser(user);
-        }
+        var newMembers = newMemberIds.Select(id => FindObjectById(id, DataHandler.Instance.AllUsers)).ToList();
+        foreach (var user in newMembers.Where(user => !group.Members.Contains(user))) 
+            group.AddUser(user);
+        foreach (var member in group.Members.Where(member => !newMembers.Contains(member)))
+            group.RemoveUser(member);
+        
+        new SaveHandler().SaveObject(group);
     }
 
     public void DeleteGroup(Guid groupId)
