@@ -1,7 +1,6 @@
-﻿using System.Dynamic;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using PPI_projektas.objects;
-using PPI_projektas.Services;
+using PPI_projektas.Services.Interfaces;
 
 namespace PPI_projektas.Controllers
 
@@ -10,22 +9,29 @@ namespace PPI_projektas.Controllers
     [Route("api/[controller]")]
     public class NoteController : ControllerBase
     {
+        private readonly INoteService _noteService;
+
+        public NoteController(INoteService noteService)
+        {
+            _noteService = noteService;
+        }
+        
         [HttpGet]
         public IActionResult Get()
         {
-            return Ok(new NoteService().GetNotes());
+            return Ok(_noteService.GetNotes());
         }
 
         [HttpGet("open/{id:guid}")]
         public IActionResult OpenNote(Guid id)
         {
-            return Ok(new NoteService().GetNote(id));
+            return Ok(_noteService.GetNote(id));
         }
 
         [HttpPost("updateNote/{noteId:guid}")]
         public IActionResult UpdateNote(Guid noteId, [FromBody] Note noteData)
         {
-            new NoteService().UpdateNote(noteId, noteData.AuthorGuid, noteData.Name, noteData.Tags, noteData.Text);
+            _noteService.UpdateNote(noteId, noteData.AuthorGuid, noteData.Name, noteData.Tags, noteData.Text);
             return Ok();
         }
     }

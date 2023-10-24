@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using PPI_projektas.Exceptions;
-using PPI_projektas.Services;
-using PPI_projektas.Services.Response;
+using PPI_projektas.Services.Interfaces;
 
 namespace PPI_projektas.Controllers
 
@@ -10,13 +9,19 @@ namespace PPI_projektas.Controllers
     [Route("api/[controller]")]
     public class GroupController : ControllerBase
     {
+        private readonly IGroupService _groupService;
+
+        public GroupController(IGroupService groupService)
+        {
+            _groupService = groupService;
+        }
         
         [HttpGet]
         public IActionResult Get(Guid? ownerId)
         {
             if (ownerId == null) return BadRequest("InvalidData");
             
-            return Ok(new GroupService().GetGroupsByOwner((Guid) ownerId));
+            return Ok(_groupService.GetGroupsByOwner((Guid) ownerId));
         }
 
         [HttpGet("group-members/{groupId:guid}")]
@@ -26,7 +31,7 @@ namespace PPI_projektas.Controllers
             
             try
             {
-                return Ok(new GroupService().GetUsersInGroup((Guid)groupId));
+                return Ok(_groupService.GetUsersInGroup((Guid)groupId));
             }
             catch (ObjectDoesNotExistException)
             {
@@ -41,7 +46,7 @@ namespace PPI_projektas.Controllers
             
             try
             {
-                var groupId = new GroupService().CreateGroup(groupData.Id, groupData.GroupName, groupData.MemberIds);
+                var groupId = _groupService.CreateGroup(groupData.Id, groupData.GroupName, groupData.MemberIds);
                 return CreatedAtAction("CreateGroup", groupId);
             }
             catch (ObjectDoesNotExistException)
@@ -50,7 +55,6 @@ namespace PPI_projektas.Controllers
             }
         }
         
-        //TODO: group edit POST with route "editgroup"
         [HttpPut("editgroup")]
         public IActionResult EditGroup([FromBody] GroupCreateData? groupData)
         {
@@ -58,7 +62,7 @@ namespace PPI_projektas.Controllers
             
             try
             {
-                new GroupService().EditGroup(groupData.Id, groupData.GroupName, groupData.MemberIds);
+                _groupService.EditGroup(groupData.Id, groupData.GroupName, groupData.MemberIds);
                 return Ok();
             }
             catch (ObjectDoesNotExistException)
@@ -70,11 +74,9 @@ namespace PPI_projektas.Controllers
         [HttpDelete("delete/{groupId:guid}")]
         public IActionResult Delete(Guid groupId)
         {
-            var groupService = new GroupService();
-
             try
             {
-                groupService.DeleteGroup(groupId);
+                _groupService.DeleteGroup(groupId);
                 return NoContent();
             }
             catch (ObjectDoesNotExistException)

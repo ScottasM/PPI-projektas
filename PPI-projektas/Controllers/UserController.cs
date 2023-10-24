@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using PPI_projektas.Exceptions;
 using PPI_projektas.Services;
+using PPI_projektas.Services.Interfaces;
 
 namespace PPI_projektas.Controllers
 {
@@ -8,15 +9,20 @@ namespace PPI_projektas.Controllers
     [Route("api/[controller]")]
     public class UserController : ControllerBase
     {
+        private readonly IUserService _userService;
 
+        public UserController(IUserService userService)
+        {
+            _userService = userService;
+        }
+        
         [HttpGet("{name}")]
         public IActionResult Get(string name)
         {
-            var userService = new UserService();
-            if (!userService.ValidateData(name)) return BadRequest("Invalid Data");
+            if (!_userService.ValidateData(name)) return BadRequest("Invalid Data");
 
-            var users = userService.GetUsersByName(name);
-            if (!userService.ValidateData(users)) return BadRequest("No users found");
+            var users = _userService.GetUsersByName(name);
+            if (!_userService.ValidateData(users)) return BadRequest("No users found");
 
             return Ok(users);
         }
@@ -24,10 +30,9 @@ namespace PPI_projektas.Controllers
         [HttpPost("createuser")]
         public IActionResult CreateUser([FromBody] UserCreateData userData)
         {
-            var userService = new UserService();
-            if (!userService.ValidateData(userData)) return BadRequest("Invalid Data");
+            if (!_userService.ValidateData(userData)) return BadRequest("Invalid Data");
 
-            var userGuidId = userService.CreateUser(userData);
+            var userGuidId = _userService.CreateUser(userData);
 
             return CreatedAtAction("CreateUser", userGuidId);
         }
@@ -35,10 +40,9 @@ namespace PPI_projektas.Controllers
         [HttpDelete("delete/{id:guid}")]
         public IActionResult Delete(Guid id)
         {
-            var userService = new UserService();
             try
             {
-                userService.DeleteUser(id);
+                _userService.DeleteUser(id);
                 return NoContent();
             }
             catch (ObjectDoesNotExistException)

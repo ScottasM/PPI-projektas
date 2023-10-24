@@ -1,15 +1,25 @@
 ﻿using PPI_projektas.Exceptions;
+using PPI_projektas.Services.Interfaces;
 using PPI_projektas.Services.Response;
 using PPI_projektas.Utils;
 
 namespace PPI_projektas.Services;
 
-public class NoteService
+public class NoteService : INoteService
 {
+    private readonly IObjectDataItemFactory _objectDataItemFactory;
+    private readonly IOpenedNoteDataFactory _openedNoteData;
+
+    public NoteService(IObjectDataItemFactory objectDataItemFactory, IOpenedNoteDataFactory openedNoteData)
+    {
+        _objectDataItemFactory = objectDataItemFactory;
+        _openedNoteData = openedNoteData;
+    }
+    
     public List<ObjectDataItem> GetNotes()
     {
         return DataHandler.Instance.AllNotes
-            .Select(note => new ObjectDataItem(note.Id, note.Name))
+            .Select(note => _objectDataItemFactory.Create(note.Id, note.Name))
             .ToList();
     }
 
@@ -19,7 +29,7 @@ public class NoteService
             .Find(note => note.Id == id);
         if (note == null) throw new ObjectDoesNotExistException(id);
         
-        return new OpenedNoteData(note.Name, note.Tags, note.Text);
+        return _openedNoteData.Create(note.Name, note.Tags, note.Text);
     }
 
     public void UpdateNote(Guid noteId, Guid authorId, string name, List<string> tags, string text)
@@ -32,21 +42,5 @@ public class NoteService
         note.Name = name;
         note.Tags = tags;
         note.Text = text;
-    }
-
-    public struct OpenedNoteData
-    {
-        public string Name { get; set; }
-        
-        public List<string> Tags { get; set; }
-
-        public string Text { get; set; }
-
-        public OpenedNoteData(string name, List<string> tags, string text)
-        {
-            Name = name;
-            Tags = tags;
-            Text = text;
-        }
     }
 }
