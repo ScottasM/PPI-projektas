@@ -9,8 +9,6 @@ export class GroupCreateMenu extends Component {
         super(props);
         this.state = {
             groupName: '',
-            userSearch: '',
-            users: [],
             members: [],
         };
     }
@@ -34,33 +32,6 @@ export class GroupCreateMenu extends Component {
     handleInputChange = (event) => {
         this.setState({ groupName: event.target.value });
     };
-    
-    handleUserSearch = (event) => {
-        this.setState({userSearch: event.target.value }, () => {
-            if(this.state.userSearch){
-                this.handleUserGet();
-            }
-        });
-    }
-    
-    handleUserGet = async () => {
-        try {
-            const response = await fetch(`http://localhost:5268/api/user/${this.state.userSearch}`);
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            const responseData = await response.json();
-
-            const userData = responseData.map(user => ({
-                id: user.id,
-                name: user.name
-            }));
-
-            this.setState({ users: userData});
-        } catch (error) {
-            console.error('There was a problem with the get operation:', error);
-        }
-    }
 
     handleMemberGet = async () => { //TODO: Group member fetching
         try {
@@ -80,25 +51,38 @@ export class GroupCreateMenu extends Component {
             console.error('There was a problem with the get operation:', error);
         }
     }
+    
+    updateMembers = (updatedMembers) => {
+        this.setState({
+            members: updatedMembers
+        });
+    }
 
     handleSubmit = (event) => {
         event.preventDefault();
 
-        const { groupName } = this.state;
-        this.handlePost(groupName)
-        this.setState({ groupName: '' });
+        if(this.state.groupName)
+        {
+            const { groupName } = this.state;
+            this.handlePost(groupName)
+            this.setState({ groupName: '' });
+        }
+        else
+        {
+            alert('Group name must not be empty');
+        }
     };
     
    async handlePost(groupName) {
        
        const groupData = {
            GroupName: groupName,
-           OwnerId: '0f8fad5b-d9cb-469f-a165-70867728950e', // temporary static user id
-           // MemberIds : this.state.members.map(member => member.id), TODO: Get selected members from editing menu
+           Id: this.props.configType === 'create' ? '0f8fad5b-d9cb-469f-a165-70867728950e' : this.props.toggledGroup.id, // temporary static user id
+           MemberIds : this.state.members.map(member => member.id)
        };
 
        await fetch(`http://localhost:5268/api/group/${this.props.configType}group`, { // temporary localhost api url
-           method: 'POST',
+           method: this.props.configType === 'create' ? 'POST' : 'PUT',
            headers: {
                'Content-Type': 'application/json',
            },
@@ -114,11 +98,11 @@ export class GroupCreateMenu extends Component {
            });
 
        this.props.fetchGroupList();
-       this.props.toggleGroupCreateMenu();
+       await this.props.toggleGroupCreateMenu();
     }
     
     render() {
-        const { groupName, userSearch } = this.state;
+        const { groupName } = this.state;
         
         return (
             <div className="groupCreateMenu position-absolute translate-middle text-white">
@@ -137,8 +121,8 @@ export class GroupCreateMenu extends Component {
                     <br />
                     <br />
                     <UserSelection
-                        handleUserSearch={this.handleUserSearch} userSearch={this.userSearch} 
-                        users={this.state.users} members={this.state.members}/>
+                        members = {this.state.members}
+                        updateMembers = {this.updateMembers}/>
                     <br />
                     <input type="submit" name="createButton" value={this.props.configType.charAt(0).toUpperCase() + this.props.configType.slice(1)} />
                 </form>
