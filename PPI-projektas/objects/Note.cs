@@ -28,10 +28,6 @@ public class Note : Entity, IComparable<Note>
         var tagComparison = Tags.Count.CompareTo(otherNote.Tags.Count);
         if (tagComparison != 0)
             return tagComparison;
-
-        var authorComparison = AuthorId.CompareTo(otherNote.AuthorId);
-        if (authorComparison != 0)
-            return authorComparison;
         
         return String.Compare(Text, otherNote.Text, StringComparison.OrdinalIgnoreCase);
     }

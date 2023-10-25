@@ -44,10 +44,7 @@ export class NoteEditor extends Component {
                     });
                     throw new Error('Network response was not ok');
                 }
-                this.setState({
-                    saved: true,
-                    showNotSavedMessage: false
-                });
+                this.handleExit();
             })
             .catch((error) =>
                 console.error('There was a problem with the fetch operation:', error));
