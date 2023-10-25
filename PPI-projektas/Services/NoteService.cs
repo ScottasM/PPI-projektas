@@ -45,13 +45,13 @@ public class NoteService
         note.Text = text;
     }
 
-    public void DeleteNote(Guid noteId, Guid authorId)
+    public void DeleteNote(Guid noteId, Guid userId)
     {
         var note = DataHandler.Instance.AllNotes
             .Find(note => note.Id == noteId);
         
         if (note == null) throw new ObjectDoesNotExistException();
-        if (note.AuthorId != authorId) throw new UnauthorizedAccessException();
+        if (note.AuthorId != userId) throw new UnauthorizedAccessException();
         
         DataHandler.Delete(note);
     }
