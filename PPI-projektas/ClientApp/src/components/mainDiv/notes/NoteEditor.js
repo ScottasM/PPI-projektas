@@ -36,7 +36,7 @@ export class NoteEditor extends Component {
             },
             body: JSON.stringify(noteData)
         })
-            .then((response) => {
+            .then(async response => {
                 if (!response.ok) {
                     alert(`Changes weren't saved!`);
                     this.setState({
@@ -44,6 +44,9 @@ export class NoteEditor extends Component {
                     });
                     throw new Error('Network response was not ok');
                 }
+                await this.setState({
+                    saved: true
+                });
                 this.handleExit();
             })
             .catch((error) =>

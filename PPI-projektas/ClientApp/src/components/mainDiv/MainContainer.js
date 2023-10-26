@@ -19,7 +19,6 @@ export class MainContainer extends Component {
             displayLoginMenu: false,
             displaySignInMenu: false,
             noteId: '',
-            notes: [],
             displayNote: false,
             noteHubDisplay: 1
         }
