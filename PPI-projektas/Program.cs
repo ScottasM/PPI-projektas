@@ -2,15 +2,22 @@ using Microsoft.EntityFrameworkCore;
 using PPI_projektas.Utils;
 
 
-DataHandler dataHandler = new DataHandler();
+
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
 builder.Services.AddControllersWithViews();
+
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<EntityData>(options => options.UseNpgsql(connectionString));
+
+if(connectionString == null) {
+    Console.WriteLine("connectionString is empty?!?!?!???!!!!!?!?!?");
+}
+
+DataHandler dataHandler = new DataHandler(connectionString);
 
 // Add CORS services
 builder.Services.AddCors(options =>

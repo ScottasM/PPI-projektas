@@ -1,4 +1,5 @@
 ﻿using System.Text.Json;
+using Microsoft.EntityFrameworkCore;
 using PPI_projektas.objects;
 using PPI_projektas.objects.abstractions;
 
@@ -27,31 +28,19 @@ namespace PPI_projektas.Utils
             
         }
 
-        public void SaveList<T>(List<T> obj)
+        public void SaveList<T>(List<T> obj, DbContextOptions<EntityData> options) where T: class
         {
-            string? sr = SerializeList(obj);
-            if (sr == null)
-                return;
-
-            try {
-                File.WriteAllText(_filePaths[typeof(T)], sr);
-            }
-            catch (Exception err) {
-                Console.WriteLine($"Failed to save file : {err.Message}");
+            using (var context = new EntityData(options)) {
+                context.Set<T>().AddRange(obj);
+                context.SaveChanges();
             }
         }
 
-        public List<T> LoadList<T>()
+        public List<T> LoadList<T>(DbContextOptions<EntityData> options) where T: class
         {
-            if (File.Exists(_filePaths[typeof(T)])) {
-                var json = File.ReadAllText(_filePaths[typeof(T)]);
-                var list = JsonSerializer.Deserialize<List<T>>(json);
-
-                if (list != null)
-                    return list;
+            using (var context = new EntityData(options)) {
+                return context.Set<T>().ToList();
             }
-
-            return new List<T>();
         }
         
         public void SaveObject<T>(T obj) where T : Entity

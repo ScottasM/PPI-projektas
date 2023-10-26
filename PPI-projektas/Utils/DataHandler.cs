@@ -24,7 +24,9 @@ namespace PPI_projektas.Utils
 
         private FileState _state = FileState.Ready;
 
-        public DataHandler()
+        private DbContextOptions<EntityData> options;
+
+        public DataHandler(string connectionString)
         {
             #region Singleton
             if (Instance != null)
@@ -34,6 +36,8 @@ namespace PPI_projektas.Utils
 
             _saveHandler = LazySingleton<SaveHandler>.Instance;
 
+            var optionsBuilder = new DbContextOptionsBuilder<EntityData>();
+            options = optionsBuilder.UseNpgsql(connectionString).Options;
 
             _state = FileState.Reading;
 
@@ -72,9 +76,9 @@ namespace PPI_projektas.Utils
 
                 _state = FileState.Saving;
 
-                _saveHandler.SaveList(AllGroups);
-                _saveHandler.SaveList(AllUsers);
-                _saveHandler.SaveList(AllNotes);
+                _saveHandler.SaveList(AllGroups,options);
+                _saveHandler.SaveList(AllUsers, options);
+                _saveHandler.SaveList(AllNotes, options);
 
                 _state = FileState.Ready;
             }
@@ -88,17 +92,17 @@ namespace PPI_projektas.Utils
             if (obj is Group) {
                 var obje = obj as Group;
                 Instance.AllGroups.Add(obje);
-                Instance._saveHandler.SaveList(Instance.AllGroups);
+                Instance._saveHandler.SaveList(Instance.AllGroups, Instance.options);
             }
             else if (obj is User) {
                 var obje = obj as User;
                 Instance.AllUsers.Add(obje);
-                Instance._saveHandler.SaveList(Instance.AllUsers);
+                Instance._saveHandler.SaveList(Instance.AllUsers, Instance.options);
             }
             else if (obj is Note) {
                 var obje = obj as Note;
                 Instance.AllNotes.Add(obje);
-                Instance._saveHandler.SaveList(Instance.AllNotes);
+                Instance._saveHandler.SaveList(Instance.AllNotes, Instance.options);
             }
         }
 
@@ -109,17 +113,17 @@ namespace PPI_projektas.Utils
             if (obj is Group) {
                 var obje = obj as Group;
                 Instance.AllGroups.Remove(obje);
-                Instance._saveHandler.SaveList(Instance.AllGroups);
+                Instance._saveHandler.SaveList(Instance.AllGroups, Instance.options);
             }
             else if (obj is User) {
                 var obje = obj as User;
                 Instance.AllUsers.Remove(obje);
-                Instance._saveHandler.SaveList(Instance.AllUsers);
+                Instance._saveHandler.SaveList(Instance.AllUsers, Instance.options);
             }
             else if (obj is Note) {
                 var obje = obj as Note;
                 Instance.AllNotes.Remove(obje);
-                Instance._saveHandler.SaveList(Instance.AllNotes);
+                Instance._saveHandler.SaveList(Instance.AllNotes, Instance.options);
             }
         }
 
