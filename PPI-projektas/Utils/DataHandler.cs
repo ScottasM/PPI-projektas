@@ -52,8 +52,7 @@ namespace PPI_projektas.Utils
                 user.LoadFavoriteNotes();
                 user.LoadGroups();
             }
-            foreach (var note in AllNotes) note.Author = AllUsers.Find(inst => inst.Id == note.AuthorGuid);
-
+          
             _state = FileState.Ready;
 
             SaveTimeout(15);

@@ -11,6 +11,15 @@
     float: right;
 }
 
+.createNoteButtonDiv {
+    height: 50px;
+    margin-bottom: 10px;
+    margin-right: 10px;
+    display: inline-block;
+    float: right;
+    top: 0;
+}
+
 .create-button {
     background-color: #1899D6;
     border: solid transparent;
