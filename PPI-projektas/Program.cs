@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using PPI_projektas.Utils;
 
 
@@ -8,6 +9,8 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 builder.Services.AddControllersWithViews();
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+builder.Services.AddDbContext<EntityData>(options => options.UseNpgsql(connectionString));
 
 // Add CORS services
 builder.Services.AddCors(options =>
