@@ -41,9 +41,9 @@ namespace PPI_projektas.Utils
 
             _state = FileState.Reading;
 
-            AllUsers = _saveHandler.LoadList<User>();
-            AllNotes = _saveHandler.LoadList<Note>();
-            AllGroups = _saveHandler.LoadList<Group>();
+            AllUsers = _saveHandler.LoadList<User>(options);
+            AllNotes = _saveHandler.LoadList<Note>(options);
+            AllGroups = _saveHandler.LoadList<Group>(options);
 
 
             // assign loaded guids to actual objects

@@ -43,16 +43,16 @@ namespace PPI_projektas.Utils
             }
         }
         
-        public void SaveObject<T>(T obj) where T : Entity
+        public void SaveObject<T>(T obj,DbContextOptions<EntityData> options) where T : Entity
         {
-            var list = LoadList<T>();
+            var list = LoadList<T>(options);
             if (list == null)
                 return;
 
             var index = list.FindIndex(inst => inst.Id == obj.Id) ;
             list[index] = obj;
 
-            SaveList(list);
+            SaveList(list, options);
         }
     }
 }
