@@ -18,7 +18,7 @@ public class User : Entity
     [NotMapped] public List<Note> FavoriteNotes = new();
     [JsonInclude] public List<Guid> FavoriteNotesGuids;
 
-    [NotMapped] public List<Group> Groups = new();
+    public List<Group> Groups = new();
     [JsonInclude] public List<Guid> GroupsGuids;
 
     public User () {} // For deserialization
