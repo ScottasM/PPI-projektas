@@ -1,6 +1,7 @@
 using PPI_projektas.objects.abstractions;
 using System.Text.Json.Serialization;
 using PPI_projektas.Utils;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace PPI_projektas.objects;
 
@@ -9,13 +10,13 @@ public class Group : Entity, IComparable<Group>
 
     public string Name { get; set; }
 
-    [JsonIgnore] public User Owner { get; set; }
+    [NotMapped] public User Owner { get; set; }
     [JsonInclude] public Guid OwnerGuid;
 
-    [JsonIgnore] public List<User> Members { get; } = new();
+    [NotMapped] public List<User> Members { get; } = new();
     [JsonInclude] public List<Guid> MembersGuid;
 
-    [JsonIgnore] public List<Note> Notes { get; } = new();
+    [NotMapped] public List<Note> Notes { get; } = new();
     [JsonInclude] public List<Guid> NotesGuid;
 
     public Group () {} // For deserialization

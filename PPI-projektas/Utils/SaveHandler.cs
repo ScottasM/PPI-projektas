@@ -30,7 +30,7 @@ namespace PPI_projektas.Utils
 
         public void SaveList<T>(List<T> obj, DbContextOptions<EntityData> options) where T: class
         {
-            using (var context = new EntityData(options)) {
+            using (var context = new EntityData()) {
                 context.Set<T>().AddRange(obj);
                 context.SaveChanges();
             }
@@ -38,7 +38,7 @@ namespace PPI_projektas.Utils
 
         public List<T> LoadList<T>(DbContextOptions<EntityData> options) where T: class
         {
-            using (var context = new EntityData(options)) {
+            using (var context = new EntityData()) {
                 return context.Set<T>().ToList();
             }
         }

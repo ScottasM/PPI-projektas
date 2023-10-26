@@ -1,6 +1,7 @@
 ﻿using PPI_projektas.objects.abstractions;
 using System.Text.Json.Serialization;
 using PPI_projektas.Utils;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace PPI_projektas.objects;
 
@@ -11,13 +12,13 @@ public class User : Entity
     private readonly string _email;
 
 
-    [JsonIgnore] public List<Note> CreatedNotes = new();
+    [NotMapped] public List<Note> CreatedNotes = new();
     [JsonInclude] public List<Guid> CreatedNotesGuids;
 
-    [JsonIgnore] public List<Note> FavoriteNotes = new();
+    [NotMapped] public List<Note> FavoriteNotes = new();
     [JsonInclude] public List<Guid> FavoriteNotesGuids;
-    
-    [JsonIgnore] public List<Group> Groups = new();
+
+    [NotMapped] public List<Group> Groups = new();
     [JsonInclude] public List<Guid> GroupsGuids;
 
     public User () {} // For deserialization

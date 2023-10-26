@@ -6,10 +6,26 @@ namespace PPI_projektas.Utils
 {
     public class EntityData : DbContext
     {
-        public  EntityData(DbContextOptions<EntityData> options) : base(options) { }
+        public EntityData() { }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+
+            var connectionString = "server=185.34.52.6;user=NotesApp;password=AlioValioIrInternetas;database=NotesApp";
+            var serverVersion = MariaDbServerVersion.AutoDetect(connectionString);
+            optionsBuilder.UseMySql(connectionString, serverVersion);
+        }
+        public  EntityData(DbContextOptions<EntityData> options) : base(options) { Database.EnsureCreated(); }
 
         public DbSet<User> Users { get; set; }
         public DbSet<Note> Notes { get; set; }
         public DbSet<Group> Groups { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<User>().HasKey(u => u.Id);
+            modelBuilder.Entity<Note>().HasKey(u => u.Id);
+            modelBuilder.Entity<Group>().HasKey(u => u.Id);
+        }
     }
 }

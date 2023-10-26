@@ -32,7 +32,7 @@ public class NoteService
         return note.Id;
     }
     
-    public void UpdateNote(Guid noteId, Guid userId, string name, List<string> tags, string text)
+    public void UpdateNote(Guid noteId, Guid userId, string name, List<EntityStrings> tags, string text)
     {
         var note = DataHandler.Instance.AllNotes
             .Find(note => note.Id == noteId);
@@ -60,11 +60,11 @@ public class NoteService
     {
         public string Name { get; set; }
         
-        public List<string> Tags { get; set; }
+        public List<EntityStrings> Tags { get; set; }
 
         public string Text { get; set; }
 
-        public OpenedNoteData(string name, List<string> tags, string text)
+        public OpenedNoteData(string name, List<EntityStrings> tags, string text)
         {
             Name = name;
             Tags = tags;

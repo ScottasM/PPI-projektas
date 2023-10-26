@@ -1,7 +1,15 @@
 ﻿using PPI_projektas.objects.abstractions;
+using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
 namespace PPI_projektas.objects;
+
+public class EntityStrings
+{
+    [Key]
+    public int Id { get; set; }
+    public string value { get; set; } = null!;
+}
 
 public class Note : Entity, IComparable<Note>
 {
@@ -9,7 +17,7 @@ public class Note : Entity, IComparable<Note>
   
 	public string Name { get; set; }
 
-	public List<string> Tags { get; set; }
+	public List<EntityStrings> Tags { get; set; }
   
 	[JsonInclude] public string Text;
 	
@@ -19,7 +27,7 @@ public class Note : Entity, IComparable<Note>
 	{
 		AuthorId = authorId;
 		Name = "";
-		Tags = new List<string>();
+		Tags = new List<EntityStrings>();
 		Text = "";
 	}
   

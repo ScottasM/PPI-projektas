@@ -37,8 +37,8 @@ namespace PPI_projektas.Utils
 
             _saveHandler = LazySingleton<SaveHandler>.Instance;
 
-            var optionsBuilder = new DbContextOptionsBuilder<EntityData>();
-            options = optionsBuilder.UseNpgsql(connectionString).Options;
+            //var optionsBuilder = new DbContextOptionsBuilder<EntityData>();
+            //options = optionsBuilder.UseMySql(ServerVersion.AutoDetect(connectionString)).Options;
 
             _state = FileState.Reading;
 
