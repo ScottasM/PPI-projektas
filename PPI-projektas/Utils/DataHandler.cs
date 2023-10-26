@@ -1,6 +1,7 @@
 ﻿using PPI_projektas.objects;
 using Microsoft.EntityFrameworkCore;
 using System;
+using PPI_projektas.objects.abstractions;
 
 namespace PPI_projektas.Utils
 {
@@ -126,8 +127,12 @@ namespace PPI_projektas.Utils
                 Instance._saveHandler.SaveList(Instance.AllNotes, Instance.options);
             }
         }
+        public static void SaveObject<T>(T obj) where T: Entity
+        {
+            Instance._saveHandler.SaveObject(obj, Instance.options);
+        }
 
-        
+
         public static bool userExists(string username)
         {
             return Instance.AllUsers.Any(inst => inst.GetUsername() == username);
