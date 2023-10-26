@@ -11,7 +11,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-builder.Services.AddDbContext<EntityData>(options => options.UseNpgsql(connectionString));
+builder.Services.AddDbContext<EntityData>(options => options.UseMySql(ServerVersion.AutoDetect(connectionString)));
 
 if(connectionString == null) {
     Console.WriteLine("connectionString is empty?!?!?!???!!!!!?!?!?");
