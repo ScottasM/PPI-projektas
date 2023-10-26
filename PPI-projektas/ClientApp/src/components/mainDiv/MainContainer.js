@@ -13,16 +13,16 @@ export class MainContainer extends Component {
 
     constructor(props) {
         super(props);
-    }
-    
-    state = {
-        displayGroupCreateMenu: false,
-        groupConfigMenuType: 'create',
-        displayLoginMenu: false,
-        displaySignInMenu: false,
-        noteId: '',
-        displayNote: false,
-        noteHubDisplay: 1
+        this.state = {
+            displayGroupCreateMenu: this.props.displayGroupEditMenu,
+            groupConfigMenuType: 'create',
+            displayLoginMenu: false,
+            displaySignInMenu: false,
+            noteId: '',
+            notes: [],
+            displayNote: false,
+            noteHubDisplay: 1
+        }
     }
     
     componentDidUpdate(prevProps) {
@@ -68,9 +68,10 @@ export class MainContainer extends Component {
             this.setState({ displayLoginMenu: false, displaySignInMenu: false })
         }
         else{
-            this.setState({
+            this.setState((prevState) => ({
                 groupConfigMenuType: 'create',
-            })
+            }));
+            if(this.props.displayGroupEditMenu) this.props.toggleGroupEditMenu();
         }
         
         this.setState((prevState) => ({

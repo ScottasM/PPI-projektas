@@ -29,20 +29,8 @@ public class GroupService
 
         return users;
     }
-    
-    public Guid CreateGroup(Guid ownerId, string groupName)
-    {
 
-        // var owner = FindObjectById(ownerId, DataHandler.Instance.AllUsers);
-        
-        // var group = new Group(groupName, owner);
-        var group = new Group(groupName, new User());
-        DataHandler.Create(group);
-
-        return group.Id;
-    }
-
-    public Guid CreateGroup(Guid ownerId, string groupName, List<Guid> groupMemberIds)
+    public Guid CreateGroup(Guid ownerId, string groupName, IEnumerable<Guid> groupMemberIds)
     {
         // var owner = FindObjectById(ownerId, DataHandler.Instance.AllUsers);
 
@@ -56,16 +44,23 @@ public class GroupService
     }
     
 
-    public void EditGroup(Guid groupId, string? optionalNewName = null, List<User>? optionalNewUsers = null)
+    public void EditGroup(Guid groupId, string newName, IEnumerable<Guid> newMemberIds)
     {
         var group = FindObjectById(groupId, DataHandler.Instance.AllGroups);
+
+        group.Name = newName;
         
-        if (optionalNewName != null) group.Name = optionalNewName;
-        if (optionalNewUsers != null)
-        {
-            foreach (var user in optionalNewUsers.Where(user => !group.Members.Contains(user)))
-                group.AddUser(user);
-        }
+        var newMembers = newMemberIds.Select(id => FindObjectById(id, DataHandler.Instance.AllUsers)).ToList();
+
+        var membersToAdd = newMembers.Where(user => !group.Members.Contains(user)).ToList();
+        foreach (var member in membersToAdd)
+            group.AddUser(member);
+
+        var membersToRemove = group.Members.Where(member => !newMembers.Contains(member)).ToList();
+        foreach (var member in membersToRemove)
+            group.RemoveUser(member);
+        
+        new SaveHandler().SaveObject(group);
     }
 
     public void DeleteGroup(Guid groupId)
