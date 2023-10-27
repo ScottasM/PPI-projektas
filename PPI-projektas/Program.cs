@@ -34,6 +34,7 @@ builder.Services.AddScoped<IObjectDataItemFactory, ObjectDataItemFactory>();
 builder.Services.AddScoped<IOpenedNoteDataFactory, OpenedNoteDataFactory>();
 builder.Services.AddScoped<IGroupFactory, GroupFactory>();
 builder.Services.AddScoped<IUserFactory, UserFactory>();
+builder.Services.AddScoped<INoteFactory, NoteFactory>();
 
 
 var app = builder.Build();

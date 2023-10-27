@@ -12,7 +12,6 @@ export class UserSelection extends Component {
         this.memberScrollContainerRef = React.createRef();
         this.scrollPosition = 0;
         this.memberScrollPosition = 0;
-``        
         this.state = {
             userSearch: '',
             users: []

@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
-import { NoteDisplay } from "./Notes/NoteDisplay";
-import {NoteHub} from "./Notes/NoteHub";
+import { NoteDisplay } from "./notes/NoteDisplay";
+import { NoteHub } from "./notes/NoteHub";
 import { GroupCreateMenu } from "./group/GroupCreateMenu";
 import { UserLoginMenu } from "./login/UserLoginMenu";
 import { UserSignInMenu } from "./login/UserSignInMenu";
 import { CreatingButtons } from "./CreatingButtons";
 import { CreatingLoginButtons } from "./login/CreatingLoginButtons";
+import { CreatingNotesButton } from "./notes/CreatingNotesButton";
 
 export class MainContainer extends Component {
     static displayName = MainContainer.name;
@@ -13,26 +14,16 @@ export class MainContainer extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            mounted: false,
             displayGroupCreateMenu: this.props.displayGroupEditMenu,
             groupConfigMenuType: 'create',
             displayLoginMenu: false,
             displaySignInMenu: false,
             noteId: '',
-            notes: [],
-            showNote: false
+            displayNote: false,
+            noteHubDisplay: 1
         }
     }
     
-    componentDidMount() {
-       if(!this.state.mounted) {
-           this.fetchNotes();
-           this.setState({
-               mounted: true
-           });
-       }
-    }
-
     componentDidUpdate(prevProps) {
         if (this.props.toggledGroup !== prevProps.toggledGroup || this.props.displayGroupEditMenu !== prevProps.displayGroupEditMenu) {
             if(this.props.displayGroupEditMenu){
@@ -52,27 +43,23 @@ export class MainContainer extends Component {
         }
     }
     
-    fetchNotes = async () => {
-        try {
-            fetch('http://localhost:5268/api/note')
-                .then(async response => {
-                    if (!response.ok)
-                        throw new Error(`Network response was not ok`);
-                    return await response.json();
-                })
-                .then(data => {
-                    const notes = data.map(note => ({
-                        id: note.id,
-                        name: note.name,
-                    }));
-                    this.setState({
-                        notes: notes
-                    });
-                })
-        }
-        catch (error) { 
-                console.error('There was a problem with the fetch operation:', error);
-        }
+    handleCreateNote = async () => {
+        fetch(`http://localhost:5268/api/note/createNote/0f8fad5b-d9cb-469f-a165-70867728950e`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+            .then(async response => {
+                if (!response.ok)
+                    throw new Error('Network response was not ok');
+                return await response.json();
+            })
+            .then(noteId =>
+                this.openNote(noteId, 2)
+            )
+            .catch(error =>
+                console.error('There was a problem with the fetch operation:', error));
     }
     
     toggleGroupConfigMenu = () => {
@@ -111,19 +98,19 @@ export class MainContainer extends Component {
         }));
  
     }
-    
-    openNote = id => {
+
+    openNote = (noteId, display) => {
         this.setState(prevState => ({
-            noteId: id,
-            showNote: !prevState.showNote
+            noteId: noteId,
+            noteHubDisplay: display,
+            displayNote: true
         }));
     }
-    
+
     exitNote = () => {
-        this.fetchNotes();
         this.setState(prevState => ({
             noteId: '',
-            showNote: !prevState.showNote
+            displayNote: false
         }));
     }
     
@@ -143,10 +130,9 @@ export class MainContainer extends Component {
 
                 <CreatingLoginButtons toggleMenu={this.toggleLoginMenu} buttonName={{name: "Login"}} />
                 {this.state.displayLoginMenu && <UserLoginMenu />}
-
-                {this.state.notes == null || this.state.notes.length === 0 ? <p>No notes found.</p> : !this.state.showNote && <NoteDisplay notes={this.state.notes} openNote={this.openNote}/>}
-                {this.state.showNote && <NoteHub noteId={this.state.noteId} exitNote={this.exitNote}/>}
-
+                
+                <CreatingNotesButton handleCreateNote={this.handleCreateNote} />
+                {this.state.displayNote ? <NoteHub display={this.state.noteHubDisplay} noteId={this.state.noteId} exitNote={this.exitNote} /> : <NoteDisplay openNote={this.openNote} />}
             </div>
         );
     }
