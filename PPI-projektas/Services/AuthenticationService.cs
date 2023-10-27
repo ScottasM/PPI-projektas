@@ -2,25 +2,21 @@
 using System.Text;
 using System.Text.RegularExpressions;
 using PPI_projektas.objects;
+using PPI_projektas.Services.Interfaces;
+using PPI_projektas.Services.Response;
 using PPI_projektas.Utils;
 
 namespace PPI_projektas.Services
 {
-    public class AuthReturn
+    public class AuthenticationService : ICustomAuthenticationService
     {
-        public User? User;
-        public bool Success;
-        public string? ErrorMessage;
+        private readonly IAuthReturnFactory _authReturnFactory;
 
-        public AuthReturn(User? user, bool success = true, string errorMessage = "")
+        public AuthenticationService(IAuthReturnFactory authReturnFactory)
         {
-            User = user;
-            Success = success;
-            ErrorMessage = errorMessage;
+            _authReturnFactory = authReturnFactory;
         }
-    }
-    public class AuthenticationService
-    {
+        
         public AuthReturn TryRegister(string name, string password)
         {
             var hashedPassword = Hash(password);
@@ -30,24 +26,24 @@ namespace PPI_projektas.Services
 
             var validateGuidRegex = new Regex("^(?=.*?[a-zA-Z])(?=.*?[0-9]).{8,}$"); // at least one letter, at least one number and at least 8 characters long
             if (!validateGuidRegex.IsMatch("-Secr3t."))
-                return new AuthReturn(null, false, "Invalid password format. Ensure at least 1 letter, 1 number and total length of at least 8 characters");
+                return _authReturnFactory.Create(null, false, "Invalid password format. Ensure at least 1 letter, 1 number and total length of at least 8 characters");
 
             var newUser = new User(name, hashedPassword);
             DataHandler.Create(newUser);
 
-            return new AuthReturn(newUser);
+            return _authReturnFactory.Create(newUser);
         }
 
         public AuthReturn TryLogin(string name,string password)
         {
             var user = DataHandler.userExistsObject(name);
             if (user == null)
-                return new AuthReturn(null, false, "User with such username not found.");
+                return _authReturnFactory.Create(null, false, "User with such username not found.");
 
             var hashedPassword = Hash(password);
             return hashedPassword != user.GetPassword() ? 
-                new AuthReturn(null, false, "Password is incorrect") 
-                : new AuthReturn(user, true);
+                _authReturnFactory.Create(null, false, "Password is incorrect") 
+                : _authReturnFactory.Create(user, true);
         }
 
 
