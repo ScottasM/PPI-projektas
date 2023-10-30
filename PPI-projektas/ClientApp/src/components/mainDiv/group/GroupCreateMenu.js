@@ -75,11 +75,15 @@ export class GroupCreateMenu extends Component {
     
    async handlePost(groupName) {
        
-       const groupData = {
+       let groupData = {
            GroupName: groupName,
-           Id: this.props.configType === 'create' ? '0f8fad5b-d9cb-469f-a165-70867728950e' : this.props.toggledGroup.id, // temporary static user id
+           Id: this.props.currentUserId,
            MemberIds : this.state.members.map(member => member.id)
        };
+       
+       if(this.props.configType === 'edit'){
+           groupData.groupId = this.props.toggledGroup.id;
+       }
 
        await fetch(`http://localhost:5268/api/group/${this.props.configType}group`, { // temporary localhost api url
            method: this.props.configType === 'create' ? 'POST' : 'PUT',

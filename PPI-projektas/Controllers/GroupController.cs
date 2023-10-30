@@ -51,23 +51,27 @@ namespace PPI_projektas.Controllers
             }
             catch (ObjectDoesNotExistException)
             {
-                return BadRequest("USER-ERROR");
+                return NotFound();
             }
         }
         
         [HttpPut("editgroup")]
-        public IActionResult EditGroup([FromBody] GroupCreateData? groupData)
+        public IActionResult EditGroup([FromBody] GroupEditData? groupData)
         {
             if (groupData == null) return BadRequest("InvalidData");
-            
+
             try
             {
-                _groupService.EditGroup(groupData.Id, groupData.GroupName, groupData.MemberIds);
+                _groupService.EditGroup(groupData.groupId, groupData.GroupName, groupData.MemberIds, groupData.Id);
                 return Ok();
+            }
+            catch (UnauthorizedAccessException)
+            {
+                return Unauthorized();
             }
             catch (ObjectDoesNotExistException)
             {
-                return BadRequest("GROUP-ERROR");
+                return NotFound();
             }
         }
 
@@ -91,5 +95,10 @@ namespace PPI_projektas.Controllers
         public string GroupName { get; set; }
         public Guid Id { get; set; }
         public List<Guid> MemberIds { get; set; }
+    }
+
+    public record GroupEditData : GroupCreateData
+    {
+        public Guid groupId { get; set; }
     }
 }

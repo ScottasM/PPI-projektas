@@ -7,8 +7,8 @@ namespace PPI_projektas.objects;
 public class User : Entity
 {
     [JsonInclude] public string Username;
-    private readonly string _password;
-    private readonly string _email;
+    [JsonInclude] public readonly string _password;
+    [JsonInclude] public readonly string _email;
 
 
     [JsonIgnore] public List<Note> CreatedNotes = new();

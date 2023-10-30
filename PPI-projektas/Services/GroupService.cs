@@ -42,22 +42,28 @@ public class GroupService : IGroupService
 
     public Guid CreateGroup(Guid ownerId, string groupName, IEnumerable<Guid> groupMemberIds)
     {
-        // var owner = FindObjectById(ownerId, DataHandler.Instance.AllUsers);
+        var owner = FindObjectById(ownerId, DataHandler.Instance.AllUsers);
+
+        if (owner == null)
+            throw new ObjectDoesNotExistException(ownerId);
 
         var groupMembers = groupMemberIds.Select(id => FindObjectById(id, DataHandler.Instance.AllUsers)).ToList();
 
-        // var group = _groupFactory.Create(groupName, owner, groupMembers);
-        var group = _groupFactory.Create(groupName, new User(), groupMembers);
+        var group = _groupFactory.Create(groupName, owner, groupMembers);
+        // var group = _groupFactory.Create(groupName, new User(), groupMembers);
         DataHandler.Create(group);
 
         return group.Id;
     }
     
 
-    public void EditGroup(Guid groupId, string newName, IEnumerable<Guid> newMemberIds)
+    public void EditGroup(Guid groupId, string newName, IEnumerable<Guid> newMemberIds, Guid userId)
     {
         var group = FindObjectById(groupId, DataHandler.Instance.AllGroups);
 
+        if (group.OwnerGuid != userId)
+            throw new UnauthorizedAccessException();
+        
         group.Name = newName;
         
         var newMembers = newMemberIds.Select(id => FindObjectById(id, DataHandler.Instance.AllUsers)).ToList();
