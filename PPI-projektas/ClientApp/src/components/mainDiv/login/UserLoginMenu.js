@@ -21,7 +21,45 @@ export class UserLoginMenu extends Component {
     };
 
     handleSubmit = (event) => {
-        //to do
+        event.preventDefault();
+        const { username, password } = this.state;
+
+        this.handlePost(username, password);
+
+        this.setState({
+            username: '',
+            email: '',
+            password: '',
+        });
+    };
+
+    async handlePost(username, password) {
+        const userData = {
+            username: username,
+            password: password,
+        };
+
+        await fetch(`http://localhost:5268/api/Authentication/trylogin`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(userData),
+        })
+            .then(async (response) => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                const data = await response.json();
+
+                if (data)
+                    this.props.setCurrentUser(data);
+            })
+            .catch((error) => {
+                console.error('There was a problem with the fetch operation:', error);
+            });
+
+        this.props.toggleMenu();
     };
 
     render() {

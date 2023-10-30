@@ -29,7 +29,7 @@ export class UserSignInMenu extends Component {
         event.preventDefault();
         const { username, email, password } = this.state;
 
-        this.handlePost(username, email, password)
+        this.handlePost(username, email, password);
 
         this.setState({
             username: '',
@@ -39,25 +39,30 @@ export class UserSignInMenu extends Component {
     }
 
     async handlePost(username, email, password) {
-
         const userData = {
-            Username: username,
-            Email: email,
-            Password: password,
-            OwnerId: '00000000-0000-0000-0000-000000000000',
+            username: username,
+            password: password,
         };
 
-        await fetch(`http://localhost:5268/api/user/createuser`, {
+        await fetch(`http://localhost:5268/api/Authentication/tryregister`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify(userData),
         })
-            .then((response) => {
+            .then(async (response) => {
+                if(response.status === 400){
+                    alert(await response.text());
+                }
+                
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }
+                const data = await response.json();
+                
+                if (data)
+                    this.props.setCurrentUser(data);
             })
             .catch((error) => {
                 console.error('There was a problem with the fetch operation:', error);

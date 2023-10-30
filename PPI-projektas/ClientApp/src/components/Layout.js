@@ -12,7 +12,9 @@ export class Layout extends Component {
             displayGroupEditMenu: false,
             mounted: false,
             groups: [],
-            toggledGroupId: '00000000-0000-0000-0000-000000000000',
+            toggledGroupId: 0,
+            currentUserId: 0,
+            currentGroupId: 0,
         };
     }
 
@@ -22,6 +24,14 @@ export class Layout extends Component {
             this.setState({ mounted : true});
         }
     }
+    
+    setCurrentUser = (id) => {
+        this.setState({
+            currentUserId: id,
+        })
+        
+        this.fetchGroupList();
+    }
 
     toggleGroupEditMenu = (groupId) => {
         this.setState((prevState) => ({
@@ -30,9 +40,23 @@ export class Layout extends Component {
         }));
     }
     
+    toggleGroup = (groupId) => {
+        if(this.state.groups.find(group => group.id === groupId))
+        {
+            this.setState({
+                currentGroupId: groupId,
+            })
+        }
+        else 
+            this.fetchGroupList();
+    }
+    
     fetchGroupList = async () => {
-        const ownerId = '00000000-0000-0000-0000-000000000000';
-
+        const ownerId = this.state.currentUserId;
+        
+        if(ownerId === 0)
+            return;
+        
         try {
             const response = await fetch(`http://localhost:5268/api/group?ownerId=${ownerId}`);
             if (!response.ok) {
@@ -54,11 +78,18 @@ export class Layout extends Component {
     render() {
     return (
       <div>
-          <SideNav fetchGroupList={this.fetchGroupList} toggleGroupEditMenu={this.toggleGroupEditMenu}
-                   groups={this.state.groups}/>
+          <SideNav fetchGroupList={this.fetchGroupList} 
+                   toggleGroupEditMenu={this.toggleGroupEditMenu}
+                   toggleGroup={this.toggleGroup}
+                   groups={this.state.groups}
+          />
           <MainContainer fetchGroupList={this.fetchGroupList} toggleGroupEditMenu={this.toggleGroupEditMenu}
                          toggledGroup={this.state.groups.find(group => group.id === this.state.toggledGroupId)}
-                         displayGroupEditMenu={this.state.displayGroupEditMenu}/>
+                         displayGroupEditMenu={this.state.displayGroupEditMenu}
+                         setCurrentUser={this.setCurrentUser}
+                         currentUserId={this.state.currentUserId}
+                         currentGroupId={this.state.currentGroupId}
+          />
       </div>
     );
   }

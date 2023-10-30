@@ -29,7 +29,7 @@ namespace PPI_projektas.Controllers
                 return BadRequest(authReturn.ErrorMessage);
             }
 
-            return CreatedAtAction("Register", new { id = authReturn.User.Id, username = authReturn.User.GetUsername() }, authReturn.User);
+            return CreatedAtAction("Register", new { id = authReturn.User.Id, username = authReturn.User.GetUsername() }, authReturn.User.Id);
         }
 
 
@@ -45,13 +45,13 @@ namespace PPI_projektas.Controllers
                 return BadRequest(authReturn.ErrorMessage);
             }
 
-            return CreatedAtAction("Login", new { id = authReturn.User.Id, username = authReturn.User.GetUsername() }, authReturn.User);
+            return CreatedAtAction("Login", new { id = authReturn.User.Id, username = authReturn.User.GetUsername() }, authReturn.User.Id);
         }
     }
 
     public class AuthData
     {
-        public string Username;
-        public string Password;
+        public string Username { get; set; }
+        public string Password { get; set; }
     }
 }

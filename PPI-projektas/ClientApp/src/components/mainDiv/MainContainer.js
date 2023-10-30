@@ -117,21 +117,35 @@ export class MainContainer extends Component {
     render() {
         return (
             <div className="bg-white">
-                <CreatingButtons toggleMenu={this.toggleGroupConfigMenu}/>
-                {this.state.displayGroupCreateMenu && 
+                {this.props.currentUserId !== 0 && <CreatingButtons toggleMenu={this.toggleGroupConfigMenu}/>}
+                {this.state.displayGroupCreateMenu &&
                     <GroupCreateMenu 
                         configType = {this.state.groupConfigMenuType}
                         toggledGroup={this.props.toggledGroup}
-                        fetchGroupList={this.props.fetchGroupList} toggleGroupCreateMenu={this.toggleGroupConfigMenu} />
+                        fetchGroupList={this.props.fetchGroupList} toggleGroupCreateMenu={this.toggleGroupConfigMenu} 
+                        currentUserId={this.props.currentUserId}/>
                 }
                         
                 <CreatingLoginButtons toggleMenu={this.toggleSignInMenu} buttonName={{name: "Sign In"}} />
-                {this.state.displaySignInMenu && <UserSignInMenu toggleMenu={this.toggleSignInMenu}/>}
+                {this.state.displaySignInMenu && 
+                    <UserSignInMenu 
+                        toggleMenu={this.toggleSignInMenu}
+                        setCurrentUser={this.props.setCurrentUser}
+                    />}
 
                 <CreatingLoginButtons toggleMenu={this.toggleLoginMenu} buttonName={{name: "Login"}} />
-                {this.state.displayLoginMenu && <UserLoginMenu />}
-                
-                <CreatingNotesButton handleCreateNote={this.handleCreateNote} />
+                {this.state.displayLoginMenu && 
+                    <UserLoginMenu
+                        toggleMenu={this.toggleLoginMenu}
+                        setCurrentUser={this.props.setCurrentUser}
+                    />}
+
+                {this.props.currentGroupId !== 0 &&
+                    <CreatingNotesButton 
+                        handleCreateNote={this.handleCreateNote} 
+                        groupId={this.props.currentGroupId}
+                    />
+                }
                 {this.state.displayNote ? <NoteHub display={this.state.noteHubDisplay} noteId={this.state.noteId} exitNote={this.exitNote} /> : <NoteDisplay openNote={this.openNote} />}
             </div>
         );

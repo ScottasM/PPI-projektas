@@ -33,7 +33,7 @@ export class GroupCreateMenu extends Component {
         this.setState({ groupName: event.target.value });
     };
 
-    handleMemberGet = async () => { //TODO: Group member fetching
+    handleMemberGet = async () => {
         try {
             const response = await fetch(`http://localhost:5268/api/group/group-members/${this.props.toggledGroup.id}`);
             if (!response.ok) {
