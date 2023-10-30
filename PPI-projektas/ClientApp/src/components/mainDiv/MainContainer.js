@@ -124,16 +124,22 @@ export class MainContainer extends Component {
     render() {
         return (
             <div className="bg-white">
-                {this.props.currentUserId !== 0 && <CreatingButtons toggleMenu={this.toggleGroupConfigMenu}/>}
-                {this.props.currentUserId !== 0 && <CreatingLoginButtons toggleMenu={() => this.props.setCurrentUser(0)} buttonName={{name: 'Log out'}}/>}
-                {this.props.currentUserId !== 0 &&
-                    <div className="registerButtonsDiv">
-                        <h6>Logged in as: {this.state.currentUserName}</h6>
-                    </div>
-                }
-                
-                {this.props.currentUserId === 0 && <CreatingLoginButtons toggleMenu={this.toggleSignInMenu} buttonName={{name: "Sign In"}}/>}
-                {this.props.currentUserId === 0 && <CreatingLoginButtons toggleMenu={this.toggleLoginMenu} buttonName={{name: "Login"}}/>}
+                {this.props.currentUserId !== 0 && (
+                    <>
+                        <CreatingButtons toggleMenu={this.toggleGroupConfigMenu} />
+                        <CreatingLoginButtons toggleMenu={() => this.props.setCurrentUser(0)} buttonName={{ name: 'Log out' }} />
+                        <div className="registerButtonsDiv">
+                            <h6>Logged in as: {this.state.currentUserName}</h6>
+                        </div>
+                    </>
+                )}
+
+                {this.props.currentUserId === 0 && (
+                    <>
+                        <CreatingLoginButtons toggleMenu={this.toggleSignInMenu} buttonName={{name: "Sign In"}}/>
+                        <CreatingLoginButtons toggleMenu={this.toggleLoginMenu} buttonName={{name: "Login"}}/>
+                    </>
+                )}
                         
                 {this.state.displayGroupCreateMenu &&
                     <GroupCreateMenu 
