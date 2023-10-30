@@ -20,7 +20,8 @@ export class MainContainer extends Component {
             displaySignInMenu: false,
             noteId: '',
             displayNote: false,
-            noteHubDisplay: 1
+            noteHubDisplay: 1,
+            currentUserName: '',
         }
     }
     
@@ -114,10 +115,26 @@ export class MainContainer extends Component {
         }));
     }
     
+    setUserName = (username) => {
+        this.setState({
+            currentUserName: username,
+        })
+    }
+    
     render() {
         return (
             <div className="bg-white">
                 {this.props.currentUserId !== 0 && <CreatingButtons toggleMenu={this.toggleGroupConfigMenu}/>}
+                {this.props.currentUserId !== 0 && <CreatingLoginButtons toggleMenu={() => this.props.setCurrentUser(0)} buttonName={{name: 'Log out'}}/>}
+                {this.props.currentUserId !== 0 &&
+                    <div className="registerButtonsDiv">
+                        <h6>Logged in as: {this.state.currentUserName}</h6>
+                    </div>
+                }
+                
+                {this.props.currentUserId === 0 && <CreatingLoginButtons toggleMenu={this.toggleSignInMenu} buttonName={{name: "Sign In"}}/>}
+                {this.props.currentUserId === 0 && <CreatingLoginButtons toggleMenu={this.toggleLoginMenu} buttonName={{name: "Login"}}/>}
+                        
                 {this.state.displayGroupCreateMenu &&
                     <GroupCreateMenu 
                         configType = {this.state.groupConfigMenuType}
@@ -125,18 +142,18 @@ export class MainContainer extends Component {
                         fetchGroupList={this.props.fetchGroupList} toggleGroupCreateMenu={this.toggleGroupConfigMenu} 
                         currentUserId={this.props.currentUserId}/>
                 }
-                        
-                <CreatingLoginButtons toggleMenu={this.toggleSignInMenu} buttonName={{name: "Sign In"}} />
+                
                 {this.state.displaySignInMenu && 
                     <UserSignInMenu 
                         toggleMenu={this.toggleSignInMenu}
+                        setUserName={this.setUserName}
                         setCurrentUser={this.props.setCurrentUser}
                     />}
 
-                <CreatingLoginButtons toggleMenu={this.toggleLoginMenu} buttonName={{name: "Login"}} />
                 {this.state.displayLoginMenu && 
                     <UserLoginMenu
                         toggleMenu={this.toggleLoginMenu}
+                        setUserName={this.setUserName}
                         setCurrentUser={this.props.setCurrentUser}
                     />}
 

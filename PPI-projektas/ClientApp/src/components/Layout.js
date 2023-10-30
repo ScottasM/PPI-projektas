@@ -28,7 +28,7 @@ export class Layout extends Component {
     setCurrentUser = (id) => {
         this.setState({
             currentUserId: id,
-        })
+        });
         
         this.fetchGroupList();
     }

@@ -55,14 +55,18 @@ export class UserSignInMenu extends Component {
                 if(response.status === 400){
                     alert(await response.text());
                 }
-                
-                if (!response.ok) {
+                else if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }
-                const data = await response.json();
-                
-                if (data)
-                    this.props.setCurrentUser(data);
+                else{
+                    const data = await response.json();
+
+                    if (data)
+                    {
+                        this.props.setCurrentUser(data);
+                        this.props.setUserName(username);
+                    }
+                }
             })
             .catch((error) => {
                 console.error('There was a problem with the fetch operation:', error);

@@ -47,13 +47,22 @@ export class UserLoginMenu extends Component {
             body: JSON.stringify(userData),
         })
             .then(async (response) => {
-                if (!response.ok) {
+                if(response.status === 400){
+                    alert(await response.text());
+                }
+                else if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }
-                const data = await response.json();
+                else{
+                    const data = await response.json();
+                    
+                    if (data)
+                    {
+                        this.props.setCurrentUser(data);
+                        this.props.setUserName(username);
+                    }
+                }
 
-                if (data)
-                    this.props.setCurrentUser(data);
             })
             .catch((error) => {
                 console.error('There was a problem with the fetch operation:', error);
