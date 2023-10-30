@@ -2,6 +2,7 @@
 using System.Text;
 using System.Text.RegularExpressions;
 using PPI_projektas.objects;
+using PPI_projektas.objects.Factories;
 using PPI_projektas.Services.Interfaces;
 using PPI_projektas.Services.Response;
 using PPI_projektas.Utils;
@@ -11,10 +12,12 @@ namespace PPI_projektas.Services
     public class AuthenticationService : ICustomAuthenticationService
     {
         private readonly IAuthReturnFactory _authReturnFactory;
+        private readonly IUserFactory _userFactory;
 
-        public AuthenticationService(IAuthReturnFactory authReturnFactory)
+        public AuthenticationService(IAuthReturnFactory authReturnFactory, IUserFactory userFactory)
         {
             _authReturnFactory = authReturnFactory;
+            _userFactory = userFactory;
         }
         
         public AuthReturn TryRegister(string name, string password)
@@ -22,13 +25,13 @@ namespace PPI_projektas.Services
             var hashedPassword = Hash(password);
 
             if (DataHandler.userExists(name))
-                return new AuthReturn(null, false, "User already exists.");
+                return _authReturnFactory.Create(null, false, "User already exists.");
 
             var validateGuidRegex = new Regex("^(?=.*?[a-zA-Z])(?=.*?[0-9]).{8,}$"); // at least one letter, at least one number and at least 8 characters long
             if (!validateGuidRegex.IsMatch("-Secr3t."))
                 return _authReturnFactory.Create(null, false, "Invalid password format. Ensure at least 1 letter, 1 number and total length of at least 8 characters");
 
-            var newUser = new User(name, hashedPassword);
+            var newUser = _userFactory.Create(name, hashedPassword);
             DataHandler.Create(newUser);
 
             return _authReturnFactory.Create(newUser);
