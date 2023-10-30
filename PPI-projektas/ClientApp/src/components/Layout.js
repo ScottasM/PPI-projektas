@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Container } from 'reactstrap';
 import { SideNav } from './SideNav';
 import {MainContainer} from "./mainDiv/MainContainer";
+import {User} from "oidc-client";
 
 export class Layout extends Component {
   static displayName = Layout.name;
@@ -28,9 +29,10 @@ export class Layout extends Component {
     setCurrentUser = (id) => {
         this.setState({
             currentUserId: id,
+        }, () => {
+            this.fetchGroupList();
         });
         
-        this.fetchGroupList();
     }
 
     toggleGroupEditMenu = (groupId) => {
@@ -52,13 +54,15 @@ export class Layout extends Component {
     }
     
     fetchGroupList = async () => {
-        const ownerId = this.state.currentUserId;
+        const userId = this.state.currentUserId;
         
-        if(ownerId === 0)
+        if(userId === 0){
+            this.setState({groups: []})
             return;
+        }
         
         try {
-            const response = await fetch(`http://localhost:5268/api/group?ownerId=${ownerId}`);
+            const response = await fetch(`http://localhost:5268/api/user/groups/${userId}`);
             if (!response.ok) {
                 throw new Error('Network response was not ok');
             }

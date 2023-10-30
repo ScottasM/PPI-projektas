@@ -1,5 +1,4 @@
 using PPI_projektas.Exceptions;
-using PPI_projektas.objects;
 using PPI_projektas.objects.abstractions;
 using PPI_projektas.objects.Factories;
 using PPI_projektas.Services.Interfaces;
@@ -50,7 +49,12 @@ public class GroupService : IGroupService
         var groupMembers = groupMemberIds.Select(id => FindObjectById(id, DataHandler.Instance.AllUsers)).ToList();
 
         var group = _groupFactory.Create(groupName, owner, groupMembers);
-        // var group = _groupFactory.Create(groupName, new User(), groupMembers);
+
+        foreach (var user in groupMembers)
+            user.AddGroup(group);
+        
+        owner.AddGroup(group);
+        
         DataHandler.Create(group);
 
         return group.Id;
@@ -70,11 +74,17 @@ public class GroupService : IGroupService
 
         var membersToAdd = newMembers.Where(user => !group.Members.Contains(user)).ToList();
         foreach (var member in membersToAdd)
+        {
             group.AddUser(member);
+            member.AddGroup(group);
+        }
 
         var membersToRemove = group.Members.Where(member => !newMembers.Contains(member)).ToList();
         foreach (var member in membersToRemove)
+        {
             group.RemoveUser(member);
+            member.RemoveGroup(group);
+        }
         
         new SaveHandler().SaveObject(group);
     }
