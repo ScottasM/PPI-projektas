@@ -28,28 +28,24 @@ public class NoteService : INoteService
 
     public OpenedNoteData GetNote(Guid noteId)
     {
-        var note = DataHandler.Instance.AllNotes
-            .Find(note => note.Id == noteId);
-        
-        if (note == null) throw new ObjectDoesNotExistException();
+        var note = DataHandler.FindObjectById(noteId, DataHandler.Instance.AllNotes);
         
         return _openedNoteDataFactory.Create(note.Name, note.Tags, note.Text);
     }
 
-    public Guid CreateNote(Guid authorId)
+    public Guid CreateNote(Guid groupId, Guid authorId)
     {
+        var group = DataHandler.FindObjectById(groupId, DataHandler.Instance.AllGroups);
         var note = _noteFactory.Create(authorId);
         DataHandler.Create(note);
+        group.AddNote(note);
 
         return note.Id;
     }
     
     public void UpdateNote(Guid noteId, Guid userId, string name, List<string> tags, string text)
     {
-        var note = DataHandler.Instance.AllNotes
-            .Find(note => note.Id == noteId);
-        
-        if (note == null) throw new ObjectDoesNotExistException();
+        var note = DataHandler.FindObjectById(noteId, DataHandler.Instance.AllNotes);
         if (note.AuthorId != userId) throw new UnauthorizedAccessException();
         
         note.Name = name;
@@ -59,10 +55,8 @@ public class NoteService : INoteService
 
     public void DeleteNote(Guid noteId, Guid userId)
     {
-        var note = DataHandler.Instance.AllNotes
-            .Find(note => note.Id == noteId);
+        var note = DataHandler.FindObjectById(noteId, DataHandler.Instance.AllNotes);
         
-        if (note == null) throw new ObjectDoesNotExistException();
         if (note.AuthorId != userId) throw new UnauthorizedAccessException();
         
         DataHandler.Delete(note);

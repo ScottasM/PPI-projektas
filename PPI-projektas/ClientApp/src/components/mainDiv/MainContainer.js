@@ -45,7 +45,7 @@ export class MainContainer extends Component {
     }
     
     handleCreateNote = async () => {
-        fetch(`http://localhost:5268/api/note/createNote/0f8fad5b-d9cb-469f-a165-70867728950e`, {
+        fetch(`http://localhost:5268/api/note/createNote/${this.props.currentGroupId}/${this.props.currentUserId}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

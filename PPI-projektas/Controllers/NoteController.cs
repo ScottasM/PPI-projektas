@@ -36,11 +36,18 @@ namespace PPI_projektas.Controllers
             }
         }
 
-        [HttpPost("createNote/{authorId}")]
-        public IActionResult CreateNote(Guid authorId)
+        [HttpPost("createNote/{groupId:guid}/{authorId:guid}")]
+        public IActionResult CreateNote(Guid groupId, Guid authorId)
         {
-            var noteId = _noteService.CreateNote(authorId);
-            return CreatedAtAction("CreateNote", noteId);
+            try
+            {
+                var noteId = _noteService.CreateNote(groupId, authorId);
+                return CreatedAtAction("CreateNote", noteId);
+            }
+            catch (ObjectDoesNotExistException)
+            {
+                return NotFound();
+            }
         }
 
         [HttpPost("updateNote/{noteId:guid}")]

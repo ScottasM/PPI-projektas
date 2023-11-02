@@ -30,7 +30,7 @@ public class GroupService : IGroupService
 
     public List<ObjectDataItem> GetUsersInGroup(Guid groupId)
     {
-        var group = FindObjectById(groupId, DataHandler.Instance.AllGroups);
+        var group = DataHandler.FindObjectById(groupId, DataHandler.Instance.AllGroups);
 
         var users = group.Members
             .Select(user => _objectDataItemFactory.Create(user.Id, user.GetUsername()))
@@ -41,12 +41,9 @@ public class GroupService : IGroupService
 
     public Guid CreateGroup(Guid ownerId, string groupName, IEnumerable<Guid> groupMemberIds)
     {
-        var owner = FindObjectById(ownerId, DataHandler.Instance.AllUsers);
+        var owner = DataHandler.FindObjectById(ownerId, DataHandler.Instance.AllUsers);
 
-        if (owner == null)
-            throw new ObjectDoesNotExistException(ownerId);
-
-        var groupMembers = groupMemberIds.Select(id => FindObjectById(id, DataHandler.Instance.AllUsers)).ToList();
+        var groupMembers = groupMemberIds.Select(id => DataHandler.FindObjectById(id, DataHandler.Instance.AllUsers)).ToList();
 
         var group = _groupFactory.Create(groupName, owner, groupMembers);
 
@@ -63,14 +60,14 @@ public class GroupService : IGroupService
 
     public void EditGroup(Guid groupId, string newName, IEnumerable<Guid> newMemberIds, Guid userId)
     {
-        var group = FindObjectById(groupId, DataHandler.Instance.AllGroups);
+        var group = DataHandler.FindObjectById(groupId, DataHandler.Instance.AllGroups);
 
         if (group.OwnerGuid != userId)
             throw new UnauthorizedAccessException();
         
         group.Name = newName;
         
-        var newMembers = newMemberIds.Select(id => FindObjectById(id, DataHandler.Instance.AllUsers)).ToList();
+        var newMembers = newMemberIds.Select(id => DataHandler.FindObjectById(id, DataHandler.Instance.AllUsers)).ToList();
 
         var membersToAdd = newMembers.Where(user => !group.Members.Contains(user)).ToList();
         foreach (var member in membersToAdd)
@@ -91,16 +88,8 @@ public class GroupService : IGroupService
 
     public void DeleteGroup(Guid groupId)
     {
-        var group = FindObjectById(groupId, DataHandler.Instance.AllGroups);
+        var group = DataHandler.FindObjectById(groupId, DataHandler.Instance.AllGroups);
 
         DataHandler.Delete(group);
-    }
-    
-    private T FindObjectById<T>(Guid objectId, List<T> objectList) where T : Entity
-    {
-        var obj = objectList.Find(obj => obj.Id == objectId);
-        if (obj == null) throw new ObjectDoesNotExistException(objectId);
-
-        return obj;
     }
 }
