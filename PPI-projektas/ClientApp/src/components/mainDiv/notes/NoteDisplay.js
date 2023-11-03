@@ -46,15 +46,13 @@ export class NoteDisplay extends Component {
         return (
             <div className='noteDisplay'>
                 {this.state.notes.length > 0 ?
-                    <ul className='noteList'>
-                        {this.state.notes.map(note => (
+                        this.state.notes.map(note => (
                             <NoteDisplayElement
                                 noteName={note.name}
                                 noteId={note.id}
                                 openNote={this.props.openNote}
                             />
-                        ))}
-                    </ul> :
+                        )) :
                     <p>No notes found.</p>}
             </div>
         )
