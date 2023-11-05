@@ -17,12 +17,12 @@ public class NoteService : INoteService
         _openedNoteDataFactory = openedNoteDataFactory;
         _noteFactory = noteFactory;
     }
-    
-    public List<ObjectDataItem> GetNotes()
+
+    public List<ObjectDataItem> GetNotes(Guid groupId)
     {
-        return DataHandler.Instance.AllNotes
-            .Select(note => _objectDataItemFactory.Create(note.Id, note.Name))
-            .ToList();
+        var group = DataHandler.FindObjectById(groupId, DataHandler.Instance.AllGroups);
+
+        return group.Notes.Select(note => _objectDataItemFactory.Create(note.Id, note.Name)).ToList();
     }
 
     public OpenedNoteData GetNote(Guid noteId)

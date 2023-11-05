@@ -17,10 +17,10 @@ namespace PPI_projektas.Controllers
             _noteService = noteService;
         }
         
-        [HttpGet]
-        public IActionResult Get()
+        [HttpGet("{groupId:guid}")]
+        public IActionResult Get(Guid groupId)
         {
-            return Ok(_noteService.GetNotes());
+            return Ok(_noteService.GetNotes(groupId));
         }
 
         [HttpGet("openNote/{noteId:guid}")]

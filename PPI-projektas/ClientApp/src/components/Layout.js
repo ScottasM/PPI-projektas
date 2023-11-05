@@ -29,6 +29,7 @@ export class Layout extends Component {
     setCurrentUser = (id) => {
         this.setState({
             currentUserId: id,
+            currentGroupId: id === 0 ? 0 : this.state.currentGroupId,
         }, () => {
             this.fetchGroupList();
         });

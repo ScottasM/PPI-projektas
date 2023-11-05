@@ -131,6 +131,19 @@ export class MainContainer extends Component {
                         <div className="registerButtonsDiv">
                             <h6>Logged in as: {this.state.currentUserName}</h6>
                         </div>
+                        
+                        {this.props.currentGroupId !== 0 &&
+                            <CreatingNotesButton
+                                handleCreateNote={this.handleCreateNote}
+                                groupId={this.props.currentGroupId}
+                            />
+                        }
+                        
+                        {this.state.displayNote ?
+                        <NoteHub display={this.state.noteHubDisplay} noteId={this.state.noteId} exitNote={this.exitNote} /> :
+                        <NoteDisplay currentGroupId={this.props.currentGroupId}
+                                     openNote={this.openNote} />
+                        }
                     </>
                 )}
 
@@ -162,14 +175,6 @@ export class MainContainer extends Component {
                         setUserName={this.setUserName}
                         setCurrentUser={this.props.setCurrentUser}
                     />}
-
-                {this.props.currentGroupId !== 0 &&
-                    <CreatingNotesButton 
-                        handleCreateNote={this.handleCreateNote} 
-                        groupId={this.props.currentGroupId}
-                    />
-                }
-                {this.state.displayNote ? <NoteHub display={this.state.noteHubDisplay} noteId={this.state.noteId} exitNote={this.exitNote} /> : <NoteDisplay openNote={this.openNote} />}
             </div>
         );
     }
