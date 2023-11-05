@@ -140,7 +140,10 @@ export class MainContainer extends Component {
                         }
                         
                         {this.state.displayNote ?
-                        <NoteHub display={this.state.noteHubDisplay} noteId={this.state.noteId} exitNote={this.exitNote} /> :
+                        <NoteHub display={this.state.noteHubDisplay} 
+                                 noteId={this.state.noteId} 
+                                 currentUserId={this.props.currentUserId}
+                                 exitNote={this.exitNote} /> :
                         <NoteDisplay currentGroupId={this.props.currentGroupId}
                                      openNote={this.openNote} />
                         }
