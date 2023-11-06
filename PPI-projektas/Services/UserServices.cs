@@ -1,12 +1,23 @@
 using PPI_projektas.Exceptions;
 using PPI_projektas.objects;
+using PPI_projektas.objects.Factories;
+using PPI_projektas.Services.Interfaces;
 using PPI_projektas.Services.Response;
 using PPI_projektas.Utils;
 
 namespace PPI_projektas.Services;
 
-public class UserService
+public class UserService : IUserService
 {
+    private readonly IObjectDataItemFactory _objectDataItemFactory;
+    private readonly IUserFactory _userFactory;
+
+    public UserService(IObjectDataItemFactory objectDataItemFactory, IUserFactory userFactory)
+    {
+        _objectDataItemFactory = objectDataItemFactory;
+        _userFactory = userFactory;
+    }
+    
     public bool ValidateData(string data)
     {
         return !String.IsNullOrEmpty(data);
@@ -24,7 +35,7 @@ public class UserService
     {
         var users = DataHandler.Instance.AllUsers
             .Where(user => user.GetUsername().Contains(name))
-            .Select(user => new ObjectDataItem(user.Id, user.GetUsername()))
+            .Select(user => _objectDataItemFactory.Create(user.Id, user.GetUsername()))
             .ToList();
 
         return users;
@@ -32,7 +43,7 @@ public class UserService
 
     public Guid CreateUser(UserCreateData userData)
     {
-        var newUser = new User(userData.Username, userData.Password, userData.Email);
+        var newUser = _userFactory.Create(userData.Username, userData.Password, userData.Email);
         DataHandler.Create(newUser);
 
         return newUser.Id;

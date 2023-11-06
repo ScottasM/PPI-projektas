@@ -1,19 +1,29 @@
 using PPI_projektas.Exceptions;
 using PPI_projektas.objects;
 using PPI_projektas.objects.abstractions;
+using PPI_projektas.objects.Factories;
+using PPI_projektas.Services.Interfaces;
 using PPI_projektas.Services.Response;
 using PPI_projektas.Utils;
 
 namespace PPI_projektas.Services;
 
-public class GroupService
+public class GroupService : IGroupService
 {
+    private readonly IObjectDataItemFactory _objectDataItemFactory;
+    private readonly IGroupFactory _groupFactory;
+
+    public GroupService(IObjectDataItemFactory objectDataItemFactory, IGroupFactory groupFactory)
+    {
+        _objectDataItemFactory = objectDataItemFactory;
+        _groupFactory = groupFactory;
+    }
     
     public List<ObjectDataItem> GetGroupsByOwner(Guid ownerId)
     {
         var data = DataHandler.Instance.AllGroups
             //.Where(group => group.OwnerGuid == ownerId) Will be uncommented when user is associated on the frontend
-            .Select(group => new ObjectDataItem(group.Id, group.Name))
+            .Select(group => _objectDataItemFactory.Create(group.Id, group.Name))
             .ToList();
         
         return data;
@@ -24,7 +34,7 @@ public class GroupService
         var group = FindObjectById(groupId, DataHandler.Instance.AllGroups);
 
         var users = group.Members
-            .Select(user => new ObjectDataItem(user.Id, user.GetUsername()))
+            .Select(user => _objectDataItemFactory.Create(user.Id, user.GetUsername()))
             .ToList();
 
         return users;
@@ -36,8 +46,8 @@ public class GroupService
 
         var groupMembers = groupMemberIds.Select(id => FindObjectById(id, DataHandler.Instance.AllUsers)).ToList();
 
-        // var group = new Group(groupName, owner, groupMembers);
-        var group = new Group(groupName, new User(), groupMembers);
+        // var group = _groupFactory.Create(groupName, owner, groupMembers);
+        var group = _groupFactory.Create(groupName, new User(), groupMembers);
         DataHandler.Create(group);
 
         return group.Id;

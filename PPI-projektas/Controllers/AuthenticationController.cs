@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using PPI_projektas.objects;
 using PPI_projektas.Utils;
 using PPI_projektas.Services;
+using PPI_projektas.Services.Interfaces;
 
 
 namespace PPI_projektas.Controllers
@@ -10,15 +10,17 @@ namespace PPI_projektas.Controllers
     [Route("api/[controller]")]
     public class AuthenticationController : ControllerBase
     {
-        AuthenticationService? service;
+        private readonly ICustomAuthenticationService _authenticationService;
 
-
+        public AuthenticationController(ICustomAuthenticationService authenticationService)
+        {
+            _authenticationService = authenticationService;
+        }
+        
         [HttpPost("tryregister")]
         public IActionResult Register([FromBody]AuthData authData)
         {
-            service = LazySingleton<AuthenticationService>.Instance;
-            
-            var authReturn = service.TryRegister(authData.Username, authData.Password);
+            var authReturn = _authenticationService.TryRegister(authData.Username, authData.Password);
             if(authReturn == null) {
                 return BadRequest("Register failed. Please try again later");
             }
@@ -34,9 +36,7 @@ namespace PPI_projektas.Controllers
         [HttpPost("trylogin")]
         public IActionResult Login([FromBody]AuthData authData)
         {
-            service = LazySingleton<AuthenticationService>.Instance;
-
-            var authReturn = service.TryLogin(authData.Username, authData.Password);
+            var authReturn = _authenticationService.TryLogin(authData.Username, authData.Password);
             if (authReturn == null) {
                 return BadRequest("Login failed. Please try again later");
             }

@@ -1,8 +1,7 @@
-﻿using System.Dynamic;
 using Microsoft.AspNetCore.Mvc;
 using PPI_projektas.Exceptions;
 using PPI_projektas.objects;
-using PPI_projektas.Services;
+using PPI_projektas.Services.Interfaces;
 
 namespace PPI_projektas.Controllers
 
@@ -11,10 +10,17 @@ namespace PPI_projektas.Controllers
     [Route("api/[controller]")]
     public class NoteController : ControllerBase
     {
+        private readonly INoteService _noteService;
+
+        public NoteController(INoteService noteService)
+        {
+            _noteService = noteService;
+        }
+        
         [HttpGet]
         public IActionResult Get()
         {
-            return Ok(new NoteService().GetNotes());
+            return Ok(_noteService.GetNotes());
         }
 
         [HttpGet("openNote/{noteId:guid}")]
@@ -22,7 +28,7 @@ namespace PPI_projektas.Controllers
         {
             try
             {
-                return Ok(new NoteService().GetNote(noteId));
+                return Ok(_noteService.GetNote(noteId));
             }
             catch (ObjectDoesNotExistException)
             {
@@ -33,7 +39,7 @@ namespace PPI_projektas.Controllers
         [HttpPost("createNote/{authorId}")]
         public IActionResult CreateNote(Guid authorId)
         {
-            var noteId = new NoteService().CreateNote(authorId);
+            var noteId = _noteService.CreateNote(authorId);
             return CreatedAtAction("CreateNote", noteId);
         }
 
@@ -42,7 +48,7 @@ namespace PPI_projektas.Controllers
         {
             try
             {
-                new NoteService().UpdateNote(noteId, noteData.AuthorId, noteData.Name, noteData.Tags, noteData.Text);
+                _noteService.UpdateNote(noteId, noteData.AuthorId, noteData.Name, noteData.Tags, noteData.Text);
                 return Ok();
             }
             catch (ObjectDoesNotExistException)
@@ -60,7 +66,7 @@ namespace PPI_projektas.Controllers
         {
             try
             {
-                new NoteService().DeleteNote(noteId, userId);
+                _noteService.DeleteNote(noteId, userId);
                 return NoContent();
             }
             catch (ObjectDoesNotExistException)
