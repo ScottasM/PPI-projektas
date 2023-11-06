@@ -105,7 +105,7 @@ export class GroupCreateMenu extends Component {
         const { groupName } = this.state;
         
         return (
-            <div className="groupCreateMenu position-absolute translate-middle text-white">
+            <div className="groupCreateMenu position-fixed translate-middle text-white">
                 <div className="title">
                     <h2>{this.props.configType.charAt(0).toUpperCase() + this.props.configType.slice(1)} Group</h2>
                 </div>

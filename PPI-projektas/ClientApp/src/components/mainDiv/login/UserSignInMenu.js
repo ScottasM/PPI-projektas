@@ -70,7 +70,7 @@ export class UserSignInMenu extends Component {
         const { username, email, password } = this.state;
 
         return (
-            <div className="userLoginMenu position-absolute translate-middle text-white">
+            <div className="userLoginMenu position-fixed translate-middle text-white">
                 <div className="title">
                     <h2>Sign In</h2>
                 </div>

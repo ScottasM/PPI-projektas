@@ -7,6 +7,7 @@ import { UserSignInMenu } from "./login/UserSignInMenu";
 import { CreatingButtons } from "./CreatingButtons";
 import { CreatingLoginButtons } from "./login/CreatingLoginButtons";
 import { CreatingNotesButton } from "./notes/CreatingNotesButton";
+import './MainContainer.css';
 
 export class MainContainer extends Component {
     static displayName = MainContainer.name;
@@ -116,24 +117,30 @@ export class MainContainer extends Component {
     
     render() {
         return (
-            <div className="bg-white">
-                <CreatingButtons toggleMenu={this.toggleGroupConfigMenu}/>
-                {this.state.displayGroupCreateMenu && 
-                    <GroupCreateMenu 
-                        configType = {this.state.groupConfigMenuType}
-                        toggledGroup={this.props.toggledGroup}
-                        fetchGroupList={this.props.fetchGroupList} toggleGroupCreateMenu={this.toggleGroupConfigMenu} />
-                }
-                        
-                <CreatingLoginButtons toggleMenu={this.toggleSignInMenu} buttonName={{name: "Sign In"}} />
-                {this.state.displaySignInMenu && <UserSignInMenu toggleMenu={this.toggleSignInMenu}/>}
+            <>
+                <div className="topNav">
+                    <CreatingButtons toggleMenu={this.toggleGroupConfigMenu}/>
+                    {this.state.displayGroupCreateMenu && 
+                        <GroupCreateMenu 
+                            configType = {this.state.groupConfigMenuType}
+                            toggledGroup={this.props.toggledGroup}
+                            fetchGroupList={this.props.fetchGroupList} toggleGroupCreateMenu={this.toggleGroupConfigMenu} />
+                    }
+                    <CreatingNotesButton handleCreateNote={this.handleCreateNote} />
 
-                <CreatingLoginButtons toggleMenu={this.toggleLoginMenu} buttonName={{name: "Login"}} />
-                {this.state.displayLoginMenu && <UserLoginMenu />}
-                
-                <CreatingNotesButton handleCreateNote={this.handleCreateNote} />
-                {this.state.displayNote ? <NoteHub display={this.state.noteHubDisplay} noteId={this.state.noteId} exitNote={this.exitNote} /> : <NoteDisplay openNote={this.openNote} />}
-            </div>
+                    <input type="text" className="search-bar col-sm-4" placeholder="Search..." />
+
+                    <CreatingLoginButtons toggleMenu={this.toggleSignInMenu} buttonName={{name: "Sign In"}} />
+                    {this.state.displaySignInMenu && <UserSignInMenu toggleMenu={this.toggleSignInMenu}/>}
+
+                    <CreatingLoginButtons toggleMenu={this.toggleLoginMenu} buttonName={{name: "Login"}} />
+                    {this.state.displayLoginMenu && <UserLoginMenu />}
+                </div>
+
+                <div className="main-container">
+                    {this.state.displayNote ? <NoteHub display={this.state.noteHubDisplay} noteId={this.state.noteId} exitNote={this.exitNote} /> : <NoteDisplay openNote={this.openNote} />}
+                </div>
+            </>
         );
     }
 }

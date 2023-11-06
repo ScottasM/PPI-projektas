@@ -1,0 +1,44 @@
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: #22223b;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #888;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #7F737D;
+}
+
+.topNav {
+    top: 0;
+    position: sticky;
+    background-color: #22223b;
+    box-shadow: 0 -4px 4px 7px #1C1C31;
+    height: 70px;
+    overflow: auto;
+}
+
+.search-bar {
+    height: 40px;
+    margin-left: 40px;
+    margin-right: auto;
+    margin-top: 15px;
+    min-width: 200px;
+}
+
+input[type=text] {
+    border-radius: 10px;
+}
+
+.main-container {
+    background-color: #4a4e69;
+}
+
+body {
+    background-color: #F2E9E4;
+}
