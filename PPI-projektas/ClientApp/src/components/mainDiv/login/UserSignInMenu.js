@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import '../../LoginWindow.css'
+import '../InputWindow.css';
 
 export class UserSignInMenu extends Component {
     static displayName = UserSignInMenu.name;

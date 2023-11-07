@@ -139,7 +139,7 @@ export class UserSelection extends Component {
                     value={this.props.userSearch}
                     onChange={this.handleUserSearch}
                 />
-                <br/>
+                <br />
                 <div className="scroll-container" ref={this.scrollContainerRef}>
                     {this.state.users.map((user) => (
                         <div key={user.id} className="scroll-item">
@@ -152,7 +152,7 @@ export class UserSelection extends Component {
                         </div>
                     ))}
                 </div>
-                <p>Group Members</p>
+                <p className="m-0">Group Members</p>
                 <div className="scroll-container" ref={this.memberScrollContainerRef}>
                     {this.props.members.map((member) => (
                         <div key={member.id} className="scroll-item">

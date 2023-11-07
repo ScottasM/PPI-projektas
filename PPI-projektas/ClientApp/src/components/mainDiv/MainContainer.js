@@ -128,8 +128,6 @@ export class MainContainer extends Component {
                     }
                     <CreatingNotesButton handleCreateNote={this.handleCreateNote} />
 
-                    <input type="text" className="search-bar col-sm-4" placeholder="Search..." />
-
                     <CreatingLoginButtons toggleMenu={this.toggleSignInMenu} buttonName={{name: "Sign In"}} />
                     {this.state.displaySignInMenu && <UserSignInMenu toggleMenu={this.toggleSignInMenu}/>}
 

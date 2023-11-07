@@ -32,7 +32,8 @@
 }
 
 input[type=text] {
-    border-radius: 10px;
+    border-radius: 8px;
+    background-color: #F2E9E4;
 }
 
 .main-container {

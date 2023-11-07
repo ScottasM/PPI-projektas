@@ -1,0 +1,24 @@
+.groupCreateMenu, .userLoginMenu {
+    top: 50%;
+    left: 50%;
+    padding: 16px;
+    transform: translate(-50%, -50%);
+    background-color: #22224B;
+    border: .5px solid #1F737D;
+    /*border-width: 0 0 4px 4px;*/
+    box-shadow: 3px 3px 0px 2px #1C1C31;
+    border-radius: 8px;
+}
+
+.submitButton {
+    margin-top: 10px;
+    border-radius: 8px;
+    background-color: #9A8C98;
+    color: #FFFFFF;
+    font-weight: 600;
+    letter-spacing: .8px;
+}
+
+#group-name, #user-search {
+    width: 350px;
+}
