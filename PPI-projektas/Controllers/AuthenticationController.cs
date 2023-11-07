@@ -1,6 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using PPI_projektas.Utils;
-using PPI_projektas.Services;
 using PPI_projektas.Services.Interfaces;
 
 

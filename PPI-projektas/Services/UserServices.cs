@@ -42,7 +42,7 @@ public class UserService : IUserService
     
     public List<ObjectDataItem> GetGroupsFromUser(Guid userId)
     {
-        var user = DataHandler.Instance.AllUsers.Find(user => user.Id == userId);
+        var user = DataHandler.FindObjectById(userId, DataHandler.Instance.AllUsers);
 
         if (user == null)
             throw new ObjectDoesNotExistException();
@@ -62,8 +62,11 @@ public class UserService : IUserService
 
     public void DeleteUser(Guid userId)
     {
-        var user = DataHandler.Instance.AllUsers.Find(user => user.Id == userId);
-        if(user == null) throw new ObjectDoesNotExistException(userId);
+        var user = DataHandler.FindObjectById(userId, DataHandler.Instance.AllUsers);
+
+        foreach (var group in user.Groups)
+            group.RemoveUser(user);
+        
         DataHandler.Delete(user);
     }
 }

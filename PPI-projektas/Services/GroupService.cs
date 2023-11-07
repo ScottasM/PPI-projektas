@@ -1,5 +1,3 @@
-using PPI_projektas.Exceptions;
-using PPI_projektas.objects.abstractions;
 using PPI_projektas.objects.Factories;
 using PPI_projektas.Services.Interfaces;
 using PPI_projektas.Services.Response;
@@ -90,6 +88,16 @@ public class GroupService : IGroupService
     {
         var group = DataHandler.FindObjectById(groupId, DataHandler.Instance.AllGroups);
 
+        foreach (var member in group.Members)
+            member.RemoveGroup(group);
+
+        foreach (var note in group.Notes)
+        {
+            var user = DataHandler.FindObjectById(note.AuthorId, DataHandler.Instance.AllUsers);
+            user.RemoveCreatedNote(note);
+            DataHandler.Delete(note);
+        }
+        
         DataHandler.Delete(group);
     }
 }
