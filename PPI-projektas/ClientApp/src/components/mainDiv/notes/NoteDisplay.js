@@ -47,7 +47,7 @@ export class NoteDisplay extends Component {
                 this.setState({
                     notes: notes,
                     isLoading: false,
-                }), console.log(notes);
+                });
             })
             .catch(error =>
                 console.error('There was a problem with the fetch operation:', error));
