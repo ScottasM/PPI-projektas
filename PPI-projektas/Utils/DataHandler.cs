@@ -48,12 +48,6 @@ namespace PPI_projektas.Utils
 
 
             // assign loaded guids to actual objects
-            foreach(var group in AllGroups) {
-                group.Owner = AllUsers.Find(inst => inst.Id == group.OwnerGuid);
-
-                group.LoadMembers();
-                group.LoadNotes();
-            }
           
             _state = FileState.Ready;
 

@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PPI_projektas.Utils;
 
@@ -10,9 +11,11 @@ using PPI_projektas.Utils;
 namespace PPI_projektas.Migrations
 {
     [DbContext(typeof(EntityData))]
-    partial class EntityDataModelSnapshot : ModelSnapshot
+    [Migration("20231109145741_StringFixes")]
+    partial class StringFixes
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
