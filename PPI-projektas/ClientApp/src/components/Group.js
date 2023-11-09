@@ -42,7 +42,7 @@ export class Group extends Component {
 
         return (
             <div className="group-container">
-                <button className="group bg-white rounded-circle" onContextMenu={this.showContextMenu}>
+                <button className="group bg-white rounded-circle" onClick={() => this.props.toggleGroup(this.props.groupId)} onContextMenu={this.showContextMenu}>
                     {this.props.groupInitials}
                 </button>
                 {isContextMenuVisible && (

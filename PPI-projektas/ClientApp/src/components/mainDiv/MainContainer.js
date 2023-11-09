@@ -20,7 +20,8 @@ export class MainContainer extends Component {
             displaySignInMenu: false,
             noteId: '',
             displayNote: false,
-            noteHubDisplay: 1
+            noteHubDisplay: 1,
+            currentUserName: '',
         }
     }
     
@@ -44,7 +45,7 @@ export class MainContainer extends Component {
     }
     
     handleCreateNote = async () => {
-        fetch(`http://localhost:5268/api/note/createNote/0f8fad5b-d9cb-469f-a165-70867728950e`, {
+        fetch(`http://localhost:5268/api/note/createNote/${this.props.currentGroupId}/${this.props.currentUserId}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -114,25 +115,69 @@ export class MainContainer extends Component {
         }));
     }
     
+    setUserName = (username) => {
+        this.setState({
+            currentUserName: username,
+        })
+    }
+    
     render() {
         return (
             <div className="bg-white">
-                <CreatingButtons toggleMenu={this.toggleGroupConfigMenu}/>
-                {this.state.displayGroupCreateMenu && 
+                {this.props.currentUserId !== 0 && (
+                    <>
+                        <CreatingButtons toggleMenu={this.toggleGroupConfigMenu} />
+                        <CreatingLoginButtons toggleMenu={() => this.props.setCurrentUser(0)} buttonName={{ name: 'Log out' }} />
+                        <div className="registerButtonsDiv">
+                            <h6>Logged in as: {this.state.currentUserName}</h6>
+                        </div>
+                        
+                        {this.props.currentGroupId !== 0 &&
+                            <CreatingNotesButton
+                                handleCreateNote={this.handleCreateNote}
+                                groupId={this.props.currentGroupId}
+                            />
+                        }
+                        
+                        {this.state.displayNote ?
+                        <NoteHub display={this.state.noteHubDisplay} 
+                                 noteId={this.state.noteId} 
+                                 currentUserId={this.props.currentUserId}
+                                 exitNote={this.exitNote} /> :
+                        <NoteDisplay currentGroupId={this.props.currentGroupId}
+                                     openNote={this.openNote} />
+                        }
+                    </>
+                )}
+
+                {this.props.currentUserId === 0 && (
+                    <>
+                        <CreatingLoginButtons toggleMenu={this.toggleSignInMenu} buttonName={{name: "Sign In"}}/>
+                        <CreatingLoginButtons toggleMenu={this.toggleLoginMenu} buttonName={{name: "Login"}}/>
+                    </>
+                )}
+                        
+                {this.state.displayGroupCreateMenu &&
                     <GroupCreateMenu 
                         configType = {this.state.groupConfigMenuType}
                         toggledGroup={this.props.toggledGroup}
-                        fetchGroupList={this.props.fetchGroupList} toggleGroupCreateMenu={this.toggleGroupConfigMenu} />
+                        fetchGroupList={this.props.fetchGroupList} toggleGroupCreateMenu={this.toggleGroupConfigMenu} 
+                        currentUserId={this.props.currentUserId}/>
                 }
-                        
-                <CreatingLoginButtons toggleMenu={this.toggleSignInMenu} buttonName={{name: "Sign In"}} />
-                {this.state.displaySignInMenu && <UserSignInMenu toggleMenu={this.toggleSignInMenu}/>}
-
-                <CreatingLoginButtons toggleMenu={this.toggleLoginMenu} buttonName={{name: "Login"}} />
-                {this.state.displayLoginMenu && <UserLoginMenu />}
                 
-                <CreatingNotesButton handleCreateNote={this.handleCreateNote} />
-                {this.state.displayNote ? <NoteHub display={this.state.noteHubDisplay} noteId={this.state.noteId} exitNote={this.exitNote} /> : <NoteDisplay openNote={this.openNote} />}
+                {this.state.displaySignInMenu && 
+                    <UserSignInMenu 
+                        toggleMenu={this.toggleSignInMenu}
+                        setUserName={this.setUserName}
+                        setCurrentUser={this.props.setCurrentUser}
+                    />}
+
+                {this.state.displayLoginMenu && 
+                    <UserLoginMenu
+                        toggleMenu={this.toggleLoginMenu}
+                        setUserName={this.setUserName}
+                        setCurrentUser={this.props.setCurrentUser}
+                    />}
             </div>
         );
     }

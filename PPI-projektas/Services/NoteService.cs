@@ -18,38 +18,36 @@ public class NoteService : INoteService
         _openedNoteDataFactory = openedNoteDataFactory;
         _noteFactory = noteFactory;
     }
-    
-    public List<ObjectDataItem> GetNotes()
+
+    public List<ObjectDataItem> GetNotes(Guid groupId)
     {
-        return DataHandler.Instance.AllNotes
-            .Select(note => _objectDataItemFactory.Create(note.Id, note.Name))
-            .ToList();
+        var group = DataHandler.FindObjectById(groupId, DataHandler.Instance.AllGroups);
+
+        return group.Notes.Select(note => _objectDataItemFactory.Create(note.Id, note.Name)).ToList();
     }
 
     public OpenedNoteData GetNote(Guid noteId)
     {
-        var note = DataHandler.Instance.AllNotes
-            .Find(note => note.Id == noteId);
-        
-        if (note == null) throw new ObjectDoesNotExistException();
+        var note = DataHandler.FindObjectById(noteId, DataHandler.Instance.AllNotes);
         
         return _openedNoteDataFactory.Create(note.Name, note.Tags, note.Text);
     }
 
-    public Guid CreateNote(Guid authorId)
+    public Guid CreateNote(Guid groupId, Guid authorId)
     {
+        var group = DataHandler.FindObjectById(groupId, DataHandler.Instance.AllGroups);
+        var author = DataHandler.FindObjectById(authorId, DataHandler.Instance.AllUsers);
         var note = _noteFactory.Create(authorId);
         DataHandler.Create(note);
+        author.AddCreatedNote(note);
+        group.AddNote(note);
 
         return note.Id;
     }
     
     public void UpdateNote(Guid noteId, Guid userId, string name, List<string> tags, string text)
     {
-        var note = DataHandler.Instance.AllNotes
-            .Find(note => note.Id == noteId);
-        
-        if (note == null) throw new ObjectDoesNotExistException();
+        var note = DataHandler.FindObjectById(noteId, DataHandler.Instance.AllNotes);
         if (note.AuthorId != userId) throw new UnauthorizedAccessException();
         
         note.Name = name;
@@ -59,12 +57,16 @@ public class NoteService : INoteService
 
     public void DeleteNote(Guid noteId, Guid userId)
     {
-        var note = DataHandler.Instance.AllNotes
-            .Find(note => note.Id == noteId);
+        var note = DataHandler.FindObjectById(noteId, DataHandler.Instance.AllNotes);
+        var user = DataHandler.FindObjectById(userId, DataHandler.Instance.AllUsers);
         
-        if (note == null) throw new ObjectDoesNotExistException();
+        var group = DataHandler.Instance.AllGroups.FirstOrDefault(group => group.Notes.Contains(note));
+        if (group == null) throw new ObjectDoesNotExistException();
+        
         if (note.AuthorId != userId) throw new UnauthorizedAccessException();
         
+        group.RemoveNote(note);
+        user.RemoveCreatedNote(note);
         DataHandler.Delete(note);
     }
 }
