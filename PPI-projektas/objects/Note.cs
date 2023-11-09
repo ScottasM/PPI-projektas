@@ -13,19 +13,19 @@ public class EntityStrings
 
 public class Note : Entity, IComparable<Note>
 {
-	[JsonInclude] public Guid AuthorId;
+	public Guid UserId;
+
   
 	public string Name { get; set; }
-
 	public List<EntityStrings> Tags { get; set; }
   
-	[JsonInclude] public string Text;
+	public string Text;
 	
 	public Note () {} // For deserialization
 
 	public Note(Guid authorId, bool createGUID = true) : base(createGUID)
 	{
-		AuthorId = authorId;
+		UserId = authorId;
 		Name = "";
 		Tags = new List<EntityStrings>();
 		Text = "";

@@ -38,7 +38,7 @@ public class NoteService
             .Find(note => note.Id == noteId);
         
         if (note == null) throw new ObjectDoesNotExistException();
-        if (note.AuthorId != userId) throw new UnauthorizedAccessException();
+        if (note.UserId != userId) throw new UnauthorizedAccessException();
         
         note.Name = name;
         note.Tags = tags;
@@ -51,7 +51,7 @@ public class NoteService
             .Find(note => note.Id == noteId);
         
         if (note == null) throw new ObjectDoesNotExistException();
-        if (note.AuthorId != userId) throw new UnauthorizedAccessException();
+        if (note.UserId != userId) throw new UnauthorizedAccessException();
         
         DataHandler.Delete(note);
     }

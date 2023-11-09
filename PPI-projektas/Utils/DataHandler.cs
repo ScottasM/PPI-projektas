@@ -54,11 +54,6 @@ namespace PPI_projektas.Utils
                 group.LoadMembers();
                 group.LoadNotes();
             }
-            foreach(var user in AllUsers) {
-                user.LoadCreatedNotes();
-                user.LoadFavoriteNotes();
-                user.LoadGroups();
-            }
           
             _state = FileState.Ready;
 
