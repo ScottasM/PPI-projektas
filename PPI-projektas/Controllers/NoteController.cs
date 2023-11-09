@@ -42,7 +42,7 @@ namespace PPI_projektas.Controllers
         {
             try
             {
-                new NoteService().UpdateNote(noteId, noteData.AuthorId, noteData.Name, noteData.Tags, noteData.Text);
+                new NoteService().UpdateNote(noteId, noteData.UserId, noteData.Name, noteData.Tags, noteData.Text);
                 return Ok();
             }
             catch (ObjectDoesNotExistException)

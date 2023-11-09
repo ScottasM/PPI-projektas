@@ -13,8 +13,9 @@ public class EntityStrings
 
 public class Note : Entity, IComparable<Note>
 {
-	public Guid UserId;
 
+	public Guid UserId;
+	public User User;
   
 	public string Name { get; set; }
 	public List<EntityStrings> Tags { get; set; }

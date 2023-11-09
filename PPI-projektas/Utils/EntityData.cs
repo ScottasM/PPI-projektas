@@ -20,11 +20,22 @@ namespace PPI_projektas.Utils
         public DbSet<Note> Notes { get; set; }
         public DbSet<Group> Groups { get; set; }
 
-        /*protected override void OnModelCreating(ModelBuilder modelBuilder)
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<User>().HasKey(u => u.Id);
             modelBuilder.Entity<Note>().HasKey(u => u.Id);
             modelBuilder.Entity<Group>().HasKey(u => u.Id);
-        }*/
+
+            modelBuilder.Entity<Note>()
+                .HasOne(n => n.User)
+                .WithMany(u => u.FavoriteNotes)
+                .HasForeignKey(n => n.UserId);
+
+            modelBuilder.Entity<Note>()
+                .HasOne(n => n.User)
+                .WithMany(u => u.CreatedNotes)
+                .HasForeignKey(n => n.UserId);
+        }
     }
 }
