@@ -10,7 +10,6 @@ namespace PPI_projektas.Utils
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-
             var connectionString = "server=185.34.52.6;user=NotesApp;password=AlioValioIrInternetas;database=NotesApp";
             var serverVersion = MariaDbServerVersion.AutoDetect(connectionString);
             optionsBuilder.UseMySql(connectionString, serverVersion);

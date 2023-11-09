@@ -3,7 +3,7 @@
     "windowsAuthentication": false,
     "anonymousAuthentication": true,
     "iisExpress": {
-      "applicationUrl": "http://localhost:58755",
+      "applicationUrl": "http://*:58755",
       "sslPort": 0
     }
   },
@@ -11,7 +11,7 @@
     "PPI_projektas": {
       "commandName": "Project",
       "launchBrowser": true,
-      "applicationUrl": "http://localhost:5268",
+      "applicationUrl": "http://*:5268",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
         "ASPNETCORE_HOSTINGSTARTUPASSEMBLIES": "Microsoft.AspNetCore.SpaProxy"
