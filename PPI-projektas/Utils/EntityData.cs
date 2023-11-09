@@ -28,9 +28,8 @@ namespace PPI_projektas.Utils
             modelBuilder.Entity<Group>().HasKey(u => u.Id);
 
             modelBuilder.Entity<Note>()
-                .HasOne(n => n.User)
+                .HasMany(n => n.FavoriteByUsers)
                 .WithMany(u => u.FavoriteNotes)
-                .HasForeignKey(n => n.UserId);
 
             modelBuilder.Entity<Note>()
                 .HasOne(n => n.User)
