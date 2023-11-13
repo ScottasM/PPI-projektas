@@ -7,12 +7,12 @@
     z-index: 1;
     top: 0;
     left: 0;
-    background-color: #22223b;
+    background-color: var(--nav-main-color);
     overflow: visible;
     padding-top: 60px;
     padding-left: 3px;
     padding-right: 3px;
-    box-shadow: 4px 2px 5px 1px #1C1C31;
+    box-shadow: 4px 2px 5px 1px var(--nav-secondary-color);
 }
 
 .settings-div {

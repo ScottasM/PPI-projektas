@@ -1,14 +1,5 @@
-.noteHub {
+.note-hub {
     margin-left: 75px;
-}
-
-textarea {
-    background-color: #F2E9E4;
-    margin-top: 8px;
-    margin-left: 10px;
-    margin-right: 10px;
-    border-radius: 8px;
-    resize: none;
 }
 
 .note-editor {
@@ -16,10 +7,24 @@ textarea {
     display: flex;
 }
 
-.editor {
+textarea {
+    background-color: var(--bg-color);
+    margin-top: 8px;
+    margin-left: 10px;
+    margin-right: 10px;
+    border-radius: 8px;
+    resize: none;
+}
+
+label {
+    font-weight: bold;
+    color: #FFFFFF;
+}
+
+.p-container {
     background-color: #4a4e69;
-    border: .5px solid #22223b;
-    box-shadow: 3px 3px 0px 2px #22223b;
+    border: .5px solid var(--nav-main-color);
+    box-shadow: 3px 3px 0px 2px var(--nav-main-color);
     border-radius: 8px;
 }
 
@@ -34,12 +39,6 @@ textarea {
     float: left;
     margin-left: 10px;
     max-height: 240px;
-}
-
-label {
-    font-weight: bold;
-    color: #FFFFFF;
-    /*text-shadow: .5px .5px .5px #000;*/
 }
 
 .tag-container {
@@ -57,10 +56,6 @@ label {
 }
 
 .viewer {
-    background-color: #4a4e69;
-    border: .5px solid #22223b;
-    box-shadow: 3px 3px 0px 2px #22223b;
-    border-radius: 8px;
     padding-left: 10px;
     padding-right: 10px;
     width: 350px;

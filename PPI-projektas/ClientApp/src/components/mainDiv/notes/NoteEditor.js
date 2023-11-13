@@ -146,25 +146,25 @@ export class NoteEditor extends Component {
     render() {
         return (
             <div className='note-editor'>
-                <div className='editor prop-side'>
+                <div className='editor prop-side p-container'>
                     <label>Note Name:</label>
                     <br />
                     <input type='text' id='note-name' name='note-name' onChange={this.handleNameChange} value={this.state.noteName} />
                     <br />
-                    <button className='submitButton' onClick={this.handlePost}> Save </button>
-                    <button className='submitButton' onClick={this.handleExit}> Exit </button>
-                    <button className='submitButton' onClick={this.handleDelete}> Delete </button>
+                    <button className='submit-button' onClick={this.handlePost}> Save </button>
+                    <button className='submit-button' onClick={this.handleExit}> Exit </button>
+                    <button className='submit-button' onClick={this.handleDelete}> Delete </button>
                     <br />
                     <label>Tags:</label>
                     <br />
                     <input type='text' id='tag-name' name='tag-name' value={this.state.tag} onChange={this.handleTagChanged} />
                     <br />
-                    <button className='submitButton' onClick={this.handleDeleteTag}> Delete tag </button>
-                    <button className='submitButton' onClick={this.handleAddTag}> Add tag </button>
+                    <button className='submit-button' onClick={this.handleDeleteTag}> Delete tag </button>
+                    <button className='submit-button' onClick={this.handleAddTag}> Add tag </button>
                     <br />
                     <TagList deleteTag={this.handleDeleteTag}  noteTags={this.state.noteTags} />
                 </div>
-                <div className='editor text-side'>
+                <div className='editor text-side p-container'>
                     <textarea name='noteText' rows='9' cols='50' placeholder='Note text...'value={this.state.noteText} onChange={this.handleTextChanged} />
                 </div>
             </div>

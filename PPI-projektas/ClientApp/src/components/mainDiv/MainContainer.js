@@ -132,10 +132,10 @@ export class MainContainer extends Component {
             <div className="main-container">
                 {this.props.currentUserId !== 0 && (
                     <>
-                        <div className="topNav">
+                        <div className="top-nav">
                         <CreatingButtons toggleMenu={this.toggleGroupConfigMenu} />
                         <CreatingLoginButtons toggleMenu={this.handleLogout} buttonName={{ name: 'Log out' }} />
-                        <div className="registerButtonsDiv">
+                        <div className="register-buttons-div">
                             <h6>Logged in as: {this.state.currentUserName}</h6>
                         </div>
 
@@ -160,7 +160,7 @@ export class MainContainer extends Component {
 
                 
                 {this.props.currentUserId === 0 && (
-                    <div className="topNav">
+                    <div className="top-nav">
                         <CreatingLoginButtons toggleMenu={this.toggleSignInMenu} buttonName={{name: "Sign In"}}/>
                         <CreatingLoginButtons toggleMenu={this.toggleLoginMenu} buttonName={{name: "Login"}}/>
                     </div>

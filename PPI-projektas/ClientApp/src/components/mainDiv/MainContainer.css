@@ -1,9 +1,16 @@
+:root {
+    --nav-main-color: #22223B;
+    --nav-secondary-color: #1C1C31;
+    --button-main-color: #9A8C98;
+    --bg-color: #F2E9E4;
+}
+
 ::-webkit-scrollbar {
     width: 10px;
 }
 
 ::-webkit-scrollbar-track {
-    background: #22223b;
+    background: var(--nav-main-color);
 }
 
 ::-webkit-scrollbar-thumb {
@@ -11,37 +18,12 @@
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background: #7F737D;
-}
-
-.topNav {
-    top: 0;
-    position: sticky;
-    background-color: #22223b;
-    box-shadow: 0 -4px 4px 7px #1C1C31;
-    height: 70px;
-    overflow: auto;
-}
-
-.search-bar {
-    height: 40px;
-    margin-left: 40px;
-    margin-right: auto;
-    margin-top: 15px;
-    min-width: 200px;
+    background: var(--button-main-color)/*#7F737D*/;
 }
 
 input[type=text] {
     border-radius: 8px;
-    background-color: #F2E9E4;
-}
-
-.main-container {
-    background-color: #8e9aaf;
-}
-
-body {
-    background-color: #F2E9E4;
+    background-color: var(--bg-color);
 }
 
 h2 {
@@ -58,4 +40,21 @@ h6 {
     letter-spacing: .8px;
     line-height: 20px;
     margin-top: 14px;
+}
+
+body {
+    background-color: var(--bg-color);
+}
+
+.main-container {
+    background-color: #8e9aaf;
+}
+
+.top-nav {
+    top: 0;
+    position: sticky;
+    background-color: var(--nav-main-color);
+    box-shadow: 0 -4px 4px 7px var(--nav-secondary-color);
+    height: 70px;
+    overflow: auto;
 }

@@ -55,7 +55,7 @@ export class NoteDisplay extends Component {
 
     render() {
         return (
-            <div className="noteDisplay">
+            <div className="note-display">
                 {this.props.currentGroupId ? 
                     (this.state.isLoading ? (
                         <p>Loading...</p>

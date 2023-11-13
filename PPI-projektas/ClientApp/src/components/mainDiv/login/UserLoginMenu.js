@@ -75,7 +75,7 @@ export class UserLoginMenu extends Component {
         const { username, password } = this.state;
 
         return (
-            <div className="userLoginMenu position-fixed translate-middle text-white">
+            <div className="user-login-menu position-fixed translate-middle text-white">
                 <div className="title">
                     <h2>Login</h2>
                 </div>
@@ -100,7 +100,7 @@ export class UserLoginMenu extends Component {
                         onChange = { this.handlePasswordInputChange }
                     />
                     <br />
-                    <input className="submitButton" type="submit" value="Login" />
+                    <input className="submit-button" type="submit" value="Login" />
                 </form>
             </div>
         );

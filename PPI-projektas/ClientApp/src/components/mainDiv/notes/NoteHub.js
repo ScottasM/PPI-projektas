@@ -69,13 +69,13 @@ export class NoteHub extends Component {
         switch (this.state.display) {
             case 0:
                 return (
-                    <div className='noteHub'>
+                    <div className='note-hub'>
                         <p>{this.state.error}</p>
                     </div>
                 )
             case 1:
                 return (
-                    <div className='noteHub'>
+                    <div className='note-hub'>
                         <NoteViewer
                             noteName={this.state.noteName}
                             noteTags={this.state.noteTags}
@@ -87,7 +87,7 @@ export class NoteHub extends Component {
                 )
             case 2:
                 return (
-                    <div className='noteHub'>
+                    <div className='note-hub'>
                         <NoteEditor
                             noteName={this.state.noteName}
                             noteTags={this.state.noteTags}

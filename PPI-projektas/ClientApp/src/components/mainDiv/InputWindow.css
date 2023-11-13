@@ -1,18 +1,23 @@
-.groupCreateMenu, .userLoginMenu {
+.group-create-menu, .user-login-menu {
     top: 50%;
     left: 50%;
     padding: 16px;
     transform: translate(-50%, -50%);
     background-color: #4a4e59;
-    border: .5px solid #1C1C31;
-    box-shadow: 3px 3px 0px 2px #1C1C31;
+    border: .5px solid var(--nav-main-color);
+    box-shadow: 3px 3px 0px 2px var(--nav-main-color);
     border-radius: 8px;
+    overflow: hidden;
 }
 
-.submitButton {
+.group-create-menu {
+    width: 600px;
+}
+
+.submit-button {
     margin-top: 10px;
     border-radius: 8px;
-    background-color: #9A8C98;
+    background-color: var(--button-main-color);
     color: #FFFFFF;
     font-weight: 600;
     letter-spacing: .8px;
