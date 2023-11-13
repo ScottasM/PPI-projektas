@@ -124,21 +124,23 @@ export class MainContainer extends Component {
     
     render() {
         return (
-            <div className="bg-white">
+            <div className="main-container">
                 {this.props.currentUserId !== 0 && (
                     <>
+                        <div className="topNav">
                         <CreatingButtons toggleMenu={this.toggleGroupConfigMenu} />
                         <CreatingLoginButtons toggleMenu={() => this.props.setCurrentUser(0)} buttonName={{ name: 'Log out' }} />
                         <div className="registerButtonsDiv">
                             <h6>Logged in as: {this.state.currentUserName}</h6>
                         </div>
-                        
+
                         {this.props.currentGroupId !== 0 &&
                             <CreatingNotesButton
                                 handleCreateNote={this.handleCreateNote}
                                 groupId={this.props.currentGroupId}
                             />
                         }
+                        </div>
                         
                         {this.state.displayNote ?
                         <NoteHub display={this.state.noteHubDisplay} 
@@ -151,11 +153,12 @@ export class MainContainer extends Component {
                     </>
                 )}
 
+                
                 {this.props.currentUserId === 0 && (
-                    <>
+                    <div className="topNav">
                         <CreatingLoginButtons toggleMenu={this.toggleSignInMenu} buttonName={{name: "Sign In"}}/>
                         <CreatingLoginButtons toggleMenu={this.toggleLoginMenu} buttonName={{name: "Login"}}/>
-                    </>
+                    </div>
                 )}
                         
                 {this.state.displayGroupCreateMenu &&
