@@ -114,8 +114,8 @@ export class NoteEditor extends Component {
         })
     }
 
-    handleDeleteTag = () => {
-        const index = this.state.noteTags.indexOf(this.state.tag);
+    handleDeleteTag = (tag) => {
+        const index = this.state.noteTags.indexOf(tag);
         if (index === -1)
             return;
         const newTags = this.props.noteTags;
@@ -130,6 +130,8 @@ export class NoteEditor extends Component {
     }
 
     handleAddTag = () => {
+        if (this.state.tag === '') return;
+
         const newTags = this.props.noteTags
         newTags.push(this.state.tag);
         this.setState({
@@ -142,30 +144,30 @@ export class NoteEditor extends Component {
     }
 
     render() {
-        return <div className='note-editor'>
-            <input type='text' width='50px' id='note-name' name='note-name' onChange={this.handleNameChange} value={this.state.noteName}/>
-            <br/>
-            <button onClick={this.handlePost}>
-                Save
-            </button>
-            <button onClick={this.handleExit}>
-                Exit
-            </button>
-            <button onClick={this.handleDelete}>
-                Delete
-            </button>
-            <br/>
-            <TagList noteTags={this.state.noteTags}/>
-            <input type='text' width='50px' id='tag-name' name='tag-name' value={this.state.tag} onChange={this.handleTagChanged}/>
-            <br/>
-            <button onClick={this.handleDeleteTag}>
-                Delete tag
-            </button>
-            <button onClick={this.handleAddTag}>
-                Add tag
-            </button>
-            <br/>
-            <textarea name='noteText' rows='20' cols='30' value={this.state.noteText} onChange={this.handleTextChanged}/>
-        </div>
+        return (
+            <div className='note-editor'>
+                <div className='editor prop-side'>
+                    <label>Note Name:</label>
+                    <br />
+                    <input type='text' id='note-name' name='note-name' onChange={this.handleNameChange} value={this.state.noteName} />
+                    <br />
+                    <button className='submitButton' onClick={this.handlePost}> Save </button>
+                    <button className='submitButton' onClick={this.handleExit}> Exit </button>
+                    <button className='submitButton' onClick={this.handleDelete}> Delete </button>
+                    <br />
+                    <label>Tags:</label>
+                    <br />
+                    <input type='text' id='tag-name' name='tag-name' value={this.state.tag} onChange={this.handleTagChanged} />
+                    <br />
+                    <button className='submitButton' onClick={this.handleDeleteTag}> Delete tag </button>
+                    <button className='submitButton' onClick={this.handleAddTag}> Add tag </button>
+                    <br />
+                    <TagList deleteTag={this.handleDeleteTag}  noteTags={this.state.noteTags} />
+                </div>
+                <div className='editor text-side'>
+                    <textarea name='noteText' rows='9' cols='50' placeholder='Note text...'value={this.state.noteText} onChange={this.handleTextChanged} />
+                </div>
+            </div>
+        )
     }
 }

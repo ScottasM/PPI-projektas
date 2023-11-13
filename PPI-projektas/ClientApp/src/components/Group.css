@@ -1,9 +1,15 @@
 ﻿.group {
+    background-color: #9A8C98;
     width: 50px;
     aspect-ratio: 1/1;
     display: flex;
     justify-content: center;
     align-items: center;
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: .8px;
+    line-height: 20px;
+    color: #FFFFFF
 }
 
 .group p {
@@ -61,13 +67,13 @@
 }
 
 .scroll-container {
+    margin-top: 10px;
+    margin-bottom: 5px;
     height: fit-content;
     white-space: nowrap;
     display: inline-block;
     flex-direction: row;
-
     transition: transform 0.3s ease;
-    
     scrollbar-width: none;
     -webkit-scrollbar-width: none;
 }
@@ -80,13 +86,14 @@
     flex: 0 0 auto;
     padding-left: 5px;
     padding-right: 5px;
-    background-color: #f0f0f0;
+    background-color: #F2E9E4;
     border: 1px solid #ccc;
     margin-right: 10px;
     color: black;
     white-space: normal;
     display: inline-block;
     flex-direction: row;
+    border-radius: 8px;
 }
 
 .item-content {

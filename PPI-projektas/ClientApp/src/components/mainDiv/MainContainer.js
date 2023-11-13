@@ -7,6 +7,7 @@ import { UserSignInMenu } from "./login/UserSignInMenu";
 import { CreatingButtons } from "./CreatingButtons";
 import { CreatingLoginButtons } from "./login/CreatingLoginButtons";
 import { CreatingNotesButton } from "./notes/CreatingNotesButton";
+import './MainContainer.css';
 
 export class MainContainer extends Component {
     static displayName = MainContainer.name;

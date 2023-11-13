@@ -1,6 +1,68 @@
 .noteHub {
     margin-left: 75px;
 }
+
 textarea {
+    background-color: #F2E9E4;
+    margin-top: 8px;
+    margin-left: 10px;
+    margin-right: 10px;
+    border-radius: 8px;
     resize: none;
+}
+
+.note-editor {
+    padding: 20px;
+    display: flex;
+}
+
+.editor {
+    background-color: #4a4e69;
+    border: .5px solid #22223b;
+    box-shadow: 3px 3px 0px 2px #22223b;
+    border-radius: 8px;
+}
+
+.editor.prop-side {
+    float: left;
+    padding-left: 10px;
+    padding-right: 10px;
+    width: 350px;
+}
+
+.editor.text-side {
+    float: left;
+    margin-left: 10px;
+    max-height: 240px;
+}
+
+label {
+    font-weight: bold;
+    color: #FFFFFF;
+    /*text-shadow: .5px .5px .5px #000;*/
+}
+
+.tag-container {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.tag {
+    margin-top: 10px;
+}
+
+.note-viewer {
+    padding: 20px;
+    display: flex;
+}
+
+.viewer {
+    background-color: #4a4e69;
+    border: .5px solid #22223b;
+    box-shadow: 3px 3px 0px 2px #22223b;
+    border-radius: 8px;
+    padding-left: 10px;
+    padding-right: 10px;
+    width: 350px;
+    /*width: fit-content;*/
 }

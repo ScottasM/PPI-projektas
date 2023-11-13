@@ -1,27 +1,37 @@
 .creatingButtonsDiv {
     height: 50px;
+    margin-left: 75px;
+    margin-top: 10px;
+    display: inline-block;
+}
+
+.createNoteDiv {
+    height: 50px;
+    margin-left: 25px;
     margin-top: 10px;
     display: inline-block;
 }
 
 .registerButtonsDiv {
     height: 50px;
+    margin-left: 25px;
     margin-top: 10px;
     display: inline-block;
     float: right;
 }
 
 .createNoteButtonDiv {
+    top: 0;
     height: 50px;
     margin-bottom: 10px;
     margin-right: 10px;
     display: inline-block;
     float: right;
-    top: 0;
 }
 
 .create-button {
-    background-color: #1899D6;
+    position: relative;
+    background-color: #7F737D;
     border: solid transparent;
     border-radius: 16px;
     border-width: 0 0 4px;
@@ -33,7 +43,6 @@
     font-weight: 700;
     letter-spacing: .8px;
     line-height: 20px;
-    margin-left: 75px;
     outline: none;
     overflow: visible;
     padding: 13px 19px;
@@ -46,11 +55,12 @@
     -webkit-user-select: none;
     vertical-align: middle;
     white-space: nowrap;
+    text-shadow: .5px .5px 3px #000;
 }
 
 .create-button:after {
     background-clip: padding-box;
-    background-color: #1CB0F6;
+    background-color: #9A8C98;
     border: solid transparent;
     border-radius: 16px;
     border-width: 0 0 4px;
