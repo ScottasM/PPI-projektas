@@ -75,7 +75,7 @@ export class UserSignInMenu extends Component {
                     <h2>Sign In</h2>
                 </div>
                 <form onSubmit={this.handleSubmit}>
-                    <label><b>Username: </b></label>
+                    <label>Username: </label>
                     <br />
                     <input
                         type="text"
@@ -85,7 +85,7 @@ export class UserSignInMenu extends Component {
                         onChange={this.handleUsernameInputChange}
                     />
                     <br />
-                    <label><b>Email: </b></label>
+                    <label>Email: </label>
                     <br />
                     <input
                         type="text"
@@ -95,7 +95,7 @@ export class UserSignInMenu extends Component {
                         onChange={this.handleEmailInputChange}
                     />
                     <br />
-                    <label><b>Password: </b></label>
+                    <label>Password: </label>
                     <br />
                     <input
                         type="text"

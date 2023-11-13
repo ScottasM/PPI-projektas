@@ -33,7 +33,7 @@ export class UserLoginMenu extends Component {
                     <h2>Login</h2>
                 </div>
                 <form onSubmit={this.handleSubmit}>
-                    <label><b>Username: </b></label>
+                    <label>Username: </label>
                     <br />
                     <input
                         type = "text"
@@ -43,7 +43,7 @@ export class UserLoginMenu extends Component {
                         onChange = { this.handleUsernameInputChange }
                     />
                     <br />
-                    <label><b>Password: </b></label>
+                    <label>Password: </label>
                     <br />
                     <input
                         type = "text"

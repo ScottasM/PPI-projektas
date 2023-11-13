@@ -37,9 +37,16 @@ input[type=text] {
 }
 
 .main-container {
-    background-color: #4a4e69;
+    background-color: #8e9aaf;
 }
 
 body {
     background-color: #F2E9E4;
+}
+
+h2 {
+    color: #FFFFFF;
+    letter-spacing: .8px;
+    line-height: 25px;
+    margin-top: 14px;
 }

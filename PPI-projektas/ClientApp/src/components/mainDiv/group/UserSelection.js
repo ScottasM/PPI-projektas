@@ -131,7 +131,8 @@ export class UserSelection extends Component {
 
         return (
             <div className="user-selection">
-                <p className="m-0">Search for users:</p>
+                <label className="m-0">Search for users:</label>
+                <br />
                 <input
                     type="text"
                     id="user-search"

@@ -3,9 +3,8 @@
     left: 50%;
     padding: 16px;
     transform: translate(-50%, -50%);
-    background-color: #22224B;
-    border: .5px solid #1F737D;
-    /*border-width: 0 0 4px 4px;*/
+    background-color: #4a4e59;
+    border: .5px solid #1C1C31;
     box-shadow: 3px 3px 0px 2px #1C1C31;
     border-radius: 8px;
 }
@@ -17,6 +16,7 @@
     color: #FFFFFF;
     font-weight: 600;
     letter-spacing: .8px;
+    text-shadow: .5px .5px 3px #000;
 }
 
 #group-name, #user-search {
