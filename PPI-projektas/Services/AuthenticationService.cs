@@ -1,7 +1,6 @@
 ﻿using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
-using PPI_projektas.objects;
 using PPI_projektas.objects.Factories;
 using PPI_projektas.Services.Interfaces;
 using PPI_projektas.Services.Response;
@@ -25,7 +24,7 @@ namespace PPI_projektas.Services
             var hashedPassword = Hash(password);
 
             if (DataHandler.userExists(name))
-                return _authReturnFactory.Create(null, false, "User already exists.");
+                return _authReturnFactory.Create(null, false, "User with the same username already exists.");
 
             var validateGuidRegex = new Regex("^(?=.*?[a-zA-Z])(?=.*?[0-9]).{8,}$"); // at least one letter, at least one number and at least 8 characters long
             if (!validateGuidRegex.IsMatch("-Secr3t."))

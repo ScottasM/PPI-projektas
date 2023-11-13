@@ -17,7 +17,9 @@ export class SideNav extends Component {
             <nav className="sidenav">
                 {this.props.groups.map((group, index) => (
                     <Group 
-                        fetchGroupList={this.props.fetchGroupList} toggleGroupEditMenu={this.props.toggleGroupEditMenu}
+                        fetchGroupList={this.props.fetchGroupList} 
+                        toggleGroupEditMenu={this.props.toggleGroupEditMenu} 
+                        toggleGroup={this.props.toggleGroup}
                         groupId={group.id} key={group.id} groupInitials={group.name.substring(0, 3)} />
                 ))}
                 <div className="settings-div position-absolute">

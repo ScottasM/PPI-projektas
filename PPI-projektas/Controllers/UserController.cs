@@ -27,6 +27,19 @@ namespace PPI_projektas.Controllers
             return Ok(users);
         }
 
+        [HttpGet("groups/{userId:guid}")]
+        public IActionResult GetGroups(Guid userId)
+        {
+            try
+            {
+                return Ok(_userService.GetGroupsFromUser(userId));
+            }
+            catch (ObjectDoesNotExistException)
+            {
+                return NotFound();
+            }
+        }
+
         [HttpPost("createuser")]
         public IActionResult CreateUser([FromBody] UserCreateData userData)
         {

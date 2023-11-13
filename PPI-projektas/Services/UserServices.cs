@@ -1,5 +1,4 @@
 using PPI_projektas.Exceptions;
-using PPI_projektas.objects;
 using PPI_projektas.objects.Factories;
 using PPI_projektas.Services.Interfaces;
 using PPI_projektas.Services.Response;
@@ -40,6 +39,18 @@ public class UserService : IUserService
 
         return users;
     }
+    
+    public List<ObjectDataItem> GetGroupsFromUser(Guid userId)
+    {
+        var user = DataHandler.FindObjectById(userId, DataHandler.Instance.AllUsers);
+
+        if (user == null)
+            throw new ObjectDoesNotExistException();
+
+        var groups = user.Groups.Select(group => _objectDataItemFactory.Create(group.Id, group.Name)).ToList();
+        
+        return groups;
+    }
 
     public Guid CreateUser(UserCreateData userData)
     {
@@ -51,8 +62,11 @@ public class UserService : IUserService
 
     public void DeleteUser(Guid userId)
     {
-        var user = DataHandler.Instance.AllUsers.Find(user => user.Id == userId);
-        if(user == null) throw new ObjectDoesNotExistException(userId);
+        var user = DataHandler.FindObjectById(userId, DataHandler.Instance.AllUsers);
+
+        foreach (var group in user.Groups)
+            group.RemoveUser(user);
+        
         DataHandler.Delete(user);
     }
 }

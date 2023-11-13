@@ -23,7 +23,7 @@ export class NoteEditor extends Component {
             });
         
         const noteData = {
-            AuthorId: '0f8fad5b-d9cb-469f-a165-70867728950e', // temporary static user id
+            AuthorId: this.props.currentUserId,
             Name: this.state.noteName,
             Tags: this.state.noteTags,
             Text: this.state.noteText
@@ -59,7 +59,7 @@ export class NoteEditor extends Component {
             this.setState({
                 showDeleteMessage: false
             });
-        } else fetch(`http://localhost:5268/api/note/deleteNote/${this.props.noteId}/0f8fad5b-d9cb-469f-a165-70867728950e`, {
+        } else fetch(`http://localhost:5268/api/note/deleteNote/${this.props.noteId}/${this.props.currentUserId}`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json'

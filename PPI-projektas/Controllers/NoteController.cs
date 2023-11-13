@@ -17,10 +17,10 @@ namespace PPI_projektas.Controllers
             _noteService = noteService;
         }
         
-        [HttpGet]
-        public IActionResult Get()
+        [HttpGet("{groupId:guid}")]
+        public IActionResult Get(Guid groupId)
         {
-            return Ok(_noteService.GetNotes());
+            return Ok(_noteService.GetNotes(groupId));
         }
 
         [HttpGet("openNote/{noteId:guid}")]
@@ -36,11 +36,18 @@ namespace PPI_projektas.Controllers
             }
         }
 
-        [HttpPost("createNote/{authorId}")]
-        public IActionResult CreateNote(Guid authorId)
+        [HttpPost("createNote/{groupId:guid}/{authorId:guid}")]
+        public IActionResult CreateNote(Guid groupId, Guid authorId)
         {
-            var noteId = _noteService.CreateNote(authorId);
-            return CreatedAtAction("CreateNote", noteId);
+            try
+            {
+                var noteId = _noteService.CreateNote(groupId, authorId);
+                return CreatedAtAction("CreateNote", noteId);
+            }
+            catch (ObjectDoesNotExistException)
+            {
+                return NotFound();
+            }
         }
 
         [HttpPost("updateNote/{noteId:guid}")]

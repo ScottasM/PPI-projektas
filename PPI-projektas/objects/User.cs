@@ -7,8 +7,8 @@ namespace PPI_projektas.objects;
 public class User : Entity
 {
     [JsonInclude] public string Username;
-    private readonly string _password;
-    private readonly string _email;
+    [JsonInclude] public string Password;
+    [JsonInclude] public string Email;
 
 
     [JsonIgnore] public List<Note> CreatedNotes = new();
@@ -25,7 +25,7 @@ public class User : Entity
     public User(string name, string password, bool createGuid = true) : base(createGuid)
     {
         Username = name;
-        _password = password;
+        Password = password;
         FavoriteNotesGuids = new List<Guid>();
         CreatedNotesGuids = new List<Guid>();
         GroupsGuids = new List<Guid>();
@@ -33,13 +33,13 @@ public class User : Entity
     
     public User(string name, string password, string email, bool createGuid = true) : this(name, password, createGuid)
     {
-        _email = email;
+        Email = email;
     }
 
     public string GetUsername() => Username;
     public void SetUsername(string name) => Username = name;
 
-    public string GetPassword() => _password;
+    public string GetPassword() => Password;
 
     public void LoadCreatedNotes()
     {
