@@ -50,3 +50,12 @@ h2 {
     line-height: 25px;
     margin-top: 14px;
 }
+
+h6 {
+    color: #FFFFFF;
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: .8px;
+    line-height: 20px;
+    margin-top: 14px;
+}

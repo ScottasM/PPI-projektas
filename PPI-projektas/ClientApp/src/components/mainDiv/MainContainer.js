@@ -101,6 +101,11 @@ export class MainContainer extends Component {
  
     }
 
+    handleLogout = () => {
+        this.props.setCurrentUser(0);
+        this.setState({ displayGroupCreateMenu: false });
+    }
+
     openNote = (noteId, display) => {
         this.setState(prevState => ({
             noteId: noteId,
@@ -129,7 +134,7 @@ export class MainContainer extends Component {
                     <>
                         <div className="topNav">
                         <CreatingButtons toggleMenu={this.toggleGroupConfigMenu} />
-                        <CreatingLoginButtons toggleMenu={() => this.props.setCurrentUser(0)} buttonName={{ name: 'Log out' }} />
+                        <CreatingLoginButtons toggleMenu={this.handleLogout} buttonName={{ name: 'Log out' }} />
                         <div className="registerButtonsDiv">
                             <h6>Logged in as: {this.state.currentUserName}</h6>
                         </div>
