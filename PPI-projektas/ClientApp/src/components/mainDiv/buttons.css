@@ -35,6 +35,7 @@
     border: solid transparent;
     border-radius: 16px;
     border-width: 0 0 4px;
+    border-color: var(--button-secondary-color);
     box-sizing: border-box;
     color: #FFFFFF;
     cursor: pointer;
@@ -90,6 +91,7 @@
 }
 
 .create-button:active {
+    bottom: -1px;
     padding-bottom: 10px;
 }
 

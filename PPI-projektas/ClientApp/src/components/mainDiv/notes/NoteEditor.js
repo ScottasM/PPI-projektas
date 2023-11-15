@@ -151,21 +151,23 @@ export class NoteEditor extends Component {
                     <br />
                     <input type='text' id='note-name' name='note-name' onChange={this.handleNameChange} value={this.state.noteName} />
                     <br />
-                    <button className='submit-button' onClick={this.handlePost}> Save </button>
-                    <button className='submit-button' onClick={this.handleExit}> Exit </button>
-                    <button className='submit-button' onClick={this.handleDelete}> Delete </button>
-                    <br />
+
                     <label>Tags:</label>
                     <br />
                     <input type='text' id='tag-name' name='tag-name' value={this.state.tag} onChange={this.handleTagChanged} />
                     <br />
-                    <button className='submit-button' onClick={this.handleDeleteTag}> Delete tag </button>
                     <button className='submit-button' onClick={this.handleAddTag}> Add tag </button>
                     <br />
                     <TagList deleteTag={this.handleDeleteTag}  noteTags={this.state.noteTags} />
                 </div>
                 <div className='editor text-side p-container'>
-                    <textarea name='noteText' rows='9' cols='50' placeholder='Note text...'value={this.state.noteText} onChange={this.handleTextChanged} />
+
+                    <textarea name='noteText' rows='7' cols='50' placeholder='Note text...' value={this.state.noteText} onChange={this.handleTextChanged} />
+                    <div className='button-container'>
+                        <button className='submit-button' onClick={this.handlePost}> Save </button>
+                        <button className='submit-button' onClick={this.handleExit}> Exit </button>
+                        <button className='submit-button' onClick={this.handleDelete}> Delete </button>
+                    </div>
                 </div>
             </div>
         )

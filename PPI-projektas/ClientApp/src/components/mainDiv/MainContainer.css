@@ -2,6 +2,7 @@
     --nav-main-color: #22223B;
     --nav-secondary-color: #1C1C31;
     --button-main-color: #9A8C98;
+    --button-secondary-color: #7F737D;
     --bg-color: #F2E9E4;
 }
 
@@ -14,11 +15,11 @@
 }
 
 ::-webkit-scrollbar-thumb {
-    background: #888;
+    background: var(--button-main-color);
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background: var(--button-main-color)/*#7F737D*/;
+    background: var(--button-secondary-color);
 }
 
 input[type=text] {

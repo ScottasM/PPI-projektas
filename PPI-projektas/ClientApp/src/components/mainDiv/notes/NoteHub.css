@@ -38,7 +38,7 @@ label {
 .editor.text-side {
     float: left;
     margin-left: 10px;
-    max-height: 240px;
+    max-height: 230px;
 }
 
 .tag-container {
@@ -60,4 +60,10 @@ label {
     padding-right: 10px;
     width: 350px;
     /*width: fit-content;*/
+}
+
+.button-container {
+    margin-top: -10px;
+    margin-bottom: 10px;
+    padding-left: 10px;
 }
