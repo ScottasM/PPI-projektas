@@ -16,6 +16,8 @@ export class NoteEditor extends Component {
         }
     }
 
+    asyncSetState = (newState) => new Promise(resolve => this.setState(newState, resolve));
+
     handlePost = async () => {
         if (this.state.noteName === '')
             await this.setState({
@@ -44,7 +46,7 @@ export class NoteEditor extends Component {
                     });
                     throw new Error('Network response was not ok');
                 }
-                await this.setState({
+                await this.asyncSetState({
                     saved: true
                 });
                 this.handleExit();
