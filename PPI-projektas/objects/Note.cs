@@ -9,7 +9,7 @@ public class Note : Entity, IComparable<Note>
   
 	public string Name { get; set; }
 
-	public List<string> Tags { get; set; }
+	public List<Tag> Tags { get; set; }
   
 	[JsonInclude] public string Text;
 	
@@ -19,7 +19,7 @@ public class Note : Entity, IComparable<Note>
 	{
 		AuthorId = authorId;
 		Name = "";
-		Tags = new List<string>();
+		Tags = new List<Tag>();
 		Text = "";
 	}
   
@@ -31,4 +31,14 @@ public class Note : Entity, IComparable<Note>
         
         return String.Compare(Text, otherNote.Text, StringComparison.OrdinalIgnoreCase);
     }
+
+    public bool ContainsAny(string[] tags)
+    {
+	    return tags.Any(tag => Tags.Contains(new Tag (tag)));
+    }
+
+    public bool ContainsAll(string[] tags)
+    {
+	    return tags.All(tag => Tags.Contains(new Tag(tag)));
+    }	
 }
