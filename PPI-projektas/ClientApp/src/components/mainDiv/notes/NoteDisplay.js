@@ -101,7 +101,6 @@ export class NoteDisplay extends Component {
                         <p>Please select a group</p>
                     )
                 }
-
             </div>
         );
     }
