@@ -1,9 +1,10 @@
 ﻿.note-display {
-    margin-left: 75px;
+    padding-left: 75px;
     width: 100%;
     white-space: nowrap;
     display: inline-flex;
     flex-direction: row;
+    overflow-x: scroll;
 }
 
 .note-list {
