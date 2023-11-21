@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.2.32630.192
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PPI-projektas", "PPI-projektas\PPI-projektas.csproj", "{8973FB80-3336-48C6-9E85-82BA134676D4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PPI_projektas", "PPI-projektas\PPI_projektas.csproj", "{8973FB80-3336-48C6-9E85-82BA134676D4}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PPI_projektas.UnitTests", "PPI-projektas.UnitTests\PPI_projektas.UnitTests.csproj", "{718C3427-EFB6-4396-BD33-2E79FB23F960}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{8973FB80-3336-48C6-9E85-82BA134676D4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8973FB80-3336-48C6-9E85-82BA134676D4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8973FB80-3336-48C6-9E85-82BA134676D4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{718C3427-EFB6-4396-BD33-2E79FB23F960}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{718C3427-EFB6-4396-BD33-2E79FB23F960}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{718C3427-EFB6-4396-BD33-2E79FB23F960}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{718C3427-EFB6-4396-BD33-2E79FB23F960}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
