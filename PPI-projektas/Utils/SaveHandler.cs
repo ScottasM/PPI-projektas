@@ -14,26 +14,6 @@ namespace PPI_projektas.Utils
             _context = new EntityData();
         }
         
-
-        private Dictionary<Type, string> _filePaths = new Dictionary<Type, string>(3) {
-            {typeof(User),"Users.json"},
-            {typeof(Group),"Groups.json"},
-            {typeof(Note),"Notes.json"}
-        };
-
-        private string? SerializeList<T>(List<T> obj)
-        {
-            try {
-                return JsonSerializer.Serialize(obj);
-            }
-            catch(Exception err) {
-                Console.WriteLine($"Error while serializing a list : {err.Message}");
-                return null;
-            }
-            
-        }
-
-
         public void Save()
         {
             _context.SaveChanges();
