@@ -125,6 +125,7 @@ export class GroupCreateMenu extends Component {
                     <br />
                     <br />
                     <UserSelection
+                        currentUserId={this.props.currentUserId}
                         members = {this.state.members}
                         updateMembers = {this.updateMembers}/>
                     <br />
