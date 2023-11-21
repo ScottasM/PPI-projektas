@@ -1,5 +1,6 @@
 .note-card {
-    position: absolute;
+    position: relative;
+    min-width: fit-content;
     width: 450px;
     height: 300px;
     border: 2px solid black;
@@ -20,9 +21,12 @@
 }
 
 .selected {
+    z-index: 1;
+    position: absolute;
+    transform: translate(-50%, -50%) scale(1.2);
     top: 50%;
     left: 50%;
-    transform: translate(-50%, -50%) scale(1.2);
+    /*transition: transform 0.5s ease, top 0.5s ease, left 0.5s ease;*/
 }
 
 .note-title,
@@ -35,6 +39,8 @@
 .note-title,
 .note-tags {
     background-color: var(--note-main-color);
+    align-items: center;
+    justify-content: center;
 }
 
 .note-title {
