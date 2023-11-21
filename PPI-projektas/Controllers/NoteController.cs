@@ -1,8 +1,7 @@
-﻿using System.Dynamic;
 using Microsoft.AspNetCore.Mvc;
 using PPI_projektas.Exceptions;
 using PPI_projektas.objects;
-using PPI_projektas.Services;
+using PPI_projektas.Services.Interfaces;
 
 namespace PPI_projektas.Controllers
 
@@ -11,10 +10,17 @@ namespace PPI_projektas.Controllers
     [Route("api/[controller]")]
     public class NoteController : ControllerBase
     {
-        [HttpGet]
-        public IActionResult Get()
+        private readonly INoteService _noteService;
+
+        public NoteController(INoteService noteService)
         {
-            return Ok(new NoteService().GetNotes());
+            _noteService = noteService;
+        }
+        
+        [HttpGet("{groupId:guid}")]
+        public IActionResult Get(Guid groupId)
+        {
+            return Ok(_noteService.GetNotes(groupId));
         }
 
         [HttpGet("openNote/{noteId:guid}")]
@@ -22,7 +28,7 @@ namespace PPI_projektas.Controllers
         {
             try
             {
-                return Ok(new NoteService().GetNote(noteId));
+                return Ok(_noteService.GetNote(noteId));
             }
             catch (ObjectDoesNotExistException)
             {
@@ -30,11 +36,18 @@ namespace PPI_projektas.Controllers
             }
         }
 
-        [HttpPost("createNote/{authorId}")]
-        public IActionResult CreateNote(Guid authorId)
+        [HttpPost("createNote/{groupId:guid}/{authorId:guid}")]
+        public IActionResult CreateNote(Guid groupId, Guid authorId)
         {
-            var noteId = new NoteService().CreateNote(authorId);
-            return CreatedAtAction("CreateNote", noteId);
+            try
+            {
+                var noteId = _noteService.CreateNote(groupId, authorId);
+                return CreatedAtAction("CreateNote", noteId);
+            }
+            catch (ObjectDoesNotExistException)
+            {
+                return NotFound();
+            }
         }
 
         [HttpPost("updateNote/{noteId:guid}")]
@@ -42,7 +55,9 @@ namespace PPI_projektas.Controllers
         {
             try
             {
-                new NoteService().UpdateNote(noteId, noteData.UserId, noteData.Name, noteData.Tags, noteData.Text);
+
+                _noteService.UpdateNote(noteId, noteData.AuthorId, noteData.Name, noteData.Tags, noteData.Text);
+
                 return Ok();
             }
             catch (ObjectDoesNotExistException)
@@ -60,7 +75,7 @@ namespace PPI_projektas.Controllers
         {
             try
             {
-                new NoteService().DeleteNote(noteId, userId);
+                _noteService.DeleteNote(noteId, userId);
                 return NoContent();
             }
             catch (ObjectDoesNotExistException)

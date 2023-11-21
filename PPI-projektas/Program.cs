@@ -1,8 +1,15 @@
+
 using Microsoft.AspNetCore.Hosting.Server;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using PPI_projektas.objects;
+
+using PPI_projektas.objects.Factories;
+using PPI_projektas.Services;
+using PPI_projektas.Services.Interfaces;
+using PPI_projektas.Services.Response;
+
 using PPI_projektas.Utils;
 
 
@@ -55,6 +62,21 @@ builder.Services.AddCors(options =>
             .AllowAnyMethod();
     });
 });
+
+/* Dependency injection */
+builder.Services.AddControllersWithViews();
+
+builder.Services.AddScoped<IGroupService, GroupService>();
+builder.Services.AddScoped<INoteService, NoteService>();
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<ICustomAuthenticationService, AuthenticationService>();
+builder.Services.AddScoped<IObjectDataItemFactory, ObjectDataItemFactory>();
+builder.Services.AddScoped<IOpenedNoteDataFactory, OpenedNoteDataFactory>();
+builder.Services.AddScoped<IAuthReturnFactory, AuthReturnFactory>();
+builder.Services.AddScoped<IGroupFactory, GroupFactory>();
+builder.Services.AddScoped<IUserFactory, UserFactory>();
+builder.Services.AddScoped<INoteFactory, NoteFactory>();
+
 
 var app = builder.Build();
 

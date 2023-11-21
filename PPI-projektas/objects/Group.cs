@@ -19,11 +19,12 @@ public class Group : Entity, IComparable<Group>
 
     public Group () {} // For deserialization
     
-    public Group(string name, User owner, bool createGUID = true) : base(createGUID)
+    public Group(string name, User owner, List<User> members, bool createGuid = true) : base(createGuid)
     {
         Name = name;
         Owner = owner;
         OwnerGuid = owner.Id;
+
     }
     
     public int CompareTo(Group anotherGroup)
@@ -31,19 +32,15 @@ public class Group : Entity, IComparable<Group>
         return String.Compare(Name, anotherGroup.Name);
     }
 
+
     public Group(string name, User owner, List<User> members) : this(name, owner)
     {
         Members = members;
 
     }
-    
 
     
-    public void CreateNote(Guid authorId)
-    {
-        var newNote = new Note(authorId);
-        Notes.Add(newNote);
-    }
+
     
     public void AddNote(Note note)
     {

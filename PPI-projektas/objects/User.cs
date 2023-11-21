@@ -7,9 +7,11 @@ namespace PPI_projektas.objects;
 
 public class User : Entity
 {
+
     public string Username { get; set; }
     public string _password { get; set; }
     public string _email { get; set; }
+
 
 
     public List<Note> CreatedNotes = new();
@@ -23,18 +25,17 @@ public class User : Entity
     {
         Username = name;
         _password = password;
-
     }
     
     public User(string name, string password, string email, bool createGuid = true) : this(name, password, createGuid)
     {
-        _email = email;
+        Email = email;
     }
 
     public string GetUsername() => Username;
     public void SetUsername(string name) => Username = name;
 
-    public string GetPassword() => _password;
+    public string GetPassword() => Password;
 
     
     public void AddCreatedNote(Note note)

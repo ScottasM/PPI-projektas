@@ -94,6 +94,7 @@ export class NoteHub extends Component {
                             noteText={this.state.noteText}
                             noteId={this.props.noteId}
                             exitNote={this.props.exitNote}
+                            currentUserId={this.props.currentUserId}
                             transferChanges={this.transferChanges}
                             changeDisplay={this.changeDisplay}
                         />

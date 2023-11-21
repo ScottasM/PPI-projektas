@@ -1,6 +1,10 @@
+
 ﻿using PPI_projektas.objects;
 using Microsoft.EntityFrameworkCore;
 using System;
+
+﻿using PPI_projektas.Exceptions;
+
 using PPI_projektas.objects.abstractions;
 
 namespace PPI_projektas.Utils
@@ -122,6 +126,14 @@ namespace PPI_projektas.Utils
         public static User? userExistsObject(string username)
         {
             return Instance.AllUsers.Find(inst => inst.GetUsername() == username);
+        }
+        
+        public static T FindObjectById<T>(Guid objectId, List<T> objectList) where T : Entity
+        {
+            var obj = objectList.Find(obj => obj.Id == objectId);
+            if (obj == null) throw new ObjectDoesNotExistException(objectId);
+
+            return obj;
         }
     }
 }
