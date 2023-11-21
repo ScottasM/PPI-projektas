@@ -153,6 +153,7 @@ export class MainContainer extends Component {
                                  currentUserId={this.props.currentUserId}
                                  exitNote={this.exitNote} /> :
                         <NoteDisplay currentGroupId={this.props.currentGroupId}
+                                     currentUserId={this.props.currentUserId}
                                      openNote={this.openNote} />
                         }
                     </>

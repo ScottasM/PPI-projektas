@@ -1,26 +1,27 @@
 import React, { Component }  from 'react';
 import './NoteHub.css';
 import {TagList} from "../../TagList";
+import {MdDelete, MdEditDocument, MdSave} from "react-icons/md";
 
 export class NoteEditor extends Component {
     constructor (props) {
         super(props)
         this.state = {
-            noteName: this.props.noteName,
-            noteTags: this.props.noteTags,
-            noteText: this.props.noteText,
+            noteName: this.props.noteData.name,
+            noteText: this.props.noteData.text,
+            noteTags: this.props.noteData.tags,
             saved: true,
             showNotSavedMessage: true,
             showDeleteMessage: true,
-            tag: ''
         }
     }
 
-    handlePost = async () => {
+    handleSave = async () => {
         if (this.state.noteName === '')
-            await this.setState({
-                noteName: 'Untitled Note'
-            });
+            alert('Note name cannot be empty!');
+        
+        if (this.state.noteText === '')
+            alert('Note text cannot be empty!');
         
         const noteData = {
             AuthorId: this.props.currentUserId,
@@ -90,7 +91,7 @@ export class NoteEditor extends Component {
             this.props.changeDisplay(1, '');
     }
     
-    handleNameChange = (event) => {
+    handleTitleChange = (event) => {
         this.setState({
             noteName: event.target.value,
             saved: false,
@@ -99,7 +100,7 @@ export class NoteEditor extends Component {
         })
     }
 
-    handleTextChanged = (event) => {
+    handleTextChange = (event) => {
         this.setState({
             noteText: event.target.value,
             saved: false,
@@ -110,7 +111,7 @@ export class NoteEditor extends Component {
     
     handleTagChanged = (event) => {
         this.setState({
-            tag: event.target.value
+            noteTags: event.target.value
         })
     }
 
@@ -144,30 +145,33 @@ export class NoteEditor extends Component {
     }
 
     render() {
+        const {noteData} = this.props;
+
         return (
-            <div className='note-editor'>
-                <div className='editor prop-side p-container'>
-                    <label>Note Name:</label>
-                    <br />
-                    <input type='text' id='note-name' name='note-name' onChange={this.handleNameChange} value={this.state.noteName} />
-                    <br />
-
-                    <label>Tags:</label>
-                    <br />
-                    <input type='text' id='tag-name' name='tag-name' value={this.state.tag} onChange={this.handleTagChanged} />
-                    <br />
-                    <button className='submit-button' onClick={this.handleAddTag}> Add tag </button>
-                    <br />
-                    <TagList deleteTag={this.handleDeleteTag}  noteTags={this.state.noteTags} />
+            <div className="note-card selected">
+                <div className="note-title">
+                    <input className="note-title-edit" type="text" value={noteData.name} onChange={(e) => this.handleTitleChange(e)} />
                 </div>
-                <div className='editor text-side p-container'>
-
-                    <textarea name='noteText' rows='7' cols='50' placeholder='Note text...' value={this.state.noteText} onChange={this.handleTextChanged} />
-                    <div className='button-container'>
-                        <button className='submit-button' onClick={this.handlePost}> Save </button>
-                        <button className='submit-button' onClick={this.handleExit}> Exit </button>
-                        <button className='submit-button' onClick={this.handleDelete}> Delete </button>
-                    </div>
+                <div className="note-tags">
+                    <span>Math</span>
+                    <span>Formula</span>
+                    <span>1 semester</span>
+                </div>
+                <div className="note-text">
+                    <textarea className="note-text-edit" value={"testing"} onChange={(e) => this.handleTextChange(e)} />
+                </div>
+                <div className="note-misc">
+                    <button className="button save-button" onClick={this.handleSave}>
+                        <MdSave /> Save
+                    </button>
+                </div>
+                <div className="note-buttons">
+                    <button className="button button-hover delete-button delete-button-hover">
+                        <MdDelete />
+                    </button>
+                    <button className="button button-hover edit-button edit-button-hover" onClick={() => this.props.changeDisplay(2, '')}>
+                        <MdEditDocument />
+                    </button>
                 </div>
             </div>
         )

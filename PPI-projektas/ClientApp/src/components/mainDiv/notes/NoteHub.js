@@ -7,19 +7,16 @@ import {NoteDisplay} from "./NoteDisplay";
 export class NoteHub extends Component {
     constructor(props) {
         super(props);
-    }
-    
-    state = {
-        mounted: false,
-        display: this.props.display,
-        noteName: '',
-        noteTags: [],
-        noteText: ''
+        this.state = {
+            mounted: false,
+            display: 1,
+            error: '',
+        }
     }
     
     componentDidMount() {
         if (!this.state.mounted) {
-            this.fetchNote();
+            // this.fetchNote();
             this.setState({
                 mounted: true
             });
@@ -56,7 +53,7 @@ export class NoteHub extends Component {
             noteTags: tags,
             noteText: text
         })
-    } 
+    }   
     
     changeDisplay = (display, error) => {
         this.setState({
@@ -77,11 +74,10 @@ export class NoteHub extends Component {
                 return (
                     <div className='note-hub'>
                         <NoteViewer
-                            noteName={this.state.noteName}
-                            noteTags={this.state.noteTags}
-                            noteText={this.state.noteText}
+                            noteData={this.props.noteData}
                             exitNote={this.props.exitNote}
                             changeDisplay={this.changeDisplay}
+                            // deleteNote={}
                         />
                     </div>
                 )
@@ -89,13 +85,10 @@ export class NoteHub extends Component {
                 return (
                     <div className='note-hub'>
                         <NoteEditor
-                            noteName={this.state.noteName}
-                            noteTags={this.state.noteTags}
-                            noteText={this.state.noteText}
-                            noteId={this.props.noteId}
+                            noteData={this.props.noteData}
                             exitNote={this.props.exitNote}
+                            currentGroupId={this.props.currentGroupId}
                             currentUserId={this.props.currentUserId}
-                            transferChanges={this.transferChanges}
                             changeDisplay={this.changeDisplay}
                         />
                     </div>
