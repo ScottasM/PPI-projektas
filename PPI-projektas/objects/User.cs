@@ -29,13 +29,13 @@ public class User : Entity
     
     public User(string name, string password, string email, bool createGuid = true) : this(name, password, createGuid)
     {
-        Email = email;
+        _email = email;
     }
 
     public string GetUsername() => Username;
     public void SetUsername(string name) => Username = name;
 
-    public string GetPassword() => Password;
+    public string GetPassword() => _password;
 
     
     public void AddCreatedNote(Note note)

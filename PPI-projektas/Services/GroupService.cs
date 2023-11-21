@@ -92,7 +92,7 @@ public class GroupService : IGroupService
 
         foreach (var note in group.Notes)
         {
-            var user = DataHandler.FindObjectById(note.AuthorId, DataHandler.Instance.AllUsers);
+            var user = DataHandler.FindObjectById(note.UserId, DataHandler.Instance.AllUsers);
             user.RemoveCreatedNote(note);
             DataHandler.Delete(note);
         }

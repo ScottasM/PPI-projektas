@@ -30,7 +30,7 @@ public class Note : Entity, IComparable<Note>
 
 	public Note(Guid authorId, bool createGUID = true) : base(createGUID)
 	{
-		UserId = authorId;
+        UserId = authorId;
 		Name = "";
 		Tags = new List<EntityStrings>();
 		Text = "";

@@ -24,6 +24,7 @@ public class Group : Entity, IComparable<Group>
         Name = name;
         Owner = owner;
         OwnerGuid = owner.Id;
+        Members = members;
 
     }
     
@@ -31,15 +32,6 @@ public class Group : Entity, IComparable<Group>
     {
         return String.Compare(Name, anotherGroup.Name);
     }
-
-
-    public Group(string name, User owner, List<User> members) : this(name, owner)
-    {
-        Members = members;
-
-    }
-
-    
 
     
     public void AddNote(Note note)

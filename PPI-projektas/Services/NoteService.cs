@@ -3,6 +3,7 @@ using PPI_projektas.Services.Interfaces;
 using PPI_projektas.objects.Factories;
 using PPI_projektas.Services.Response;
 using PPI_projektas.Utils;
+using PPI_projektas.objects;
 
 namespace PPI_projektas.Services;
 
@@ -49,7 +50,7 @@ public class NoteService : INoteService
     {
 
         var note = DataHandler.FindObjectById(noteId, DataHandler.Instance.AllNotes);
-        if (note.AuthorId != userId) throw new UnauthorizedAccessException();
+        if (note.UserId != userId) throw new UnauthorizedAccessException();
 
         
         note.Name = name;
@@ -66,7 +67,7 @@ public class NoteService : INoteService
         if (group == null) throw new ObjectDoesNotExistException();
         
 
-        if (note.AuthorId != userId) throw new UnauthorizedAccessException();
+        if (note.UserId != userId) throw new UnauthorizedAccessException();
         
         group.RemoveNote(note);
         user.RemoveCreatedNote(note);

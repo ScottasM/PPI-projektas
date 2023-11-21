@@ -56,7 +56,7 @@ namespace PPI_projektas.Controllers
             try
             {
 
-                _noteService.UpdateNote(noteId, noteData.AuthorId, noteData.Name, noteData.Tags, noteData.Text);
+                _noteService.UpdateNote(noteId, noteData.UserId, noteData.Name, noteData.Tags, noteData.Text);
 
                 return Ok();
             }
