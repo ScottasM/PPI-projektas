@@ -26,7 +26,6 @@
     transform: translate(-50%, -50%) scale(1.2);
     top: 50%;
     left: 50%;
-    /*transition: transform 0.5s ease, top 0.5s ease, left 0.5s ease;*/
 }
 
 .note-title,
@@ -40,7 +39,6 @@
 .note-tags {
     background-color: var(--note-main-color);
     align-items: center;
-    justify-content: center;
 }
 
 .note-title {
@@ -48,7 +46,6 @@
     padding-left: 10px;
     border-radius: 20px 0 0 0;
     display: flex;
-    align-items: center;
 }
 
 .note-title p {
