@@ -6,6 +6,8 @@ namespace PPI_projektas.objects;
 public class Note : Entity, IComparable<Note>
 {
 	[JsonInclude] public Guid AuthorId;
+
+	[JsonInclude] public Guid GroupId;
   
 	public string Name { get; set; }
 
@@ -15,9 +17,10 @@ public class Note : Entity, IComparable<Note>
 	
 	public Note () {} // For deserialization
 
-	public Note(Guid authorId, bool createGUID = true) : base(createGUID)
+	public Note(Guid authorId, Guid groupId, bool createGUID = true) : base(createGUID)
 	{
 		AuthorId = authorId;
+		GroupId = groupId;
 		Name = "";
 		Tags = new List<Tag>();
 		Text = "";
@@ -32,12 +35,12 @@ public class Note : Entity, IComparable<Note>
         return String.Compare(Text, otherNote.Text, StringComparison.OrdinalIgnoreCase);
     }
 
-    public bool ContainsAny(string[] tags)
+    public bool ContainsAny(IEnumerable<string> tags)
     {
 	    return tags.Any(tag => Tags.Contains(new Tag (tag)));
     }
 
-    public bool ContainsAll(string[] tags)
+    public bool ContainsAll(IEnumerable<string> tags)
     {
 	    return tags.All(tag => Tags.Contains(new Tag(tag)));
     }	

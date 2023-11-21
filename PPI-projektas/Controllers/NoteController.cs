@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using PPI_projektas.Exceptions;
 using PPI_projektas.objects;
 using PPI_projektas.Services.Interfaces;
+using PPI_projektas.Services.Request;
 
 namespace PPI_projektas.Controllers
 
@@ -17,18 +18,18 @@ namespace PPI_projektas.Controllers
             _noteService = noteService;
         }
         
-        [HttpGet("{groupId:guid}")]
-        public IActionResult Get(Guid groupId)
+        [HttpGet]
+        public IActionResult Get([FromBody] NoteSearchData data)
         {
-            return Ok(_noteService.GetNotes(groupId));
+            return Ok(_noteService.GetNotes(data.UserId, data.GroupId, data.SearchType, data.Tags, data.NameFilter));
         }
 
         [HttpGet("openNote/{noteId:guid}")]
-        public IActionResult OpenNote(Guid noteId)
+        public IActionResult OpenNote(Guid noteId, [FromBody] Guid userId)
         {
             try
             {
-                return Ok(_noteService.GetNote(noteId));
+                return Ok(_noteService.GetNote(userId, noteId));
             }
             catch (ObjectDoesNotExistException)
             {
@@ -36,12 +37,12 @@ namespace PPI_projektas.Controllers
             }
         }
 
-        [HttpPost("createNote/{groupId:guid}/{authorId:guid}")]
-        public IActionResult CreateNote(Guid groupId, Guid authorId)
+        [HttpPost("createNote/")]
+        public IActionResult CreateNote([FromBody] NoteCreationData data)
         {
             try
             {
-                var noteId = _noteService.CreateNote(groupId, authorId);
+                var noteId = _noteService.CreateNote(data.GroupId, data.AuthorId);
                 return CreatedAtAction("CreateNote", noteId);
             }
             catch (ObjectDoesNotExistException)
@@ -51,11 +52,11 @@ namespace PPI_projektas.Controllers
         }
 
         [HttpPost("updateNote/{noteId:guid}")]
-        public IActionResult UpdateNote(Guid noteId, [FromBody] Note noteData)
+        public IActionResult UpdateNote(Guid noteId, [FromBody] NoteUpdateData data)
         {
             try
             {
-                _noteService.UpdateNote(noteId, noteData.AuthorId, noteData.Name, noteData.Tags, noteData.Text);
+                _noteService.UpdateNote(noteId, data.UserId, data.Name, data.Tags, data.Text);
                 return Ok();
             }
             catch (ObjectDoesNotExistException)
@@ -68,8 +69,8 @@ namespace PPI_projektas.Controllers
             }
         }
 
-        [HttpDelete("deleteNote/{noteId}/{userId}")]
-        public IActionResult DeleteNote(Guid noteId, Guid userId)
+        [HttpDelete("deleteNote/{noteId}")]
+        public IActionResult DeleteNote(Guid noteId, [FromBody] Guid userId)
         {
             try
             {

@@ -1,15 +1,17 @@
+using PPI_projektas.objects;
+
 namespace PPI_projektas.Services.Response;
 
 public interface IOpenedNoteDataFactory
 {
-    OpenedNoteData Create(string name, List<string> tags, string text);
+    OpenedNoteData Create(string name, IEnumerable<Tag> tags, string text);
 }
 
 public class OpenedNoteDataFactory : IOpenedNoteDataFactory
 {
-    public OpenedNoteData Create(string name, List<string> tags, string text)
+    public OpenedNoteData Create(string name, IEnumerable<Tag> tags, string text)
     {
-        return new OpenedNoteData(name, tags, text);
+        return new OpenedNoteData(name, tags.Select(tag => tag.Text), text);
     }
 }
 
@@ -17,11 +19,11 @@ public struct OpenedNoteData
 {
     public string Name { get; set; }
         
-    public List<string> Tags { get; set; }
+    public IEnumerable<string> Tags { get; set; }
 
     public string Text { get; set; }
 
-    public OpenedNoteData(string name, List<string> tags, string text)
+    public OpenedNoteData(string name, IEnumerable<string> tags, string text)
     {
         Name = name;
         Tags = tags;
