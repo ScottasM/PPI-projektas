@@ -31,6 +31,9 @@ namespace PPI_projektas.Utils
         public void SaveList<T>(List<T> obj, DbContextOptions<EntityData> options) where T: class
         {
             using (var context = new EntityData()) {
+                context.Set<T>().RemoveRange(context.Set<T>());
+
+                // Add the new entities to the DbSet
                 context.Set<T>().AddRange(obj);
                 context.SaveChanges();
             }
@@ -45,14 +48,10 @@ namespace PPI_projektas.Utils
         
         public void SaveObject<T>(T obj,DbContextOptions<EntityData> options) where T : Entity
         {
-            var list = LoadList<T>(options);
-            if (list == null)
-                return;
-
-            var index = list.FindIndex(inst => inst.Id == obj.Id) ;
-            list[index] = obj;
-
-            SaveList(list, options);
+            using (var context = new EntityData()) {
+                context.Set<T>().Add(obj);
+                context.SaveChanges();
+            }
         }
     }
 }
