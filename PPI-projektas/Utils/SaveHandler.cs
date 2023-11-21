@@ -8,6 +8,11 @@ namespace PPI_projektas.Utils
     public class SaveHandler
     {
 
+        private EntityData _context;
+        public SaveHandler()
+        {
+            _context = new EntityData();
+        }
         
 
         private Dictionary<Type, string> _filePaths = new Dictionary<Type, string>(3) {
@@ -28,30 +33,27 @@ namespace PPI_projektas.Utils
             
         }
 
-        public void SaveList<T>(List<T> obj, DbContextOptions<EntityData> options) where T: class
-        {
-            using (var context = new EntityData()) {
-                context.Set<T>().RemoveRange(context.Set<T>());
 
-                // Add the new entities to the DbSet
-                context.Set<T>().AddRange(obj);
-                context.SaveChanges();
-            }
+        public void Save()
+        {
+            _context.SaveChanges();
         }
 
-        public List<T> LoadList<T>(DbContextOptions<EntityData> options) where T: class
+        public List<T> LoadList<T>() where T: class
         {
-            using (var context = new EntityData()) {
-                return context.Set<T>().ToList();
-            }
+            return _context.Set<T>().ToList();
         }
         
-        public void SaveObject<T>(T obj,DbContextOptions<EntityData> options) where T : Entity
+        public void SaveObject<T>(T obj) where T : Entity
         {
-            using (var context = new EntityData()) {
-                context.Set<T>().Add(obj);
-                context.SaveChanges();
-            }
+            _context.Set<T>().Add(obj);
+            _context.SaveChanges();
+        }
+
+        public void RemoveObject<T>(T obj) where T : Entity
+        {
+            _context.Set<T>().Remove(obj);
+            _context.SaveChanges();
         }
     }
 }

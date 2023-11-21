@@ -37,14 +37,13 @@ namespace PPI_projektas.Utils
 
             _saveHandler = LazySingleton<SaveHandler>.Instance;
 
-            //var optionsBuilder = new DbContextOptionsBuilder<EntityData>();
-            //options = optionsBuilder.UseMySql(ServerVersion.AutoDetect(connectionString)).Options;
+
 
             _state = FileState.Reading;
 
-            AllUsers = _saveHandler.LoadList<User>(options);
-            AllNotes = _saveHandler.LoadList<Note>(options);
-            AllGroups = _saveHandler.LoadList<Group>(options);
+            AllUsers = _saveHandler.LoadList<User>();
+            AllNotes = _saveHandler.LoadList<Note>();
+            AllGroups = _saveHandler.LoadList<Group>();
 
 
             // assign loaded guids to actual objects
@@ -66,9 +65,7 @@ namespace PPI_projektas.Utils
 
                 _state = FileState.Saving;
 
-                _saveHandler.SaveList(AllGroups,options);
-                _saveHandler.SaveList(AllUsers, options);
-                _saveHandler.SaveList(AllNotes, options);
+                _saveHandler.Save();
 
                 _state = FileState.Ready;
             }
@@ -82,17 +79,17 @@ namespace PPI_projektas.Utils
             if (obj is Group) {
                 var obje = obj as Group;
                 Instance.AllGroups.Add(obje);
-                Instance._saveHandler.SaveList(Instance.AllGroups, Instance.options);
+                Instance._saveHandler.SaveObject(obje);
             }
             else if (obj is User) {
                 var obje = obj as User;
                 Instance.AllUsers.Add(obje);
-                Instance._saveHandler.SaveList(Instance.AllUsers, Instance.options);
+                Instance._saveHandler.SaveObject(obje);
             }
             else if (obj is Note) {
                 var obje = obj as Note;
                 Instance.AllNotes.Add(obje);
-                Instance._saveHandler.SaveList(Instance.AllNotes, Instance.options);
+                Instance._saveHandler.SaveObject(obje);
             }
         }
 
@@ -103,24 +100,19 @@ namespace PPI_projektas.Utils
             if (obj is Group) {
                 var obje = obj as Group;
                 Instance.AllGroups.Remove(obje);
-                Instance._saveHandler.SaveList(Instance.AllGroups, Instance.options);
+                Instance._saveHandler.RemoveObject(obje);
             }
             else if (obj is User) {
                 var obje = obj as User;
                 Instance.AllUsers.Remove(obje);
-                Instance._saveHandler.SaveList(Instance.AllUsers, Instance.options);
+                Instance._saveHandler.RemoveObject(obje);
             }
             else if (obj is Note) {
                 var obje = obj as Note;
                 Instance.AllNotes.Remove(obje);
-                Instance._saveHandler.SaveList(Instance.AllNotes, Instance.options);
+                Instance._saveHandler.RemoveObject(obje);
             }
         }
-        public static void SaveObject<T>(T obj) where T: Entity
-        {
-            Instance._saveHandler.SaveObject(obj, Instance.options);
-        }
-
 
         public static bool userExists(string username)
         {

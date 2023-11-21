@@ -60,7 +60,6 @@ public class GroupService
         foreach (var member in membersToRemove)
             group.RemoveUser(member);
         
-        DataHandler.SaveObject(group);
     }
 
     public void DeleteGroup(Guid groupId)
