@@ -5,7 +5,7 @@ VisualStudioVersion = 17.2.32630.192
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PPI_projektas", "PPI-projektas\PPI_projektas.csproj", "{8973FB80-3336-48C6-9E85-82BA134676D4}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PPI_projektas.UnitTests", "PPI-projektas.UnitTests\PPI_projektas.UnitTests.csproj", "{718C3427-EFB6-4396-BD33-2E79FB23F960}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PPI_projektas.IntegrationTests", "PPI-projektas.UnitTests\PPI_projektas.IntegrationTests.csproj", "{718C3427-EFB6-4396-BD33-2E79FB23F960}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
