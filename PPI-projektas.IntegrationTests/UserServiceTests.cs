@@ -3,7 +3,6 @@ using PPI_projektas.objects.Factories;
 using PPI_projektas.Services;
 using PPI_projektas.Services.Response;
 using Moq;
-using PPI_projektas.Utils;
 
 namespace PPI_projektas.IntegrationTests
 {
@@ -12,16 +11,14 @@ namespace PPI_projektas.IntegrationTests
     ordererAssemblyName: "PPI_projektas.IntegrationTests")]
     public class UserServiceTests
     {
-        //DataHandler dataHandler = new DataHandler();
         UserCreateData userData;
         UserService userService;
         List<ObjectDataItem>? userList;
-
         public UserServiceTests() 
         {
-            userData.Username = "TestData_username";
-            userData.Password = "TestData_password";
-            userData.Email = "TestData_email";
+            userData.Username = "integrTestData_username";
+            userData.Password = "integrTestData_password";
+            userData.Email = "integrTestData_email";
 
             var testUser = new User(userData.Username, userData.Password, userData.Email);
 
@@ -84,7 +81,6 @@ namespace PPI_projektas.IntegrationTests
 
             //Testing DeleteUser()
             Assert.False(userList.Exists(x => x.Id == testUserId));
-            //dataHandler.AllUsers.Clear();
         }
     }
 }

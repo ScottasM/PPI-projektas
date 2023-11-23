@@ -3,13 +3,11 @@ using PPI_projektas.objects;
 using PPI_projektas.objects.Factories;
 using PPI_projektas.Services;
 using PPI_projektas.Services.Response;
-using PPI_projektas.Utils;
 
 namespace PPI_projektas.IntegrationTests
 {
     public class GroupServiceTests
     {
-        //DataHandler dataHandler = new DataHandler();
 
         [Fact, TestPriority(5)]
         public void GroupServiceTest()
