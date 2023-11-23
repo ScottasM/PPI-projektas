@@ -18,7 +18,7 @@ public class GroupService : IGroupService
     
     public List<ObjectDataItem> GetGroupsByOwner(Guid ownerId)
     {
-        var data = DataHandler.Instance.AllGroups
+        var data = DataHandler.Instance.AllGroups.Values
             //.Where(group => group.OwnerGuid == ownerId) Will be uncommented when user is associated on the frontend
             .Select(group => _objectDataItemFactory.Create(group.Id, group.Name))
             .ToList();
@@ -30,7 +30,7 @@ public class GroupService : IGroupService
     {
         var group = DataHandler.FindObjectById(groupId, DataHandler.Instance.AllGroups);
 
-        var users = group.Members
+        var users = group.Members.Values
             .Select(user => _objectDataItemFactory.Create(user.Id, user.GetUsername()))
             .ToList();
 
@@ -67,14 +67,14 @@ public class GroupService : IGroupService
         
         var newMembers = newMemberIds.Select(id => DataHandler.FindObjectById(id, DataHandler.Instance.AllUsers)).ToList();
 
-        var membersToAdd = newMembers.Where(user => !group.Members.Contains(user)).ToList();
+        var membersToAdd = newMembers.Where(user => !group.Members.TryGetValue(user.Id, out _)).ToList();
         foreach (var member in membersToAdd)
         {
             group.AddUser(member);
             member.AddGroup(group);
         }
 
-        var membersToRemove = group.Members.Where(member => !newMembers.Contains(member)).ToList();
+        var membersToRemove = group.Members.Values.Where(member => !newMembers.Contains(member)).ToList();
         foreach (var member in membersToRemove)
         {
             group.RemoveUser(member);
@@ -87,10 +87,10 @@ public class GroupService : IGroupService
     {
         var group = DataHandler.FindObjectById(groupId, DataHandler.Instance.AllGroups);
 
-        foreach (var member in group.Members)
+        foreach (var member in group.Members.Values)
             member.RemoveGroup(group);
 
-        foreach (var note in group.Notes)
+        foreach (var note in group.Notes.Values)
         {
             var user = DataHandler.FindObjectById(note.UserId, DataHandler.Instance.AllUsers);
             user.RemoveCreatedNote(note);

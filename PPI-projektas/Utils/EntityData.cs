@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using PPI_projektas.objects;
-using System;
 
 namespace PPI_projektas.Utils
 {
@@ -37,12 +36,12 @@ namespace PPI_projektas.Utils
                 .HasForeignKey(n => n.UserId);
 
             modelBuilder.Entity<Group>()
-                .HasMany(n => n.Members)
+                .HasMany(n => n.Members.Values)
                 .WithMany(u => u.Groups);
 
             modelBuilder.Entity<Note>()
                 .HasOne(n => n.Group)
-                .WithMany(u => u.Notes);
+                .WithMany(u => u.Notes.Values);
 
         }
     }

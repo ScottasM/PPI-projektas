@@ -1,7 +1,5 @@
+using System.Collections.Concurrent;
 using PPI_projektas.objects.abstractions;
-using System.Text.Json.Serialization;
-using PPI_projektas.Utils;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace PPI_projektas.objects;
 
@@ -12,9 +10,9 @@ public class Group : Entity, IComparable<Group>
 
     public User Owner { get; set; }
     public Guid OwnerGuid;
-
-    public List<User> Members { get; } = new();
-    public List<Note> Notes { get; } = new();
+    
+    public ConcurrentDictionary<Guid, User> Members { get; } = new();
+    public ConcurrentDictionary<Guid, Note> Notes { get; } = new();
 
 
     public Group () {} // For deserialization
@@ -24,8 +22,7 @@ public class Group : Entity, IComparable<Group>
         Name = name;
         Owner = owner;
         OwnerGuid = owner.Id;
-        Members = members;
-
+        members.ForEach(member => Members.TryAdd(member.Id, member));
     }
     
     public int CompareTo(Group anotherGroup)
@@ -36,25 +33,22 @@ public class Group : Entity, IComparable<Group>
     
     public void AddNote(Note note)
     {
-        Notes.Add(note);
+        Notes.TryAdd(note.Id, note);
 
     }
 
     public void RemoveNote(Note note)
     {
-        Notes.Remove(note);
+        Notes.TryRemove(note.Id, out _);
     }
     
-
-
     public void AddUser(User member)
     {
-        Members.Add(member);
+        Members.TryAdd(member.Id, member);
     }
 
     public void RemoveUser(User member)
     {
-        Members.Remove(member);
+        Members.TryRemove(member.Id, out _);
     }
-    
 }

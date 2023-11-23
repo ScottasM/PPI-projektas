@@ -1,9 +1,8 @@
 
 ﻿using PPI_projektas.objects;
 using Microsoft.EntityFrameworkCore;
-using System;
-
-﻿using PPI_projektas.Exceptions;
+ using System.Collections.Concurrent;
+ using PPI_projektas.Exceptions;
 
 using PPI_projektas.objects.abstractions;
 
@@ -14,9 +13,9 @@ namespace PPI_projektas.Utils
 
         public static DataHandler Instance;
 
-        public List<User> AllUsers = new();
-        public List<Group> AllGroups = new();
-        public List<Note> AllNotes = new();
+        public ConcurrentDictionary<Guid, User> AllUsers = new();
+        public ConcurrentDictionary<Guid, Group> AllGroups = new();
+        public ConcurrentDictionary<Guid, Note> AllNotes = new();
 
         private SaveHandler _saveHandler;
 
@@ -75,24 +74,24 @@ namespace PPI_projektas.Utils
             }
         }
 
-        public static void Create<T>(T obj) 
+        public static void Create<T>(T obj)
         {
             if (obj == null)
                 return;
 
             if (obj is Group) {
                 var obje = obj as Group;
-                Instance.AllGroups.Add(obje);
+                Instance.AllGroups.TryAdd(obje.Id, obje);
                 Instance._saveHandler.SaveObject(obje);
             }
             else if (obj is User) {
                 var obje = obj as User;
-                Instance.AllUsers.Add(obje);
+                Instance.AllUsers.TryAdd(obje.Id, obje);
                 Instance._saveHandler.SaveObject(obje);
             }
             else if (obj is Note) {
                 var obje = obj as Note;
-                Instance.AllNotes.Add(obje);
+                Instance.AllNotes.TryAdd(obje.Id, obje);
                 Instance._saveHandler.SaveObject(obje);
             }
         }
@@ -103,35 +102,34 @@ namespace PPI_projektas.Utils
 
             if (obj is Group) {
                 var obje = obj as Group;
-                Instance.AllGroups.Remove(obje);
+                Instance.AllGroups.TryRemove(obje.Id, out _);
                 Instance._saveHandler.RemoveObject(obje);
             }
             else if (obj is User) {
                 var obje = obj as User;
-                Instance.AllUsers.Remove(obje);
+                Instance.AllUsers.TryRemove(obje.Id, out _);
                 Instance._saveHandler.RemoveObject(obje);
             }
             else if (obj is Note) {
                 var obje = obj as Note;
-                Instance.AllNotes.Remove(obje);
+                Instance.AllNotes.TryRemove(obje.Id, out _);
                 Instance._saveHandler.RemoveObject(obje);
             }
         }
 
         public static bool userExists(string username)
         {
-            return Instance.AllUsers.Any(inst => inst.GetUsername() == username);
+            return Instance.AllUsers.Values.Any(inst => inst.GetUsername() == username);
         }
 
         public static User? userExistsObject(string username)
         {
-            return Instance.AllUsers.Find(inst => inst.GetUsername() == username);
+            return Instance.AllUsers.Values.FirstOrDefault(inst => inst.GetUsername() == username);
         }
         
-        public static T FindObjectById<T>(Guid objectId, List<T> objectList) where T : Entity
+        public static T FindObjectById<T>(Guid objectId, ConcurrentDictionary<Guid, T> objectList) where T : Entity
         {
-            var obj = objectList.Find(obj => obj.Id == objectId);
-            if (obj == null) throw new ObjectDoesNotExistException(objectId);
+            if (objectList.TryGetValue(objectId, out var obj)) throw new ObjectDoesNotExistException(objectId);
 
             return obj;
         }
