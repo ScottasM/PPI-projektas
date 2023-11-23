@@ -13,10 +13,25 @@ namespace PPI_projektas.Utils
         {
             _context = new EntityData();
         }
-        
+
+
+        enum FileState
+        {
+            Ready,
+            Saving,
+            Reading
+        }
+
+        private FileState _state = FileState.Ready;
+
         public void Save()
         {
+            if( _state == FileState.Saving ) {
+                return;
+            }
+            _state = FileState.Saving;
             _context.SaveChanges();
+            _state = FileState.Ready;
         }
 
         public List<T> LoadList<T>() where T: class
