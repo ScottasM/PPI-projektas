@@ -17,7 +17,8 @@ public class User : Entity
     public List<Note> CreatedNotes = new();
     public List<Note> FavoriteNotes = new();
     public List<Group> Groups = new();
-
+    
+    private object listLock = new();
 
     public User () {} // For deserialization
     
@@ -58,11 +59,17 @@ public class User : Entity
     
     public void AddGroup(Group group)
     {
-        Groups.Add(group);
+        lock (listLock)
+        {
+            Groups.Add(group);
+        }
     }
 
     public void RemoveGroup(Group group)
     {
-        Groups.Remove(group);
+        lock (listLock)
+        {
+            Groups.Remove(group);
+        }
     }
 }
