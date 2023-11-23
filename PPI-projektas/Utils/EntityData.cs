@@ -36,12 +36,12 @@ namespace PPI_projektas.Utils
                 .HasForeignKey(n => n.UserId);
 
             modelBuilder.Entity<Group>()
-                .HasMany(n => n.Members.Values)
+                .HasMany(n => n.Members)
                 .WithMany(u => u.Groups);
 
             modelBuilder.Entity<Note>()
                 .HasOne(n => n.Group)
-                .WithMany(u => u.Notes.Values);
+                .WithMany(u => u.Notes);
 
         }
     }

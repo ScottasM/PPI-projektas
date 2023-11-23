@@ -24,7 +24,7 @@ public class NoteService : INoteService
     {
         var group = DataHandler.FindObjectById(groupId, DataHandler.Instance.AllGroups);
 
-        return group.Notes.Values.Select(note => _objectDataItemFactory.Create(note.Id, note.Name)).ToList();
+        return group.Notes.Select(note => _objectDataItemFactory.Create(note.Id, note.Name)).ToList();
     }
 
     public OpenedNoteData GetNote(Guid noteId)
@@ -63,7 +63,7 @@ public class NoteService : INoteService
         var note = DataHandler.FindObjectById(noteId, DataHandler.Instance.AllNotes);
         var user = DataHandler.FindObjectById(userId, DataHandler.Instance.AllUsers);
         
-        var group = DataHandler.Instance.AllGroups.Values.FirstOrDefault(group => group.Notes.TryGetValue(noteId, out _));
+        var group = DataHandler.Instance.AllGroups.Values.FirstOrDefault(group => group.Notes.Contains(note));
         if (group == null) throw new ObjectDoesNotExistException();
         
 
