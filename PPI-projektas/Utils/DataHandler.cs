@@ -20,14 +20,7 @@ namespace PPI_projektas.Utils
 
         private SaveHandler _saveHandler;
 
-        enum FileState
-        {
-            Ready,
-            Saving,
-            Reading
-        }
-
-        private FileState _state = FileState.Ready;
+        
 
         private DbContextOptions<EntityData> options;
 
@@ -43,7 +36,7 @@ namespace PPI_projektas.Utils
 
 
 
-            _state = FileState.Reading;
+
 
             AllUsers = _saveHandler.LoadList<User>();
             AllNotes = _saveHandler.LoadList<Note>();
@@ -52,7 +45,6 @@ namespace PPI_projektas.Utils
 
             // assign loaded guids to actual objects
           
-            _state = FileState.Ready;
 
             SaveTimeout(15);
         }
@@ -62,16 +54,7 @@ namespace PPI_projektas.Utils
         {
             while (true) {
                 await Task.Delay(TimeoutSeconds * 1000);
-
-                if(_state != FileState.Ready) { // dont save if we're reading from the files
-                    continue;
-                }
-
-                _state = FileState.Saving;
-
                 _saveHandler.Save();
-
-                _state = FileState.Ready;
             }
         }
 
