@@ -9,28 +9,28 @@ namespace PPI_projektas.Services;
 public class NoteService : INoteService
 {
     private readonly IObjectDataItemFactory _objectDataItemFactory;
-    private readonly IOpenedNoteDataFactory _openedNoteDataFactory;
+    private readonly INoteDataFactory _noteDataFactory;
     private readonly INoteFactory _noteFactory;
 
-    public NoteService(IObjectDataItemFactory objectDataItemFactory, IOpenedNoteDataFactory openedNoteDataFactory, INoteFactory noteFactory)
+    public NoteService(IObjectDataItemFactory objectDataItemFactory, INoteDataFactory noteDataFactory, INoteFactory noteFactory)
     {
         _objectDataItemFactory = objectDataItemFactory;
-        _openedNoteDataFactory = openedNoteDataFactory;
+        _noteDataFactory = noteDataFactory;
         _noteFactory = noteFactory;
     }
 
-    public List<ObjectDataItem> GetNotes(Guid groupId)
+    public List<NoteData> GetNotes(Guid groupId)
     {
         var group = DataHandler.FindObjectById(groupId, DataHandler.Instance.AllGroups);
 
-        return group.Notes.Select(note => _objectDataItemFactory.Create(note.Id, note.Name)).ToList();
+        return group.Notes.Select(note => _noteDataFactory.Create(note.Id, note.Name, note.Tags, note.Text)).ToList();
     }
 
-    public OpenedNoteData GetNote(Guid noteId)
+    public NoteData GetNote(Guid noteId)
     {
         var note = DataHandler.FindObjectById(noteId, DataHandler.Instance.AllNotes);
         
-        return _openedNoteDataFactory.Create(note.Name, note.Tags, note.Text);
+        return _noteDataFactory.Create(note.Id, note.Name, note.Tags, note.Text);
     }
 
     public Guid CreateNote(Guid groupId, Guid authorId)

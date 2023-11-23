@@ -19,13 +19,18 @@ export class MainContainer extends Component {
             groupConfigMenuType: 'create',
             displayLoginMenu: false,
             displaySignInMenu: false,
-            noteId: '',
+            notes: [],
             displayNote: false,
             noteHubDisplay: 1,
             currentUserName: '',
+            createNote: false,
         }
     }
     
+    componentDidMount() {
+        // this.fetchNotes();
+    }
+
     componentDidUpdate(prevProps) {
         if (this.props.toggledGroup !== prevProps.toggledGroup || this.props.displayGroupEditMenu !== prevProps.displayGroupEditMenu) {
             if(this.props.displayGroupEditMenu){
@@ -44,24 +49,10 @@ export class MainContainer extends Component {
             }
         }
     }
-    
-    handleCreateNote = async () => {
-        fetch(`http://localhost:5268/api/note/createNote/${this.props.currentGroupId}/${this.props.currentUserId}`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        })
-            .then(async response => {
-                if (!response.ok)
-                    throw new Error('Network response was not ok');
-                return await response.json();
-            })
-            .then(noteId =>
-                this.openNote(noteId, 2)
-            )
-            .catch(error =>
-                console.error('There was a problem with the fetch operation:', error));
+    handleCreateNote = (createNote) => {
+        this.setState({
+            createNote: createNote,
+        });
     }
     
     toggleGroupConfigMenu = () => {
@@ -105,21 +96,6 @@ export class MainContainer extends Component {
         this.props.setCurrentUser(0);
         this.setState({ displayGroupCreateMenu: false });
     }
-
-    openNote = (noteId, display) => {
-        this.setState(prevState => ({
-            noteId: noteId,
-            noteHubDisplay: display,
-            displayNote: true
-        }));
-    }
-
-    exitNote = () => {
-        this.setState(prevState => ({
-            noteId: '',
-            displayNote: false
-        }));
-    }
     
     setUserName = (username) => {
         this.setState({
@@ -147,15 +123,11 @@ export class MainContainer extends Component {
                         }
                         </div>
                         
-                        {this.state.displayNote ?
-                        <NoteHub display={this.state.noteHubDisplay} 
-                                 noteId={this.state.noteId} 
-                                 currentUserId={this.props.currentUserId}
-                                 exitNote={this.exitNote} /> :
                         <NoteDisplay currentGroupId={this.props.currentGroupId}
                                      currentUserId={this.props.currentUserId}
-                                     openNote={this.openNote} />
-                        }
+                                     createNote={this.state.createNote}
+                                     noteCreated={() => this.handleCreateNote(false)}
+                        />
                     </>
                 )}
 

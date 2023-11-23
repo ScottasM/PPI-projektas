@@ -7,20 +7,21 @@ export class Note extends Component {
         super(props);
     }
     render() {
-        const { title, selected, handleSelect, id } = this.props;
+        const { noteData, handleSelect} = this.props;
         
         return (
-            <div className="note-card unselected" onClick={() => handleSelect(id)}>
+            <div className="note-card unselected" onClick={() => handleSelect(noteData.id)}>
                 <div className="note-title">
-                    <p>{title}</p>
+                    <p>{noteData.name}</p>
                 </div>
                 <div className="note-tags">
-                    <span>Math</span>
-                    <span>Formula</span>
-                    <span>1 semester</span>
+                    {noteData.tags.map(tag => (
+                        <span>{tag}</span>
+                        )
+                    )}
                 </div>
                 <div className="note-text">
-                    <p>sample note text</p>
+                    <p>{noteData.text}</p>
                 </div>
                 <div className="note-buttons">
                     <button className="button delete-button">

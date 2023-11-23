@@ -7,16 +7,48 @@ export class NoteEditor extends Component {
     constructor (props) {
         super(props)
         this.state = {
-            noteName: this.props.noteData.name,
-            noteText: this.props.noteData.text,
-            noteTags: this.props.noteData.tags,
+            id: this.props.noteData === undefined ? 0 : this.props.noteData.id,
+            name: this.props.noteData === undefined ? '' : this.props.noteData.name,
+            text: this.props.noteData === undefined ? '' : this.props.noteData.text,
+            tags: this.props.noteData === undefined ? 0 : this.props.noteData.tags,
             saved: true,
-            showNotSavedMessage: true,
-            showDeleteMessage: true,
+            showNotSavedMessage: false,
+        }
+    }
+
+    handleCreateNote = async () => {
+        try {
+            const response = await fetch(`http://localhost:5268/api/note/createNote/${this.props.currentGroupId}/${this.props.currentUserId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+
+            const noteId = await response.json();
+            
+            this.setState({
+                id: noteId,
+            }, () => {
+                this.handleSave();
+            });
+
+        } catch (error) {
+            console.error('There was a problem with the fetch operation:', error);
         }
     }
 
     handleSave = async () => {
+        if(this.state.id === 0)
+        {
+            await this.handleCreateNote();
+            return;
+        }
+        
         if (this.state.noteName === '')
             alert('Note name cannot be empty!');
         
@@ -25,60 +57,42 @@ export class NoteEditor extends Component {
         
         const noteData = {
             AuthorId: this.props.currentUserId,
-            Name: this.state.noteName,
-            Tags: this.state.noteTags,
-            Text: this.state.noteText
+            Name: this.state.name,
+            Tags: this.state.tags === 0 ? [] : this.state.tags,
+            Text: this.state.text
         };
 
-        fetch(`http://localhost:5268/api/note/updateNote/${this.props.noteId}`, { // temporary localhost api url
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(noteData)
-        })
-            .then(async response => {
-                if (!response.ok) {
-                    alert(`Changes weren't saved!`);
-                    this.setState({
-                        showNotSavedMessage: false
-                    });
-                    throw new Error('Network response was not ok');
-                }
-                await this.setState({
-                    saved: true
-                });
-                this.handleExit();
-            })
-            .catch((error) =>
-                console.error('There was a problem with the fetch operation:', error));
-    }
-    
-    handleDelete = async () => {
-        if (this.state.showDeleteMessage) {
-            alert(`You're about to delete this note.`)
-            this.setState({
-                showDeleteMessage: false
+        try {
+            const response = await fetch(`http://localhost:5268/api/note/updateNote/${this.state.id}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(noteData),
             });
-        } else fetch(`http://localhost:5268/api/note/deleteNote/${this.props.noteId}/${this.props.currentUserId}`, {
-            method: 'DELETE',
-            headers: {
-                'Content-Type': 'application/json'
+
+            if (!response.ok) {
+                alert(`Changes weren't saved!`);
+                this.setState({
+                    showNotSavedMessage: false,
+                });
+                throw new Error('Network response was not ok');
             }
-        })
-            .then(response => {
-                if (!response.ok)
-                    throw new Error('Network response was not ok');
-                this.props.exitNote();
-            })
-            .catch(error =>
-                console.log('There was a problem with the fetch operation:', error));
+
+            this.setState({
+                saved: true,
+                showNotSavedMessage: false,
+            }, () => {
+                this.handleExit();
+            });
+        } catch (error) {
+            console.error('There was a problem with the fetch operation:', error);
+        }
     }
     
     handleExit = () => {
         if (this.state.saved)
         {
-            this.props.transferChanges(this.state.noteName, this.state.noteTags, this.state.noteText);
             this.props.changeDisplay(1, '');
         }
         else if (this.state.showNotSavedMessage) {
@@ -93,7 +107,7 @@ export class NoteEditor extends Component {
     
     handleTitleChange = (event) => {
         this.setState({
-            noteName: event.target.value,
+            name: event.target.value,
             saved: false,
             showNotSavedMessage: true,
             showDeleteMessage: true
@@ -102,16 +116,16 @@ export class NoteEditor extends Component {
 
     handleTextChange = (event) => {
         this.setState({
-            noteText: event.target.value,
+            text: event.target.value,
             saved: false,
             showNotSavedMessage: true,
             showDeleteMessage: true
         })
     }
     
-    handleTagChanged = (event) => {
+    handleTagChanged = (event) => { //TODO: Add tag selection
         this.setState({
-            noteTags: event.target.value
+            tags: event.target.value
         })
     }
 
@@ -119,10 +133,10 @@ export class NoteEditor extends Component {
         const index = this.state.noteTags.indexOf(tag);
         if (index === -1)
             return;
-        const newTags = this.props.noteTags;
+        const newTags = this.props.tags;
         newTags.splice(index, 1)
         this.setState({
-            noteTags: newTags,
+            tags: newTags,
             tag: '',
             saved: false,
             showNotSavedMessage: true,
@@ -133,10 +147,10 @@ export class NoteEditor extends Component {
     handleAddTag = () => {
         if (this.state.tag === '') return;
 
-        const newTags = this.props.noteTags
+        const newTags = this.props.tags
         newTags.push(this.state.tag);
         this.setState({
-            noteTags: newTags,
+            tags: newTags,
             tag: '',
             saved: false,
             showNotSavedMessage: true,
@@ -145,20 +159,21 @@ export class NoteEditor extends Component {
     }
 
     render() {
-        const {noteData} = this.props;
+        const {name, text, tags} = this.state;
 
         return (
             <div className="note-card selected">
                 <div className="note-title">
-                    <input className="note-title-edit" type="text" value={noteData.name} onChange={(e) => this.handleTitleChange(e)} />
+                    <input className="note-title-edit" type="text" value={name} onChange={(e) => this.handleTitleChange(e)} />
                 </div>
                 <div className="note-tags">
-                    <span>Math</span>
-                    <span>Formula</span>
-                    <span>1 semester</span>
+                    {tags !== 0 && tags.map(tag => (
+                            <span>{tag}</span>
+                        )
+                    )}
                 </div>
                 <div className="note-text">
-                    <textarea className="note-text-edit" value={"testing"} onChange={(e) => this.handleTextChange(e)} />
+                    <textarea className="note-text-edit" value={text} onChange={(e) => this.handleTextChange(e)} />
                 </div>
                 <div className="note-misc">
                     <button className="button save-button" onClick={this.handleSave}>
@@ -166,7 +181,7 @@ export class NoteEditor extends Component {
                     </button>
                 </div>
                 <div className="note-buttons">
-                    <button className="button button-hover delete-button delete-button-hover">
+                    <button className="button button-hover delete-button delete-button-hover" onClick={this.props.deleteNote}>
                         <MdDelete />
                     </button>
                     <button className="button button-hover edit-button edit-button-hover" onClick={() => this.props.changeDisplay(2, '')}>

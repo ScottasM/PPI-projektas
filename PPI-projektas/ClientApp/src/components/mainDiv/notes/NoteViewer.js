@@ -16,15 +16,16 @@ export class NoteViewer extends Component {
                     <p>{noteData.name}</p>
                 </div>
                 <div className="note-tags">
-                    <span>Math</span>
-                    <span>Formula</span>
-                    <span>1 semester</span>
+                    {noteData !== 0 && noteData.tags.map(tag => (
+                            <span>{tag}</span>
+                        )
+                    )}
                 </div>
                 <div className="note-text">
-                    <p>sample note text</p>
+                    <p>{noteData.text}</p>
                 </div>
                 <div className="note-buttons">
-                    <button className="button button-hover delete-button delete-button-hover no-close-button">
+                    <button className="button button-hover delete-button delete-button-hover no-close-button" onClick={this.props.deleteNote}>
                         <MdDelete />
                     </button>
                     <button className="button button-hover edit-button edit-button-hover no-close-button" onClick={() => this.props.changeDisplay(2, '')}>
@@ -34,4 +35,8 @@ export class NoteViewer extends Component {
             </div>
         )
     }
+
+    static defaultProps = {
+        noteData: 0,
+    };
 }

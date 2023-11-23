@@ -9,8 +9,9 @@ export class NoteHub extends Component {
         super(props);
         this.state = {
             mounted: false,
-            display: 1,
+            display: this.props.display,
             error: '',
+            showDeleteMessage: true,
         }
     }
     
@@ -20,30 +21,6 @@ export class NoteHub extends Component {
             this.setState({
                 mounted: true
             });
-        }
-    }
-
-    fetchNote = async () => {
-        try {
-            fetch(`http://localhost:5268/api/note/openNote/${this.props.noteId}`,)
-                .then(async response => {
-                    if (!response.ok)
-                        throw new Error('Network response was not ok');
-                    return await response.json();
-                })
-                .then(note => {
-                    this.setState({
-                        noteName: note.name,
-                        noteTags: note.tags,
-                        noteText: note.text,
-                    });
-                });
-        }
-    catch (error) {
-            this.setState({
-               error: error 
-            });
-            console.error('There was a problem with the fetch operation:', error);
         }
     }
     
@@ -61,6 +38,27 @@ export class NoteHub extends Component {
             error: error
         });
     }
+
+    handleDelete = async () => {
+        if (this.state.showDeleteMessage) {
+            alert(`You're about to delete this note.`)
+            this.setState({
+                showDeleteMessage: false
+            });
+        } else fetch(`http://localhost:5268/api/note/deleteNote/${this.props.noteData.id}/${this.props.currentUserId}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+            .then(response => {
+                if (!response.ok)
+                    throw new Error('Network response was not ok');
+                this.props.handleClose();
+            })
+            .catch(error =>
+                console.log('There was a problem with the fetch operation:', error));
+    }
     
     render() {
         switch (this.state.display) {
@@ -75,9 +73,8 @@ export class NoteHub extends Component {
                     <div className='note-hub'>
                         <NoteViewer
                             noteData={this.props.noteData}
-                            exitNote={this.props.exitNote}
                             changeDisplay={this.changeDisplay}
-                            // deleteNote={}
+                            deleteNote={this.handleDelete}
                         />
                     </div>
                 )
@@ -86,10 +83,10 @@ export class NoteHub extends Component {
                     <div className='note-hub'>
                         <NoteEditor
                             noteData={this.props.noteData}
-                            exitNote={this.props.exitNote}
                             currentGroupId={this.props.currentGroupId}
                             currentUserId={this.props.currentUserId}
-                            changeDisplay={this.changeDisplay}
+                            changeDisplay={(display, error) => {this.changeDisplay(display, error); this.props.fetchNotes()}}
+                            deleteNote={this.handleDelete}
                         />
                     </div>
                 )

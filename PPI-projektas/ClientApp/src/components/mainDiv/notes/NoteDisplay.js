@@ -52,8 +52,10 @@ export class NoteDisplay extends Component {
             })
             .then(data => {
                 const notes = data.map(note => ({
+                    id: note.id,
                     name: note.name,
-                    id: note.id
+                    tags: note.tags,
+                    text: note.text,
                 }));
                 this.setState({
                     notes: notes,
@@ -62,6 +64,9 @@ export class NoteDisplay extends Component {
             })
             .catch(error =>
                 console.error('There was a problem with the fetch operation:', error));
+        
+        if(this.props.createNote)
+            this.props.noteCreated();
     }
     
     handleNoteSelect = (noteId) => {
@@ -96,9 +101,7 @@ export class NoteDisplay extends Component {
                             notes.map((note) => (
                                 <Note
                                     key={note.id}
-                                    id={note.id}
-                                    title={note.name}
-                                    selected={note.id === selectedNote}
+                                    noteData={note}
                                     handleSelect={this.handleNoteSelect}
                                 />
                             ))
@@ -109,13 +112,19 @@ export class NoteDisplay extends Component {
                         )
                     }
                 </div>
-                {selectedNote !== 0 &&
-                <NoteHub
-                    ref={this.noteHubRef}
-                    noteData={notes.find(note => note.id === selectedNote)}
-                    currentGroupId={this.props.currentGroupId}
-                    currentUserId={this.props.currentUserId}
-                />
+                {(selectedNote !== 0 || this.props.createNote) &&
+                    <NoteHub
+                        display={selectedNote !== 0 ? 1 : 2}
+                        ref={this.noteHubRef}
+                        noteData={notes.find(note => note.id === selectedNote)}
+                        currentGroupId={this.props.currentGroupId}
+                        currentUserId={this.props.currentUserId}
+                        fetchNotes={this.fetchNotes}
+                        handleClose={() => this.setState({selectedNote: 0}, () => {
+                            this.fetchNotes();
+                        })}
+                        
+                    />
                 }
             </div>
         );
