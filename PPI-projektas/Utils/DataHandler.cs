@@ -23,7 +23,14 @@ namespace PPI_projektas.Utils
         
 
         private DbContextOptions<EntityData> options;
+        enum FileState
+        {
+            Ready,
+            Saving,
+            Reading
+        }
 
+        private FileState _state = FileState.Ready;
         public DataHandler(string connectionString)
         {
             #region Singleton
@@ -37,11 +44,11 @@ namespace PPI_projektas.Utils
 
 
 
-
+            _state = FileState.Reading;
             AllUsers = _saveHandler.LoadList<User>();
             AllNotes = _saveHandler.LoadList<Note>();
             AllGroups = _saveHandler.LoadList<Group>();
-
+            _state = FileState.Saving;
 
             // assign loaded guids to actual objects
           
@@ -54,7 +61,8 @@ namespace PPI_projektas.Utils
         {
             while (true) {
                 await Task.Delay(TimeoutSeconds * 1000);
-                _saveHandler.Save();
+                _state = FileState.Saving;
+                _saveHandler.Save(() => ContextActionDone());
             }
         }
 
@@ -62,43 +70,46 @@ namespace PPI_projektas.Utils
         {
             if (obj == null)
                 return;
-
+            Instance._state = FileState.Saving;
             if (obj is Group) {
                 var obje = obj as Group;
                 Instance.AllGroups.Add(obje);
-                Instance._saveHandler.SaveObject(obje);
+                Instance._saveHandler.SaveObject(obje,() => Instance.ContextActionDone());
             }
             else if (obj is User) {
                 var obje = obj as User;
                 Instance.AllUsers.Add(obje);
-                Instance._saveHandler.SaveObject(obje);
+                Instance._saveHandler.SaveObject(obje, () => Instance.ContextActionDone());
             }
             else if (obj is Note) {
                 var obje = obj as Note;
                 Instance.AllNotes.Add(obje);
-                Instance._saveHandler.SaveObject(obje);
+                Instance._saveHandler.SaveObject(obje, () => Instance.ContextActionDone());
             }
+            else Instance._state = FileState.Ready;
         }
 
         public static void Delete<T>(T obj)
         {
             if(obj == null) return;
 
+            Instance._state = FileState.Saving;
             if (obj is Group) {
                 var obje = obj as Group;
                 Instance.AllGroups.Remove(obje);
-                Instance._saveHandler.RemoveObject(obje);
+                Instance._saveHandler.RemoveObject(obje, () => Instance.ContextActionDone());
             }
             else if (obj is User) {
                 var obje = obj as User;
                 Instance.AllUsers.Remove(obje);
-                Instance._saveHandler.RemoveObject(obje);
+                Instance._saveHandler.RemoveObject(obje, () => Instance.ContextActionDone());
             }
             else if (obj is Note) {
                 var obje = obj as Note;
                 Instance.AllNotes.Remove(obje);
-                Instance._saveHandler.RemoveObject(obje);
+                Instance._saveHandler.RemoveObject(obje, () => Instance.ContextActionDone());
             }
+            else Instance._state = FileState.Ready;
         }
 
         public static bool userExists(string username)
@@ -117,6 +128,11 @@ namespace PPI_projektas.Utils
             if (obj == null) throw new ObjectDoesNotExistException(objectId);
 
             return obj;
+        }
+
+        public void ContextActionDone()
+        {
+            _state = FileState.Ready;
         }
     }
 }
