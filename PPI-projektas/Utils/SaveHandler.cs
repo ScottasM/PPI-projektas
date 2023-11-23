@@ -14,10 +14,9 @@ namespace PPI_projektas.Utils
             _context = new EntityData();
         }
 
-        public void Save(Action onCompleted)
+        public void Save()
         {
             _context.SaveChanges();
-            onCompleted?.Invoke();
         }
 
         public List<T> LoadList<T>() where T: class
@@ -25,18 +24,16 @@ namespace PPI_projektas.Utils
             return _context.Set<T>().ToList();
         }
         
-        public void SaveObject<T>(T obj, Action onCompleted) where T : Entity
+        public void SaveObject<T>(T obj) where T : Entity
         {
             _context.Set<T>().Add(obj);
             _context.SaveChanges();
-            onCompleted?.Invoke();
         }
 
-        public void RemoveObject<T>(T obj, Action onCompleted) where T : Entity
+        public void RemoveObject<T>(T obj) where T : Entity
         {
             _context.Set<T>().Remove(obj);
             _context.SaveChanges();
-            onCompleted?.Invoke();
         }
     }
 }

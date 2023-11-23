@@ -23,14 +23,7 @@ namespace PPI_projektas.Utils
         
 
         private DbContextOptions<EntityData> options;
-        enum FileState
-        {
-            Ready,
-            Saving,
-            Reading
-        }
 
-        private FileState _state = FileState.Ready;
         public DataHandler(string connectionString)
         {
             #region Singleton
@@ -41,17 +34,12 @@ namespace PPI_projektas.Utils
 
             _saveHandler = LazySingleton<SaveHandler>.Instance;
 
+            Thread processingThread = new Thread(ProcessQueue);
+            processingThread.Start();
 
-
-
-            _state = FileState.Reading;
-            AllUsers = _saveHandler.LoadList<User>();
-            AllNotes = _saveHandler.LoadList<Note>();
-            AllGroups = _saveHandler.LoadList<Group>();
-            _state = FileState.Saving;
-
-            // assign loaded guids to actual objects
-          
+            Enqueue(delegate { AllUsers = _saveHandler.LoadList<User>();});
+            Enqueue(delegate { AllNotes = _saveHandler.LoadList<Note>();});
+            Enqueue(delegate { AllGroups = _saveHandler.LoadList<Group>();});
 
             SaveTimeout(15);
         }
@@ -61,8 +49,8 @@ namespace PPI_projektas.Utils
         {
             while (true) {
                 await Task.Delay(TimeoutSeconds * 1000);
-                _state = FileState.Saving;
-                _saveHandler.Save(() => ContextActionDone());
+
+                Enqueue(()=>_saveHandler.Save());
             }
         }
 
@@ -70,46 +58,44 @@ namespace PPI_projektas.Utils
         {
             if (obj == null)
                 return;
-            Instance._state = FileState.Saving;
+
             if (obj is Group) {
                 var obje = obj as Group;
                 Instance.AllGroups.Add(obje);
-                Instance._saveHandler.SaveObject(obje,() => Instance.ContextActionDone());
+                Enqueue(() => Instance._saveHandler.SaveObject(obje));
             }
             else if (obj is User) {
                 var obje = obj as User;
                 Instance.AllUsers.Add(obje);
-                Instance._saveHandler.SaveObject(obje, () => Instance.ContextActionDone());
+                Enqueue(() => Instance._saveHandler.SaveObject(obje));
             }
             else if (obj is Note) {
                 var obje = obj as Note;
                 Instance.AllNotes.Add(obje);
-                Instance._saveHandler.SaveObject(obje, () => Instance.ContextActionDone());
+                Enqueue(() => Instance._saveHandler.SaveObject(obje));
             }
-            else Instance._state = FileState.Ready;
         }
 
         public static void Delete<T>(T obj)
         {
             if(obj == null) return;
 
-            Instance._state = FileState.Saving;
             if (obj is Group) {
                 var obje = obj as Group;
                 Instance.AllGroups.Remove(obje);
-                Instance._saveHandler.RemoveObject(obje, () => Instance.ContextActionDone());
+                Enqueue(() => Instance._saveHandler.RemoveObject(obje));
             }
             else if (obj is User) {
                 var obje = obj as User;
                 Instance.AllUsers.Remove(obje);
-                Instance._saveHandler.RemoveObject(obje, () => Instance.ContextActionDone());
+                Enqueue(() => Instance._saveHandler.RemoveObject(obje));
             }
             else if (obj is Note) {
                 var obje = obj as Note;
                 Instance.AllNotes.Remove(obje);
-                Instance._saveHandler.RemoveObject(obje, () => Instance.ContextActionDone());
+                Enqueue(() => Instance._saveHandler.RemoveObject(obje));
             }
-            else Instance._state = FileState.Ready;
+
         }
 
         public static bool userExists(string username)
@@ -130,9 +116,45 @@ namespace PPI_projektas.Utils
             return obj;
         }
 
-        public void ContextActionDone()
+
+
+
+        static Queue<Action> actionQueue = new Queue<Action>();
+        static object queueLock = new object();
+
+        static void ProcessQueue()
         {
-            _state = FileState.Ready;
+            while (true) {
+                Action action = Dequeue();
+                if (action != null) {
+                    action.Invoke();
+                }
+                else {
+                    lock (queueLock) {
+                        Monitor.Wait(queueLock);
+                    }
+                }
+            }
         }
+
+        static Action Dequeue()
+        {
+            lock (queueLock) {
+                if (actionQueue.Count > 0) {
+                    return actionQueue.Dequeue();
+                }
+                return null;
+            }
+        }
+
+        static void Enqueue(Action action)
+        {
+            lock (queueLock) {
+                actionQueue.Enqueue(action);
+                Monitor.Pulse(queueLock);
+            }
+        }
+
+
     }
 }
