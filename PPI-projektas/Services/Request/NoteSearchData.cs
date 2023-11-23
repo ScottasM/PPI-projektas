@@ -6,20 +6,20 @@ public class NoteSearchData
 {
     public Guid UserId { get; set; }
     
-    public Guid? GroupId { get; set; }
+    public SearchType SearchType { get; set; }
     
-    public IEnumerable<string>? Tags { get; set; }
-    
-    public SearchType? SearchType { get; set; }
+    public string? TagFilter { get; set; }
     
     public string? NameFilter { get; set; }
+    
+    public Guid? GroupId { get; set; }
 
-    public NoteSearchData(Guid userId, Guid? groupId = null, IEnumerable<string>? tags = null, SearchType? searchType = null, string? nameFilter = null)
+    public NoteSearchData(Guid userId, SearchType searchType, string tagFilter, string nameFilter, Guid? groupId = null)
     {
         UserId = userId;
-        GroupId = groupId;
-        Tags = tags;
-        SearchType = searchType;
+        TagFilter = tagFilter;
         NameFilter = nameFilter;
+        GroupId = groupId;
+        SearchType = searchType;
     }
 }

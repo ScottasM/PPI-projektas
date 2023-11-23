@@ -1,8 +1,8 @@
 ﻿import React, {Component} from "react"
 import {NoteViewer} from "./NoteViewer";
 import {NoteEditor} from "./NoteEditor";
-import "./NoteHub.css"
 import {NoteDisplay} from "./NoteDisplay";
+import "./NoteHub.css"
 
 export class NoteHub extends Component {
     constructor(props) {

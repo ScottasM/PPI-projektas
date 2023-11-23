@@ -22,7 +22,7 @@ export class NoteEditor extends Component {
                 noteName: 'Untitled Note'
             });
         
-        const noteData = {
+        const data = {
             AuthorId: this.props.currentUserId,
             Name: this.state.noteName,
             Tags: this.state.noteTags,
@@ -34,7 +34,7 @@ export class NoteEditor extends Component {
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(noteData)
+            body: JSON.stringify(data)
         })
             .then(async response => {
                 if (!response.ok) {

@@ -20,18 +20,19 @@ public class NoteService : INoteService
         _noteFactory = noteFactory;
     }
 
-    public IEnumerable<ObjectDataItem> GetNotes(Guid userId, Guid? groupId, SearchType? searchType, IEnumerable<string>? tags, string? nameFilter)
+    public IEnumerable<ObjectDataItem> GetNotes(Guid userId, SearchType searchType, string? tagFilter, string? nameFilter, Guid? groupId)
     {
         var userGroupIds = groupId == null
             ? DataHandler.FindObjectById(userId, DataHandler.Instance.AllUsers).GroupsGuids
             : null;
+        var tags = ConvertToArray(tagFilter);
         
         return DataHandler.Instance.AllNotes
             .If(groupId == null, query =>
                 query.Where(note => userGroupIds.Contains(note.GroupId)))
             .If(groupId != null, query =>
                 query.Where(note => note.GroupId == groupId))
-            .If(searchType != null && tags != null, query =>
+            .If(tags.Any(), query =>
                 {
                     return searchType switch
                     {
@@ -98,6 +99,14 @@ public class NoteService : INoteService
         group.RemoveNote(note);
         user.RemoveCreatedNote(note);
         DataHandler.Delete(note);
+    }
+
+    private IEnumerable<string> ConvertToArray(string tagFilter)
+    {
+        if (string.IsNullOrEmpty(tagFilter)) return Enumerable.Empty<string>();
+        
+        var separators = new char[] {',', ';'};
+        return tagFilter.Split(separators, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
     }
 }
 
