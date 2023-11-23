@@ -5,11 +5,11 @@ using PPI_projektas.Services;
 using PPI_projektas.Services.Response;
 using PPI_projektas.Utils;
 
-namespace PPI_projektas.UnitTests
+namespace PPI_projektas.IntegrationTests
 {
     public class GroupServiceTests
     {
-        DataHandler dataHandler = new DataHandler();
+        //DataHandler dataHandler = new DataHandler();
 
         [Fact, TestPriority(5)]
         public void GroupServiceTest()

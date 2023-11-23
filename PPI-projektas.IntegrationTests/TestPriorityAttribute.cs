@@ -1,5 +1,5 @@
 ﻿
-namespace PPI_projektas.UnitTests
+namespace PPI_projektas.IntegrationTests
 {
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
     public class TestPriorityAttribute : Attribute

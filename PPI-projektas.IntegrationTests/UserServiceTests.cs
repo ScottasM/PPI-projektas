@@ -5,14 +5,14 @@ using PPI_projektas.Services.Response;
 using Moq;
 using PPI_projektas.Utils;
 
-namespace PPI_projektas.UnitTests
+namespace PPI_projektas.IntegrationTests
 {
     [TestCaseOrderer(
-    ordererTypeName: "PPI_projektas.UnitTests.PriorityOrderer",
-    ordererAssemblyName: "PPI_projektas.UnitTests")]
+    ordererTypeName: "PPI_projektas.IntegrationTests.PriorityOrderer",
+    ordererAssemblyName: "PPI_projektas.IntegrationTests")]
     public class UserServiceTests
     {
-        DataHandler dataHandler = new DataHandler();
+        //DataHandler dataHandler = new DataHandler();
         UserCreateData userData;
         UserService userService;
         List<ObjectDataItem>? userList;
@@ -84,7 +84,7 @@ namespace PPI_projektas.UnitTests
 
             //Testing DeleteUser()
             Assert.False(userList.Exists(x => x.Id == testUserId));
-            dataHandler.AllUsers.Clear();
+            //dataHandler.AllUsers.Clear();
         }
     }
 }
