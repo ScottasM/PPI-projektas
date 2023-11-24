@@ -93,8 +93,9 @@ public class NoteService : INoteService
     {
         var note = DataHandler.FindObjectById(noteId, DataHandler.Instance.AllNotes);
         var user = DataHandler.FindObjectById(userId, DataHandler.Instance.AllUsers);
-        var group = DataHandler.FindObjectById(note.GroupId, DataHandler.Instance.AllGroups);
-        
+
+        var group = DataHandler.Instance.AllGroups.Values.FirstOrDefault(group => group.Notes.Contains(note));
+
         if (group == null) throw new ObjectDoesNotExistException();
         if (note.AuthorId != userId) throw new UnauthorizedAccessException();
         
