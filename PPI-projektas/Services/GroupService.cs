@@ -18,7 +18,7 @@ public class GroupService : IGroupService
     
     public List<ObjectDataItem> GetGroupsByOwner(Guid ownerId)
     {
-        var data = DataHandler.Instance.AllGroups
+        var data = DataHandler.Instance.AllGroups.Values
             //.Where(group => group.OwnerGuid == ownerId) Will be uncommented when user is associated on the frontend
             .Select(group => _objectDataItemFactory.Create(group.Id, group.Name))
             .ToList();

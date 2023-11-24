@@ -63,7 +63,7 @@ public class NoteService : INoteService
         var note = DataHandler.FindObjectById(noteId, DataHandler.Instance.AllNotes);
         var user = DataHandler.FindObjectById(userId, DataHandler.Instance.AllUsers);
         
-        var group = DataHandler.Instance.AllGroups.FirstOrDefault(group => group.Notes.Contains(note));
+        var group = DataHandler.Instance.AllGroups.Values.FirstOrDefault(group => group.Notes.Contains(note));
         if (group == null) throw new ObjectDoesNotExistException();
         
 
