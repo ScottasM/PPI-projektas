@@ -90,8 +90,9 @@ public class GroupService : IGroupService
         foreach (var member in group.Members)
             member.RemoveGroup(group);
 
-        foreach (var note in group.Notes)
+        for (int i = group.Notes.Count-1;i>=0; i--)
         {
+            var note = group.Notes[i];
             var user = DataHandler.FindObjectById(note.UserId, DataHandler.Instance.AllUsers);
             user.RemoveCreatedNote(note);
             DataHandler.Delete(note);

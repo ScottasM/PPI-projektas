@@ -19,14 +19,7 @@ namespace PPI_projektas.Utils
 
         private SaveHandler _saveHandler;
 
-        enum FileState
-        {
-            Ready,
-            Saving,
-            Reading
-        }
-
-        private FileState _state = FileState.Ready;
+        
 
         private DbContextOptions<EntityData> options;
 
@@ -40,18 +33,12 @@ namespace PPI_projektas.Utils
 
             _saveHandler = LazySingleton<SaveHandler>.Instance;
 
+            Thread processingThread = new Thread(ProcessQueue);
+            processingThread.Start();
 
-
-            _state = FileState.Reading;
-
-            AllUsers = _saveHandler.LoadList<User>();
-            AllNotes = _saveHandler.LoadList<Note>();
-            AllGroups = _saveHandler.LoadList<Group>();
-
-
-            // assign loaded guids to actual objects
-          
-            _state = FileState.Ready;
+            Enqueue(delegate { AllUsers = _saveHandler.LoadList<User>();});
+            Enqueue(delegate { AllNotes = _saveHandler.LoadList<Note>();});
+            Enqueue(delegate { AllGroups = _saveHandler.LoadList<Group>();});
 
             SaveTimeout(15);
         }
@@ -62,15 +49,7 @@ namespace PPI_projektas.Utils
             while (true) {
                 await Task.Delay(TimeoutSeconds * 1000);
 
-                if(_state != FileState.Ready) { // dont save if we're reading from the files
-                    continue;
-                }
-
-                _state = FileState.Saving;
-
-                _saveHandler.Save();
-
-                _state = FileState.Ready;
+                Enqueue(()=>_saveHandler.Save());
             }
         }
 
@@ -82,17 +61,17 @@ namespace PPI_projektas.Utils
             if (obj is Group) {
                 var obje = obj as Group;
                 Instance.AllGroups.TryAdd(obje.Id, obje);
-                Instance._saveHandler.SaveObject(obje);
-            }
-            else if (obj is User) {
-                var obje = obj as User;
-                Instance.AllUsers.TryAdd(obje.Id, obje);
-                Instance._saveHandler.SaveObject(obje);
+                Enqueue(() => Instance._saveHandler.SaveObject(obje));
             }
             else if (obj is Note) {
                 var obje = obj as Note;
                 Instance.AllNotes.TryAdd(obje.Id, obje);
-                Instance._saveHandler.SaveObject(obje);
+                Enqueue(() => Instance._saveHandler.SaveObject(obje));
+            }
+            else if (obj is User) {
+                var obje = obj as User;
+                Instance.AllUsers.TyAdd(obje.Id,obje);
+                Enqueue(() => Instance._saveHandler.SaveObject(obje));
             }
         }
 
@@ -103,18 +82,19 @@ namespace PPI_projektas.Utils
             if (obj is Group) {
                 var obje = obj as Group;
                 Instance.AllGroups.TryRemove(obje.Id, out _);
-                Instance._saveHandler.RemoveObject(obje);
+                Enqueue(() => Instance._saveHandler.RemoveObject(obje));
             }
             else if (obj is User) {
                 var obje = obj as User;
                 Instance.AllUsers.TryRemove(obje.Id, out _);
-                Instance._saveHandler.RemoveObject(obje);
+                Enqueue(() => Instance._saveHandler.RemoveObject(obje));
             }
             else if (obj is Note) {
                 var obje = obj as Note;
                 Instance.AllNotes.TryRemove(obje.Id, out _);
-                Instance._saveHandler.RemoveObject(obje);
+                Enqueue(() => Instance._saveHandler.RemoveObject(obje));
             }
+
         }
 
         public static bool userExists(string username)
@@ -133,5 +113,46 @@ namespace PPI_projektas.Utils
 
             return obj;
         }
+
+
+
+
+        static Queue<Action> actionQueue = new Queue<Action>();
+        static object queueLock = new object();
+
+        static void ProcessQueue()
+        {
+            while (true) {
+                Action action = Dequeue();
+                if (action != null) {
+                    action.Invoke();
+                }
+                else {
+                    lock (queueLock) {
+                        Monitor.Wait(queueLock);
+                    }
+                }
+            }
+        }
+
+        static Action Dequeue()
+        {
+            lock (queueLock) {
+                if (actionQueue.Count > 0) {
+                    return actionQueue.Dequeue();
+                }
+                return null;
+            }
+        }
+
+        static void Enqueue(Action action)
+        {
+            lock (queueLock) {
+                actionQueue.Enqueue(action);
+                Monitor.Pulse(queueLock);
+            }
+        }
+
+
     }
 }

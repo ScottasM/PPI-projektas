@@ -10,7 +10,7 @@ public class User : Entity
 
     public string Username { get; set; }
     public string _password { get; set; }
-    public string _email { get; set; }
+    public string? _email { get; set; }
 
 
 

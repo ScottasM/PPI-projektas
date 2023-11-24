@@ -14,7 +14,7 @@ namespace PPI_projektas.Utils
         {
             _context = new EntityData();
         }
-        
+
         public void Save()
         {
             _context.SaveChanges();
