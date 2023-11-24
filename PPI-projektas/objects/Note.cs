@@ -28,9 +28,8 @@ public class Note : Entity, IComparable<Note>
 	
 	public Note () {} // For deserialization
 
-	public Note(Guid authorId, Guid groupId, bool createGUID = true) : base(createGUID)
+	public Note(Guid authorId, bool createGUID = true) : base(createGUID)
 	{
-
         UserId = authorId;
 		Name = "";
 		Tags = new List<EntityStrings>();
@@ -45,14 +44,4 @@ public class Note : Entity, IComparable<Note>
         
         return String.Compare(Text, otherNote.Text, StringComparison.OrdinalIgnoreCase);
     }
-
-    public bool ContainsAny(IEnumerable<string> tags)
-    {
-	    return tags.Any(tag => Tags.Contains(new Tag (tag)));
-    }
-
-    public bool ContainsAll(IEnumerable<string> tags)
-    {
-	    return tags.All(tag => Tags.Contains(new Tag(tag)));
-    }	
 }

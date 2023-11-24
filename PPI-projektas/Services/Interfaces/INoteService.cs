@@ -5,9 +5,9 @@ namespace PPI_projektas.Services.Interfaces;
 
 public interface INoteService
 {
-    public IEnumerable<ObjectDataItem> GetNotes(Guid userId, SearchType searchType, string? tagFilter, string? nameFilter, Guid? groupId);
-    public OpenedNoteData GetNote(Guid userId, Guid noteId);
-    public Guid CreateNote(Guid authorId, Guid groupId);
-    public void UpdateNote(Guid authorId, Guid noteId, string name, List<EntityStrings> tags, string text);
-    public void DeleteNote(Guid userId, Guid noteId);
+    public List<ObjectDataItem> GetNotes(Guid groupId);
+    public OpenedNoteData GetNote(Guid id);
+    public Guid CreateNote(Guid groupId, Guid authorId);
+    public void UpdateNote(Guid noteId, Guid authorId, string name, List<EntityStrings> tags, string text);
+    public void DeleteNote(Guid noteId, Guid userId);
 }

@@ -11,7 +11,7 @@ public class OpenedNoteDataFactory : IOpenedNoteDataFactory
 {
     public OpenedNoteData Create(string name, List<EntityStrings> tags, string text)
     {
-        return new OpenedNoteData(name, tags.Select(tag => tag.Text), text);
+        return new OpenedNoteData(name, tags, text);
     }
 }
 
@@ -19,7 +19,6 @@ public struct OpenedNoteData
 {
     public string Name { get; set; }
         
-
     public List<EntityStrings> Tags { get; set; }
 
     public string Text { get; set; }
