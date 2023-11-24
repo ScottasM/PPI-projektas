@@ -70,7 +70,7 @@ namespace PPI_projektas.Utils
             }
             else if (obj is User) {
                 var obje = obj as User;
-                Instance.AllUsers.TyAdd(obje.Id,obje);
+                Instance.AllUsers.TryAdd(obje.Id,obje);
                 Enqueue(() => Instance._saveHandler.SaveObject(obje));
             }
         }
@@ -106,7 +106,7 @@ namespace PPI_projektas.Utils
         {
             return Instance.AllUsers.Values.FirstOrDefault(inst => inst.GetUsername() == username);
         }
-        
+
         public static T FindObjectById<T>(Guid objectId, ConcurrentDictionary<Guid, T> objectList) where T : Entity
         {
             if (objectList.TryGetValue(objectId, out var obj)) throw new ObjectDoesNotExistException(objectId);
