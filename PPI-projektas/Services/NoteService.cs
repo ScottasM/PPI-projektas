@@ -4,6 +4,7 @@ using PPI_projektas.objects.Factories;
 using PPI_projektas.objects;
 using PPI_projektas.Services.Response;
 using PPI_projektas.Utils;
+using PPI_projektas.objects;
 
 namespace PPI_projektas.Services;
 
@@ -78,8 +79,9 @@ public class NoteService : INoteService
     
     public void UpdateNote(Guid userId, Guid noteId, string name, IEnumerable<string> tags, string text)
     {
+
         var note = DataHandler.FindObjectById(noteId, DataHandler.Instance.AllNotes);
-        
+
         if (note.AuthorId != userId) throw new UnauthorizedAccessException();
         
         note.Name = name;
