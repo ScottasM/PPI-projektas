@@ -1,7 +1,6 @@
 ﻿import React, {Component} from "react"
 import {NoteViewer} from "./NoteViewer";
 import {NoteEditor} from "./NoteEditor";
-import {NoteDisplay} from "./NoteDisplay";
 import "./NoteHub.css"
 
 export class NoteHub extends Component {
@@ -28,10 +27,12 @@ export class NoteHub extends Component {
 
     fetchNote = async () => {
         try {
-            fetch(`http://localhost:5268/api/note/openNote/${this.props.noteId}`,)
+            fetch(`http://localhost:5268/api/note/openNote/${this.props.noteId}/${this.props.currentUserId}`)
                 .then(async response => {
-                    if (!response.ok)
+                    if (!response.ok) {
                         throw new Error('Network response was not ok');
+                        
+                    }
                     return await response.json();
                 })
                 .then(note => {

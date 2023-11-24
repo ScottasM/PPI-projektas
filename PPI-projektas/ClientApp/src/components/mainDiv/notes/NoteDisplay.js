@@ -12,9 +12,9 @@ export class NoteDisplay extends Component {
         notes: [],
         isLoading: true,
         defaultCheck: true,
-        tags: [],
-        nameFilter: '',
-        searchType: 0
+        searchType: 0,
+        tagFilter: '',
+        nameFilter: ''
     }
     
     componentDidMount() {
@@ -36,7 +36,7 @@ export class NoteDisplay extends Component {
     fetchNotes = async () => {
         const parameters = `search?UserId=${this.props.currentUserId}`
             + `&SearchType=${this.state.searchType}`
-            + (this.state.tags.length > 0 ? `&Tags=${this.state.tags}` : '')
+            + (this.state.tagFilter !== '' ? `&TagFilter=${this.state.tagFilter}` : '')
             + (this.state.nameFilter !== '' ? `&NameFilter=${this.state.nameFilter}` : '')
             + (this.props.currentGroupId !== 0 ? `&GroupId=${this.props.currentGroupId}` : '');
         
@@ -65,24 +65,29 @@ export class NoteDisplay extends Component {
             nameFilter: event.target.value
         })
     }
+    
+    handleTagFilterChange = (event) => {
+        this.setState({
+            tagFilter: event.target.value
+        })
+    }
 
     handleTypeChange = (event) => {
-        const enumToInt = {
-            'All': 0,
-            'Any': 1
-        }
-        
-        this.setState({
-            defaultCheck: false,
-            SearchType: enumToInt[event.target.value]
-        });
+        if (event.target.value === "Any")
+            this.setState({
+                searchType: 1 
+            })
+        else
+            this.setState({
+                searchType: 0
+            })
     }
     
     handleSearch = () => {
         this.setState({
             isLoading: true,
             defaultCheck: true,
-            tags: [],
+            tagFilter: [],
             searchType: 0,
             nameFilter: ''
         })
@@ -92,11 +97,23 @@ export class NoteDisplay extends Component {
     render() {
         return (
             <div className="noteDisplay">
-                <input type='search' width='100px' value={this.state.nameFilter} onChange={this.handleNameFilterChange}></input>
-                <input type='radio' name='searchType' value='All' defaultChecked={this.state.defaultCheck} onClick={this.handleTypeChange}></input>
-                <input type='radio' name='searchType' value='Any' onClick={this.handleTypeChange}></input>
-                <button onClick={this.handleSearch}>Search</button>
-                <br/>
+                <div className='searchDiv'>
+                    <input className='searchBar' type='search' value={this.state.nameFilter} onChange={this.handleNameFilterChange}></input>
+                    <button onClick={this.handleSearch}>Search</button>
+                    <br/>
+                    <input className='searchBar' type='search' value={this.state.tagFilter} onChange={this.handleTagFilterChange}></input>
+                    <br/>
+                    <div className='tagFilterOptions'>
+                        <label className='tagFilterLabel'>
+                            All
+                            <input type='radio' name='searchType' value='All' defaultChecked={this.state.defaultCheck} onClick={this.handleTypeChange}></input>
+                        </label>
+                        <label className='tagFilterOptions'>
+                            Any
+                            <input type='radio' name='searchType' value='Any' onClick={this.handleTypeChange}></input>
+                        </label>
+                    </div>
+                </div>
                 {this.state.isLoading
                     ? <p>Loading...</p>
                     : this.state.notes.length > 0

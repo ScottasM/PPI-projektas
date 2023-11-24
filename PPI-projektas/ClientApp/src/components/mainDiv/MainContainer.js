@@ -22,6 +22,12 @@ export class MainContainer extends Component {
             displayNote: false,
             noteHubDisplay: 1,
             currentUserName: '',
+            noteDisplay: {
+                notes: [],
+                searchType: 0,
+                tagFilter: [],
+                nameFilter: ''
+            }
         }
     }
     

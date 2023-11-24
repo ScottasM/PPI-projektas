@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using PPI_projektas.Exceptions;
 using PPI_projektas.objects;
+using PPI_projektas.Services;
 using PPI_projektas.Services.Interfaces;
 using PPI_projektas.Services.Request;
 
@@ -19,15 +20,14 @@ namespace PPI_projektas.Controllers
             _noteService = noteService;
         }
         
-        [HttpGet]
-        [Route("/search")]
-        public IActionResult Get([FromQuery] NoteSearchData search)
+        [HttpGet("search")]
+        public IActionResult Get([FromQuery] Guid userId, [FromQuery] SearchType searchType, [FromQuery] string? tagFilter, [FromQuery] string? nameFilter, [FromQuery] Guid? groupId)
         {
-            return Ok(_noteService.GetNotes(search.UserId, search.SearchType, search.TagFilter, search.NameFilter, search.GroupId));
+            return Ok(_noteService.GetNotes(userId, searchType, tagFilter, nameFilter, groupId));
         }
 
-        [HttpGet("openNote/{noteId:guid}")]
-        public IActionResult OpenNote(Guid noteId, [FromBody] Guid userId)
+        [HttpGet("openNote/{noteId:guid}/{userId:guid}")]
+        public IActionResult OpenNote(Guid noteId, Guid userId)
         {
             try
             {
@@ -54,11 +54,11 @@ namespace PPI_projektas.Controllers
         }
 
         [HttpPost("updateNote/{noteId:guid}")]
-        public IActionResult UpdateNote(Guid noteId, [FromBody] Note data)
+        public IActionResult UpdateNote(Guid noteId, [FromBody] NoteUpdateData data)
         {
             try
             {
-                _noteService.UpdateNote(noteId, data.AuthorId, data.Name, data.Tags.Select(tag => tag.Text), data.Text);
+                _noteService.UpdateNote(data.UserId, noteId, data.Name, data.Tags, data.Text);
                 return Ok();
             }
             catch (ObjectDoesNotExistException)
