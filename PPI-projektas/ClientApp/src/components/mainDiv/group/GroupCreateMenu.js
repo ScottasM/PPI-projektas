@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import '../../Group.css'
+import '../../Group.css';
+import '../InputWindow.css';
 import {UserSelection} from "./UserSelection";
 
 export class GroupCreateMenu extends Component {
@@ -109,12 +110,13 @@ export class GroupCreateMenu extends Component {
         const { groupName } = this.state;
         
         return (
-            <div className="groupCreateMenu position-absolute translate-middle text-white">
+            <div className="group-create-menu position-fixed translate-middle text-white">
                 <div className="title">
                     <h2>{this.props.configType.charAt(0).toUpperCase() + this.props.configType.slice(1)} Group</h2>
                 </div>
                 <form onSubmit={this.handleSubmit}>
                     <label>Group Name:</label>
+                    <br />
                     <input
                         type="text" 
                         id="group-name" 
@@ -129,7 +131,7 @@ export class GroupCreateMenu extends Component {
                         members = {this.state.members}
                         updateMembers = {this.updateMembers}/>
                     <br />
-                    <input type="submit" name="createButton" value={this.props.configType.charAt(0).toUpperCase() + this.props.configType.slice(1)} />
+                    <input className="submit-button" type="submit" name="createButton" value={this.props.configType.charAt(0).toUpperCase() + this.props.configType.slice(1)} />
                 </form>
             </div>
         );
