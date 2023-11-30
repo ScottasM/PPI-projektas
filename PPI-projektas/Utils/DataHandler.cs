@@ -109,10 +109,9 @@ namespace PPI_projektas.Utils
 
         public static T FindObjectById<T>(Guid objectId, ConcurrentDictionary<Guid, T> objectList) where T : Entity
         {
-            if (objectList.TryGetValue(objectId, out var obj)) 
-                return obj;
-            
-            throw new ObjectDoesNotExistException(objectId);
+            if (objectList.TryGetValue(objectId, out var obj)) throw new ObjectDoesNotExistException(objectId);
+
+            return obj;
         }
 
 
