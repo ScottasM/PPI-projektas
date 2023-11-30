@@ -84,7 +84,8 @@ export class UserSelection extends Component {
             }));
 
             userData = userData.filter(el =>
-                !this.props.members.some(member => member.id === el.id)
+                !this.props.members.some(member => member.id === el.id) &&
+                el.id !== this.props.currentUserId
             );
 
             this.setState({ users: userData});

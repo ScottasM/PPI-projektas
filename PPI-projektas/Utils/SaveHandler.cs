@@ -1,4 +1,6 @@
-﻿using System.Text.Json;
+﻿using System.Collections.Concurrent;
+using System.Text.Json;
+using Microsoft.EntityFrameworkCore;
 using PPI_projektas.objects;
 using PPI_projektas.objects.abstractions;
 
@@ -7,63 +9,33 @@ namespace PPI_projektas.Utils
     public class SaveHandler
     {
 
-        
-
-        private Dictionary<Type, string> _filePaths = new Dictionary<Type, string>(3) {
-            {typeof(User),"Users.json"},
-            {typeof(Group),"Groups.json"},
-            {typeof(Note),"Notes.json"}
-        };
-
-        private string? SerializeList<T>(List<T> obj)
+        private EntityData _context;
+        public SaveHandler()
         {
-            try {
-                return JsonSerializer.Serialize(obj);
-            }
-            catch(Exception err) {
-                Console.WriteLine($"Error while serializing a list : {err.Message}");
-                return null;
-            }
-            
+            _context = new EntityData();
         }
 
-        public void SaveList<T>(List<T> obj)
+        public void Save()
         {
-            string? sr = SerializeList(obj);
-            if (sr == null)
-                return;
-
-            try {
-                File.WriteAllText(_filePaths[typeof(T)], sr);
-            }
-            catch (Exception err) {
-                Console.WriteLine($"Failed to save file : {err.Message}");
-            }
+            _context.SaveChanges();
         }
 
-        public List<T> LoadList<T>()
+        public ConcurrentDictionary<Guid, T> LoadList<T>() where T: class
         {
-            if (File.Exists(_filePaths[typeof(T)])) {
-                var json = File.ReadAllText(_filePaths[typeof(T)]);
-                var list = JsonSerializer.Deserialize<List<T>>(json);
-
-                if (list != null)
-                    return list;
-            }
-
-            return new List<T>();
+            var list = _context.Set<T>().ToList();
+            return new ConcurrentDictionary<Guid, T>(list.Select(item => new KeyValuePair<Guid, T>(((dynamic)item).Id, item)));
         }
         
         public void SaveObject<T>(T obj) where T : Entity
         {
-            var list = LoadList<T>();
-            if (list == null)
-                return;
+            _context.Set<T>().Add(obj);
+            _context.SaveChanges();
+        }
 
-            var index = list.FindIndex(inst => inst.Id == obj.Id) ;
-            list[index] = obj;
-
-            SaveList(list);
+        public void RemoveObject<T>(T obj) where T : Entity
+        {
+            _context.Set<T>().Remove(obj);
+            _context.SaveChanges();
         }
     }
 }

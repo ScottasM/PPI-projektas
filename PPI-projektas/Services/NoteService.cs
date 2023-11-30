@@ -3,6 +3,7 @@ using PPI_projektas.Services.Interfaces;
 using PPI_projektas.objects.Factories;
 using PPI_projektas.Services.Response;
 using PPI_projektas.Utils;
+using PPI_projektas.objects;
 
 namespace PPI_projektas.Services;
 
@@ -45,10 +46,12 @@ public class NoteService : INoteService
         return note.Id;
     }
     
-    public void UpdateNote(Guid noteId, Guid userId, string name, List<string> tags, string text)
+    public void UpdateNote(Guid noteId, Guid userId, string name, List<EntityStrings> tags, string text)
     {
+
         var note = DataHandler.FindObjectById(noteId, DataHandler.Instance.AllNotes);
-        if (note.AuthorId != userId) throw new UnauthorizedAccessException();
+        if (note.UserId != userId) throw new UnauthorizedAccessException();
+
         
         note.Name = name;
         note.Tags = tags;
@@ -60,10 +63,11 @@ public class NoteService : INoteService
         var note = DataHandler.FindObjectById(noteId, DataHandler.Instance.AllNotes);
         var user = DataHandler.FindObjectById(userId, DataHandler.Instance.AllUsers);
         
-        var group = DataHandler.Instance.AllGroups.FirstOrDefault(group => group.Notes.Contains(note));
+        var group = DataHandler.Instance.AllGroups.Values.FirstOrDefault(group => group.Notes.Contains(note));
         if (group == null) throw new ObjectDoesNotExistException();
         
-        if (note.AuthorId != userId) throw new UnauthorizedAccessException();
+
+        if (note.UserId != userId) throw new UnauthorizedAccessException();
         
         group.RemoveNote(note);
         user.RemoveCreatedNote(note);

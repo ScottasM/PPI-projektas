@@ -18,7 +18,7 @@ public class GroupService : IGroupService
     
     public List<ObjectDataItem> GetGroupsByOwner(Guid ownerId)
     {
-        var data = DataHandler.Instance.AllGroups
+        var data = DataHandler.Instance.AllGroups.Values
             //.Where(group => group.OwnerGuid == ownerId) Will be uncommented when user is associated on the frontend
             .Select(group => _objectDataItemFactory.Create(group.Id, group.Name))
             .ToList();
@@ -81,7 +81,6 @@ public class GroupService : IGroupService
             member.RemoveGroup(group);
         }
         
-        new SaveHandler().SaveObject(group);
     }
 
     public void DeleteGroup(Guid groupId)
@@ -91,9 +90,10 @@ public class GroupService : IGroupService
         foreach (var member in group.Members)
             member.RemoveGroup(group);
 
-        foreach (var note in group.Notes)
+        for (int i = group.Notes.Count-1;i>=0; i--)
         {
-            var user = DataHandler.FindObjectById(note.AuthorId, DataHandler.Instance.AllUsers);
+            var note = group.Notes[i];
+            var user = DataHandler.FindObjectById(note.UserId, DataHandler.Instance.AllUsers);
             user.RemoveCreatedNote(note);
             DataHandler.Delete(note);
         }

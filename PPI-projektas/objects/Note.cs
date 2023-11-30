@@ -1,25 +1,38 @@
 ﻿using PPI_projektas.objects.abstractions;
+using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
 namespace PPI_projektas.objects;
 
+public class EntityStrings
+{
+    [Key]
+    public int Id { get; set; }
+    public string value { get; set; } = null!;
+}
+
 public class Note : Entity, IComparable<Note>
 {
-	[JsonInclude] public Guid AuthorId;
-  
-	public string Name { get; set; }
 
-	public List<string> Tags { get; set; }
+	public Guid UserId;
+	public User User;
+
+    public List<User> FavoriteByUsers;
+    public Group Group;
+
+
+    public string Name { get; set; }
+	public List<EntityStrings> Tags { get; set; }
   
-	[JsonInclude] public string Text;
+	public string Text { get; set; }
 	
 	public Note () {} // For deserialization
 
 	public Note(Guid authorId, bool createGUID = true) : base(createGUID)
 	{
-		AuthorId = authorId;
+        UserId = authorId;
 		Name = "";
-		Tags = new List<string>();
+		Tags = new List<EntityStrings>();
 		Text = "";
 	}
   
