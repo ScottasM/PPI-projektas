@@ -1,18 +1,14 @@
-﻿.note-display {
-    padding-left: 75px;
-    width: 100%;
-    white-space: nowrap;
-    display: inline-flex;
-    flex-direction: row;
-    overflow-x: scroll;
+﻿.noteDisplay {
+    margin-left: 75px;
+    display: grid;
 }
 
-.note-list {
+.noteList {
     list-style-type: none;
     margin: 0;
     padding: 0;
 }
 
-.note-display-element {
+.noteDisplayElement {
     font-size: 25px;
 }

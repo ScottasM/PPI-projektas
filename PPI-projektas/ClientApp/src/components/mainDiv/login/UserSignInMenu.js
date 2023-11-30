@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import '../InputWindow.css';
+import '../../LoginWindow.css'
 
 export class UserSignInMenu extends Component {
     static displayName = UserSignInMenu.name;
@@ -79,12 +79,12 @@ export class UserSignInMenu extends Component {
         const { username, email, password } = this.state;
 
         return (
-            <div className="user-login-menu position-fixed translate-middle text-white">
+            <div className="userLoginMenu position-absolute translate-middle text-white">
                 <div className="title">
                     <h2>Sign In</h2>
                 </div>
                 <form onSubmit={this.handleSubmit}>
-                    <label>Username: </label>
+                    <label><b>Username: </b></label>
                     <br />
                     <input
                         type="text"
@@ -94,7 +94,7 @@ export class UserSignInMenu extends Component {
                         onChange={this.handleUsernameInputChange}
                     />
                     <br />
-                    <label>Email: </label>
+                    <label><b>Email: </b></label>
                     <br />
                     <input
                         type="text"
@@ -104,7 +104,7 @@ export class UserSignInMenu extends Component {
                         onChange={this.handleEmailInputChange}
                     />
                     <br />
-                    <label>Password: </label>
+                    <label><b>Password: </b></label>
                     <br />
                     <input
                         type="text"
@@ -114,7 +114,7 @@ export class UserSignInMenu extends Component {
                         onChange={this.handlePasswordInputChange}
                     />
                     <br />
-                    <input className="submit-button" type="submit" value="Sign In" />
+                    <input className="submitButton" type="submit" value="Sign In" />
                 </form>
             </div>
         );

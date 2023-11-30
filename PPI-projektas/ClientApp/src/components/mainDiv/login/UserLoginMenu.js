@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import '../InputWindow.css';
+import '../../LoginWindow.css'
 
 export class UserLoginMenu extends Component {
     static displayName = UserLoginMenu.name;
@@ -75,12 +75,12 @@ export class UserLoginMenu extends Component {
         const { username, password } = this.state;
 
         return (
-            <div className="user-login-menu position-fixed translate-middle text-white">
+            <div className="userLoginMenu position-absolute translate-middle text-white">
                 <div className="title">
                     <h2>Login</h2>
                 </div>
                 <form onSubmit={this.handleSubmit}>
-                    <label>Username: </label>
+                    <label><b>Username: </b></label>
                     <br />
                     <input
                         type = "text"
@@ -90,7 +90,7 @@ export class UserLoginMenu extends Component {
                         onChange = { this.handleUsernameInputChange }
                     />
                     <br />
-                    <label>Password: </label>
+                    <label><b>Password: </b></label>
                     <br />
                     <input
                         type = "text"
@@ -100,7 +100,7 @@ export class UserLoginMenu extends Component {
                         onChange = { this.handlePasswordInputChange }
                     />
                     <br />
-                    <input className="submit-button" type="submit" value="Login" />
+                    <input className="submitButton" type="submit" value="Login" />
                 </form>
             </div>
         );

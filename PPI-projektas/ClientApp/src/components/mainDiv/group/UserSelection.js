@@ -132,8 +132,7 @@ export class UserSelection extends Component {
 
         return (
             <div className="user-selection">
-                <label className="m-0">Search for users:</label>
-                <br />
+                <p className="m-0">Search for users:</p>
                 <input
                     type="text"
                     id="user-search"
@@ -141,7 +140,7 @@ export class UserSelection extends Component {
                     value={this.props.userSearch}
                     onChange={this.handleUserSearch}
                 />
-                <br />
+                <br/>
                 <div className="scroll-container" ref={this.scrollContainerRef}>
                     {this.state.users.map((user) => (
                         <div key={user.id} className="scroll-item">
@@ -154,7 +153,7 @@ export class UserSelection extends Component {
                         </div>
                     ))}
                 </div>
-                <p className="m-0">Group Members</p>
+                <p>Group Members</p>
                 <div className="scroll-container" ref={this.memberScrollContainerRef}>
                     {this.props.members.map((member) => (
                         <div key={member.id} className="scroll-item">

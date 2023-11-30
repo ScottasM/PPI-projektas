@@ -8,7 +8,7 @@ export class NoteDisplayElement extends Component {
 
     render() {
         return (
-            <div className="note-display-element" onClick={() => this.props.openNote(this.props.noteId, 1)}>
+            <div className="noteDisplayElement" onClick={() => this.props.openNote(this.props.noteId, 1)}>
                 <h3>{this.props.noteName ? this.props.noteName : '?Could not load note name?'}</h3>
             </div>
         )

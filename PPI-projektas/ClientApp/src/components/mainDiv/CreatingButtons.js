@@ -7,7 +7,7 @@ export class CreatingButtons extends Component {
 
     render() {
         return (
-            <div className="creating-buttons-div">
+            <div className="creatingButtonsDiv">
                 <CreateNewGroup toggleMenu={this.props.toggleMenu}/>
             </div>
         );

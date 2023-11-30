@@ -1,98 +1,85 @@
 import React, { Component }  from 'react';
 import './NoteHub.css';
 import {TagList} from "../../TagList";
-import {MdDelete, MdEditDocument, MdSave} from "react-icons/md";
 
 export class NoteEditor extends Component {
     constructor (props) {
         super(props)
         this.state = {
-            id: this.props.noteData === undefined ? 0 : this.props.noteData.id,
-            name: this.props.noteData === undefined ? '' : this.props.noteData.name,
-            text: this.props.noteData === undefined ? '' : this.props.noteData.text,
-            tags: this.props.noteData === undefined ? 0 : this.props.noteData.tags,
+            noteName: this.props.noteName,
+            noteTags: this.props.noteTags,
+            noteText: this.props.noteText,
             saved: true,
-            showNotSavedMessage: false,
+            showNotSavedMessage: true,
+            showDeleteMessage: true,
+            tag: ''
         }
     }
 
-    handleCreateNote = async () => {
-        try {
-            const response = await fetch(`http://localhost:5268/api/note/createNote/${this.props.currentGroupId}/${this.props.currentUserId}`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            });
+    asyncSetState = (newState) => new Promise(resolve => this.setState(newState, resolve));
 
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-
-            const noteId = await response.json();
-            
-            this.setState({
-                id: noteId,
-            }, () => {
-                this.handleSave();
-            });
-
-        } catch (error) {
-            console.error('There was a problem with the fetch operation:', error);
-        }
-    }
-
-    handleSave = async () => {
-        if(this.state.id === 0)
-        {
-            await this.handleCreateNote();
-            return;
-        }
-        
+    handlePost = async () => {
         if (this.state.noteName === '')
-            alert('Note name cannot be empty!');
-        
-        if (this.state.noteText === '')
-            alert('Note text cannot be empty!');
+            await this.setState({
+                noteName: 'Untitled Note'
+            });
         
         const noteData = {
             AuthorId: this.props.currentUserId,
-            Name: this.state.name,
-            Tags: this.state.tags === 0 ? [] : this.state.tags,
-            Text: this.state.text
+            Name: this.state.noteName,
+            Tags: this.state.noteTags,
+            Text: this.state.noteText
         };
 
-        try {
-            const response = await fetch(`http://localhost:5268/api/note/updateNote/${this.state.id}`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(noteData),
-            });
-
-            if (!response.ok) {
-                alert(`Changes weren't saved!`);
-                this.setState({
-                    showNotSavedMessage: false,
+        fetch(`http://localhost:5268/api/note/updateNote/${this.props.noteId}`, { // temporary localhost api url
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(noteData)
+        })
+            .then(async response => {
+                if (!response.ok) {
+                    alert(`Changes weren't saved!`);
+                    this.setState({
+                        showNotSavedMessage: false
+                    });
+                    throw new Error('Network response was not ok');
+                }
+                await this.asyncSetState({
+                    saved: true
                 });
-                throw new Error('Network response was not ok');
-            }
-
-            this.setState({
-                saved: true,
-                showNotSavedMessage: false,
-            }, () => {
                 this.handleExit();
+            })
+            .catch((error) =>
+                console.error('There was a problem with the fetch operation:', error));
+    }
+    
+    handleDelete = async () => {
+        if (this.state.showDeleteMessage) {
+            alert(`You're about to delete this note.`)
+            this.setState({
+                showDeleteMessage: false
             });
-        } catch (error) {
-            console.error('There was a problem with the fetch operation:', error);
-        }
+        } else fetch(`http://localhost:5268/api/note/deleteNote/${this.props.noteId}/${this.props.currentUserId}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+            .then(response => {
+                if (!response.ok)
+                    throw new Error('Network response was not ok');
+                this.props.exitNote();
+            })
+            .catch(error =>
+                console.log('There was a problem with the fetch operation:', error));
     }
     
     handleExit = () => {
         if (this.state.saved)
         {
+            this.props.transferChanges(this.state.noteName, this.state.noteTags, this.state.noteText);
             this.props.changeDisplay(1, '');
         }
         else if (this.state.showNotSavedMessage) {
@@ -105,38 +92,38 @@ export class NoteEditor extends Component {
             this.props.changeDisplay(1, '');
     }
     
-    handleTitleChange = (event) => {
+    handleNameChange = (event) => {
         this.setState({
-            name: event.target.value,
+            noteName: event.target.value,
             saved: false,
             showNotSavedMessage: true,
             showDeleteMessage: true
         })
     }
 
-    handleTextChange = (event) => {
+    handleTextChanged = (event) => {
         this.setState({
-            text: event.target.value,
+            noteText: event.target.value,
             saved: false,
             showNotSavedMessage: true,
             showDeleteMessage: true
         })
     }
     
-    handleTagChanged = (event) => { //TODO: Add tag selection
+    handleTagChanged = (event) => {
         this.setState({
-            tags: event.target.value
+            tag: event.target.value
         })
     }
 
-    handleDeleteTag = (tag) => {
-        const index = this.state.noteTags.indexOf(tag);
+    handleDeleteTag = () => {
+        const index = this.state.noteTags.indexOf(this.state.tag);
         if (index === -1)
             return;
-        const newTags = this.props.tags;
+        const newTags = this.props.noteTags;
         newTags.splice(index, 1)
         this.setState({
-            tags: newTags,
+            noteTags: newTags,
             tag: '',
             saved: false,
             showNotSavedMessage: true,
@@ -145,12 +132,10 @@ export class NoteEditor extends Component {
     }
 
     handleAddTag = () => {
-        if (this.state.tag === '') return;
-
-        const newTags = this.props.tags
+        const newTags = this.props.noteTags
         newTags.push(this.state.tag);
         this.setState({
-            tags: newTags,
+            noteTags: newTags,
             tag: '',
             saved: false,
             showNotSavedMessage: true,
@@ -159,36 +144,30 @@ export class NoteEditor extends Component {
     }
 
     render() {
-        const {name, text, tags} = this.state;
-
-        return (
-            <div className="note-card selected">
-                <div className="note-title">
-                    <input className="note-title-edit" type="text" value={name} onChange={(e) => this.handleTitleChange(e)} />
-                </div>
-                <div className="note-tags">
-                    {tags !== 0 && tags.map(tag => (
-                            <span>{tag}</span>
-                        )
-                    )}
-                </div>
-                <div className="note-text">
-                    <textarea className="note-text-edit" value={text} onChange={(e) => this.handleTextChange(e)} />
-                </div>
-                <div className="note-misc">
-                    <button className="button save-button" onClick={this.handleSave}>
-                        <MdSave /> Save
-                    </button>
-                </div>
-                <div className="note-buttons">
-                    <button className="button button-hover delete-button delete-button-hover" onClick={this.props.deleteNote}>
-                        <MdDelete />
-                    </button>
-                    <button className="button button-hover edit-button edit-button-hover" onClick={() => this.props.changeDisplay(2, '')}>
-                        <MdEditDocument />
-                    </button>
-                </div>
-            </div>
-        )
+        return <div className='note-editor'>
+            <input type='text' width='50px' id='note-name' name='note-name' onChange={this.handleNameChange} value={this.state.noteName}/>
+            <br/>
+            <button onClick={this.handlePost}>
+                Save
+            </button>
+            <button onClick={this.handleExit}>
+                Exit
+            </button>
+            <button onClick={this.handleDelete}>
+                Delete
+            </button>
+            <br/>
+            <TagList noteTags={this.state.noteTags}/>
+            <input type='text' width='50px' id='tag-name' name='tag-name' value={this.state.tag} onChange={this.handleTagChanged}/>
+            <br/>
+            <button onClick={this.handleDeleteTag}>
+                Delete tag
+            </button>
+            <button onClick={this.handleAddTag}>
+                Add tag
+            </button>
+            <br/>
+            <textarea name='noteText' rows='20' cols='30' value={this.state.noteText} onChange={this.handleTextChanged}/>
+        </div>
     }
 }
