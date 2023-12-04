@@ -51,7 +51,9 @@ export class NoteDisplay extends Component {
                 return await response.json();
             })
             .then(data => {
-                const notes = data.map(note => ({
+                const notes = data
+                    .filter(note => note.name !== null)
+                    .map(note => ({
                     id: note.id,
                     name: note.name,
                     tags: note.tags,
@@ -73,7 +75,7 @@ export class NoteDisplay extends Component {
         this.setState({
             selectedNote: noteId,
         })
-        //event.stopPropagation();
+        event.stopPropagation();
     }
 
     handleGlobalClick = (event) => {
@@ -102,7 +104,7 @@ export class NoteDisplay extends Component {
                                 <Note
                                     key={note.id}
                                     noteData={note}
-                                    handleSelect={(event) => this.handleNoteSelect(event, note.id)}
+                                    handleSelect={this.handleNoteSelect}
                                 />
                             ))
                         ) : (

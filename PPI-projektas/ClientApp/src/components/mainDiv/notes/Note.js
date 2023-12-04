@@ -10,7 +10,7 @@ export class Note extends Component {
         const { noteData, handleSelect} = this.props;
         
         return (
-            <div className="note-card unselected" onClick={() => handleSelect(noteData.id)}>
+            <div className="note-card unselected" onClick={(event) => handleSelect(event, noteData.id)}>
                 <div className="note-title">
                     <p>{noteData.name}</p>
                 </div>

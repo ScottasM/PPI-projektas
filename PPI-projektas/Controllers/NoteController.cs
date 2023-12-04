@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using PPI_projektas.Exceptions;
 using PPI_projektas.objects;
 using PPI_projektas.Services.Interfaces;
+using PPI_projektas.Services.Response;
 
 namespace PPI_projektas.Controllers
 
@@ -51,12 +52,11 @@ namespace PPI_projektas.Controllers
         }
 
         [HttpPost("updateNote/{noteId:guid}")]
-        public IActionResult UpdateNote(Guid noteId, [FromBody] Note noteData)
+        public IActionResult UpdateNote(Guid noteId, [FromBody] NoteData noteData)
         {
             try
             {
-
-                _noteService.UpdateNote(noteId, noteData.UserId, noteData.Name, noteData.Tags, noteData.Text);
+                _noteService.UpdateNote(noteId, noteData.Id, noteData.Name, noteData.Tags, noteData.Text);
 
                 return Ok();
             }

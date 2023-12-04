@@ -56,7 +56,7 @@ export class NoteEditor extends Component {
             alert('Note text cannot be empty!');
         
         const noteData = {
-            AuthorId: this.props.currentUserId,
+            Id: this.props.currentUserId,
             Name: this.state.name,
             Tags: this.state.tags === 0 ? [] : this.state.tags,
             Text: this.state.text
