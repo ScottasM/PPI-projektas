@@ -43,6 +43,11 @@ namespace PPI_projektas.Utils
             SaveTimeout(15);
         }
 
+        public async void SaveChanges()
+        {
+            Enqueue(()=>_saveHandler.Save());
+        }
+
 
         private async void SaveTimeout(int TimeoutSeconds)
         {

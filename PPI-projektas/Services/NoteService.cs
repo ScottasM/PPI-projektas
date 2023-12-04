@@ -48,14 +48,14 @@ public class NoteService : INoteService
     
     public void UpdateNote(Guid noteId, Guid userId, string name, List<EntityStrings> tags, string text)
     {
-
         var note = DataHandler.FindObjectById(noteId, DataHandler.Instance.AllNotes);
         if (note.UserId != userId) throw new UnauthorizedAccessException();
-
         
         note.Name = name;
         note.Tags = tags;
         note.Text = text;
+        
+        DataHandler.Instance.SaveChanges();
     }
 
     public void DeleteNote(Guid noteId, Guid userId)
@@ -65,7 +65,6 @@ public class NoteService : INoteService
         
         var group = DataHandler.Instance.AllGroups.Values.FirstOrDefault(group => group.Notes.Contains(note));
         if (group == null) throw new ObjectDoesNotExistException();
-        
 
         if (note.UserId != userId) throw new UnauthorizedAccessException();
         
