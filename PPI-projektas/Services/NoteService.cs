@@ -87,6 +87,8 @@ public class NoteService : INoteService
         note.Name = name;
         if (note.Tags.Count != tags.Count) note.Tags = tags.Select(tag => new Tag(tag)).ToList();
         note.Text = text;
+        
+        DataHandler.Instance.SaveChanges();
     }
 
     public void DeleteNote(Guid userId, Guid noteId)
@@ -97,6 +99,7 @@ public class NoteService : INoteService
         var group = DataHandler.Instance.AllGroups.Values.FirstOrDefault(group => group.Notes.Contains(note));
 
         if (group == null) throw new ObjectDoesNotExistException();
+
         if (note.UserId != userId) throw new UnauthorizedAccessException();
         
         group.RemoveNote(note);

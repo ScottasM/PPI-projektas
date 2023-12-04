@@ -81,6 +81,7 @@ public class GroupService : IGroupService
             member.RemoveGroup(group);
         }
         
+        DataHandler.Instance.SaveChanges();
     }
 
     public void DeleteGroup(Guid groupId)
