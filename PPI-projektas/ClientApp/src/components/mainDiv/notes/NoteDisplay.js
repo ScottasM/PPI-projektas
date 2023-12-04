@@ -56,7 +56,7 @@ export class NoteDisplay extends Component {
                     .map(note => ({
                     id: note.id,
                     name: note.name,
-                    tags: note.tags,
+                    tags: note.tags === null ? [] : note.tags,
                     text: note.text,
                 }));
                 this.setState({
