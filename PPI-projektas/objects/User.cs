@@ -18,6 +18,8 @@ public class User : Entity
     public List<Note> FavoriteNotes { get; set; } = new();
     public List<Group> Groups { get; set; } = new();
     
+    public List<Group> OwnedGroups { get; set; } = new();
+    
     private object listLock = new();
 
     public User () {} // For deserialization
