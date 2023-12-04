@@ -36,9 +36,9 @@ namespace PPI_projektas.Utils
             Thread processingThread = new Thread(ProcessQueue);
             processingThread.Start();
 
-            Enqueue(delegate { AllUsers = _saveHandler.LoadList<User>();});
-            Enqueue(delegate { AllNotes = _saveHandler.LoadList<Note>();});
-            Enqueue(delegate { AllGroups = _saveHandler.LoadList<Group>();});
+            Enqueue(delegate { AllUsers = _saveHandler.LoadUsers();});
+            Enqueue(delegate { AllNotes = _saveHandler.LoadNotes();});
+            Enqueue(delegate { AllGroups = _saveHandler.LoadGroups();});
 
             SaveTimeout(15);
         }

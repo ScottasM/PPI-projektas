@@ -60,7 +60,7 @@ public class GroupService : IGroupService
     {
         var group = DataHandler.FindObjectById(groupId, DataHandler.Instance.AllGroups);
 
-        if (group.OwnerGuid != userId)
+        if (group.Owner.Id != userId)
             throw new UnauthorizedAccessException();
         
         group.Name = newName;
