@@ -1,21 +1,51 @@
-﻿using Moq;
+﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using Moq;
 using PPI_projektas.objects;
 using PPI_projektas.objects.Factories;
 using PPI_projektas.Services;
 using PPI_projektas.Services.Response;
+using PPI_projektas.Utils;
 
 namespace PPI_projektas.IntegrationTests
 {
-    public class GroupServiceTests
+    public class DatabaseFixture<TProgram> : WebApplicationFactory<TProgram> where TProgram : class
     {
+        protected override void ConfigureWebHost(IWebHostBuilder builde)
+        {
+            var builder = WebApplication.CreateBuilder();
+            var connectionString = "server=185.34.52.6;user=NotesApp;password=AlioValioIrInternetas;database=NotesApp";
+            var serverVersion = MariaDbServerVersion.AutoDetect(connectionString);
+
+            DataHandler dataHandler = new DataHandler(connectionString);
+
+            builder.Services.AddDbContext<EntityData>(
+                dbContextOptions => dbContextOptions
+                    .UseMySql(connectionString, serverVersion)
+            );
+        }
+    }
+    public class GroupServiceTests : IClassFixture<DatabaseFixture<Program>>
+    {
+        private readonly DatabaseFixture<Program> _factory;
+
+        public GroupServiceTests(DatabaseFixture<Program> factory)
+        {
+            _factory = factory;
+        }
 
         [Fact, TestPriority(5)]
-        public void GroupServiceTest()
+        public void GroupServiceTest() 
         {
+            var client = _factory.CreateClient();
+
             UserCreateData userData = new UserCreateData();
-            userData.Username = "TestData_username";
-            userData.Password = "TestData_password";
-            userData.Email = "TestData_email";
+            userData.Username = "IntegrationTest_username";
+            userData.Password = "IntegrationTest_password";
+            userData.Email = "IntegrationTest_email";
             var testUser = new User(userData.Username, userData.Password, userData.Email);
 
             var mockODIF = new Mock<IObjectDataItemFactory>();
