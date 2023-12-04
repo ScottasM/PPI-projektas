@@ -73,7 +73,7 @@ export class NoteDisplay extends Component {
         this.setState({
             selectedNote: noteId,
         })
-        event.stopPropagation();
+        //event.stopPropagation();
     }
 
     handleGlobalClick = (event) => {

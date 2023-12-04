@@ -9,10 +9,9 @@ public class Group : Entity, IComparable<Group>
     public string Name { get; set; }
 
     public User Owner { get; set; }
-    public Guid OwnerGuid;
     
-    public List<User> Members { get; } = new();
-    public List<Note> Notes { get; } = new();
+    public List<User> Members { get; set; } = new();
+    public List<Note> Notes { get; set; } = new();
     
     private object listLock = new();
 
@@ -23,8 +22,7 @@ public class Group : Entity, IComparable<Group>
     {
         Name = name;
         Owner = owner;
-        OwnerGuid = owner.Id;
-        Members = members;
+        //Members = members;
     }
     
     public int CompareTo(Group anotherGroup)
