@@ -14,9 +14,9 @@ public class User : Entity
 
 
 
-    public List<Note> CreatedNotes = new();
-    public List<Note> FavoriteNotes = new();
-    public List<Group> Groups = new();
+    public List<Note> CreatedNotes { get; set; } = new();
+    public List<Note> FavoriteNotes { get; set; } = new();
+    public List<Group> Groups { get; set; } = new();
     
     private object listLock = new();
 

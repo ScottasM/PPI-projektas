@@ -11,8 +11,8 @@ public class Group : Entity, IComparable<Group>
     public User Owner { get; set; }
     public Guid OwnerGuid;
     
-    public List<User> Members { get; } = new();
-    public List<Note> Notes { get; } = new();
+    public List<User> Members { get; set; } = new();
+    public List<Note> Notes { get; set; } = new();
     
     private object listLock = new();
 
