@@ -69,7 +69,7 @@ export class NoteDisplay extends Component {
             this.props.noteCreated();
     }
     
-    handleNoteSelect = (noteId) => {
+    handleNoteSelect = (event, noteId) => {
         this.setState({
             selectedNote: noteId,
         })
@@ -102,7 +102,7 @@ export class NoteDisplay extends Component {
                                 <Note
                                     key={note.id}
                                     noteData={note}
-                                    handleSelect={this.handleNoteSelect}
+                                    handleSelect={(event) => this.handleNoteSelect(event, note.id)}
                                 />
                             ))
                         ) : (
