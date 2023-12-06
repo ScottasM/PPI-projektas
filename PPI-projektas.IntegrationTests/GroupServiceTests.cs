@@ -1,6 +1,4 @@
 ﻿using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
@@ -12,9 +10,9 @@ using PPI_projektas.Utils;
 
 namespace PPI_projektas.IntegrationTests
 {
-    public class DatabaseFixture<TProgram> : WebApplicationFactory<TProgram> where TProgram : class
+    public class DatabaseFixture : IDisposable
     {
-        protected override void ConfigureWebHost(IWebHostBuilder builde)
+        public DatabaseFixture()
         {
             var builder = WebApplication.CreateBuilder();
             var connectionString = "server=185.34.52.6;user=NotesApp;password=AlioValioIrInternetas;database=NotesApp";
@@ -27,12 +25,17 @@ namespace PPI_projektas.IntegrationTests
                     .UseMySql(connectionString, serverVersion)
             );
         }
-    }
-    public class GroupServiceTests : IClassFixture<DatabaseFixture<Program>>
-    {
-        private readonly DatabaseFixture<Program> _factory;
 
-        public GroupServiceTests(DatabaseFixture<Program> factory)
+        public void Dispose()
+        {
+            // ... clean up test data from the database ...
+        }
+    }
+    public class GroupServiceTests : IClassFixture<DatabaseFixture>
+    {
+        private readonly DatabaseFixture _factory;
+
+        public GroupServiceTests(DatabaseFixture factory)
         {
             _factory = factory;
         }
@@ -40,7 +43,6 @@ namespace PPI_projektas.IntegrationTests
         [Fact, TestPriority(5)]
         public void GroupServiceTest() 
         {
-            var client = _factory.CreateClient();
 
             UserCreateData userData = new UserCreateData();
             userData.Username = "IntegrationTest_username";
@@ -60,6 +62,7 @@ namespace PPI_projektas.IntegrationTests
             var groupService = new GroupService(mockODIF.Object, mockGF.Object);
 
             var ownerId = userService.CreateUser(userData);
+            Assert.True(ownerId != Guid.Empty);
 
             List<Guid> memID = new List<Guid>();
             memID.Add(userService.CreateUser(userData));
@@ -76,7 +79,7 @@ namespace PPI_projektas.IntegrationTests
             var groupList = groupService.GetGroupsByOwner(ownerId);
             Assert.NotNull(groupList);
             Assert.True(groupList.Any());
-
+            
 
             //Edited group's id doesnt change
             groupService.EditGroup(groupId, "EditGroup_group", members, ownerId);
