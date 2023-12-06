@@ -34,7 +34,7 @@ public class UserService : IUserService
 
     public List<ObjectDataItem> GetUsersByName(string name)
     {
-        var users = DataHandler.Instance.AllUsers
+        var users = DataHandler.Instance.AllUsers.Values
             .Where(user => user.GetUsername().Contains(name))
             .Select(user => _objectDataItemFactory.Create(user.Id, user.GetUsername()))
             .ToList();
