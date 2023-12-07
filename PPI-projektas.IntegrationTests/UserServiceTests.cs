@@ -9,13 +9,16 @@ namespace PPI_projektas.IntegrationTests
     [TestCaseOrderer(
     ordererTypeName: "PPI_projektas.IntegrationTests.PriorityOrderer",
     ordererAssemblyName: "PPI_projektas.IntegrationTests")]
-    public class UserServiceTests
+    public class UserServiceTests : IClassFixture<DatabaseFixture>
     {
+        private readonly DatabaseFixture _factory;
         UserCreateData userData;
         UserService userService;
         List<ObjectDataItem>? userList;
-        public UserServiceTests() 
+
+        public UserServiceTests(DatabaseFixture factory)
         {
+            _factory = factory;
             userData.Username = "integrTestData_username";
             userData.Password = "integrTestData_password";
             userData.Email = "integrTestData_email";
@@ -27,9 +30,8 @@ namespace PPI_projektas.IntegrationTests
 
             mockODIF.Setup(x => x.Create(It.IsAny<Guid>(), It.IsAny<String>())).Returns((Guid a, String b) => new ObjectDataItem(a, b));
             mockUF.Setup(x => x.Create(It.IsAny<String>(), It.IsAny<String>(), It.IsAny<String>())).Returns(testUser);
-            
-            userService = new UserService(mockODIF.Object, mockUF.Object);
 
+            userService = new UserService(mockODIF.Object, mockUF.Object);
         }
 
         [Fact, TestPriority(0)]
