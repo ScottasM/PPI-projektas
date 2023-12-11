@@ -12,3 +12,21 @@
 .noteDisplayElement {
     font-size: 25px;
 }
+
+.searchDiv {
+    margin: 0 auto;
+}
+
+.searchBar {
+    width: 50%;
+    display: inline-block;
+}
+
+.tagFilterOptions {
+    margin: 0 auto;
+    display: inline-block;
+}
+
+.tagFilterLabel {
+    margin-right: 5px;
+}
