@@ -1,37 +1,18 @@
 using PPI_projektas.objects;
-using PPI_projektas.objects.Factories;
-using PPI_projektas.Services;
 using PPI_projektas.Services.Response;
-using Moq;
 
 namespace PPI_projektas.IntegrationTests
 {
     [TestCaseOrderer(
     ordererTypeName: "PPI_projektas.IntegrationTests.PriorityOrderer",
     ordererAssemblyName: "PPI_projektas.IntegrationTests")]
-    public class UserServiceTests : IClassFixture<DatabaseFixture>
+    public class UserServiceTests : ServiceContext, IClassFixture<DatabaseFixture>
     {
         private readonly DatabaseFixture _factory;
-        UserCreateData userData;
-        UserService userService;
-        List<ObjectDataItem>? userList;
 
         public UserServiceTests(DatabaseFixture factory)
         {
             _factory = factory;
-            userData.Username = "integrTestData_username";
-            userData.Password = "integrTestData_password";
-            userData.Email = "integrTestData_email";
-
-            var testUser = new User(userData.Username, userData.Password, userData.Email);
-
-            var mockODIF = new Mock<IObjectDataItemFactory>();
-            var mockUF = new Mock<IUserFactory>();
-
-            mockODIF.Setup(x => x.Create(It.IsAny<Guid>(), It.IsAny<String>())).Returns((Guid a, String b) => new ObjectDataItem(a, b));
-            mockUF.Setup(x => x.Create(It.IsAny<String>(), It.IsAny<String>(), It.IsAny<String>())).Returns(testUser);
-
-            userService = new UserService(mockODIF.Object, mockUF.Object);
         }
 
         [Fact, TestPriority(0)]
@@ -56,7 +37,7 @@ namespace PPI_projektas.IntegrationTests
         public void GetUsersByNameTest()
         {
             var testUserId = userService.CreateUser(userData);
-            userList = userService.GetUsersByName(userData.Username);
+            List<ObjectDataItem> userList = userService.GetUsersByName(userData.Username);
 
             //Testing GetUsersByName()
             Assert.NotNull(userList);
@@ -79,7 +60,7 @@ namespace PPI_projektas.IntegrationTests
         {
             var testUserId = userService.CreateUser(userData);
             userService.DeleteUser(testUserId);
-            userList = userService.GetUsersByName(userData.Username);
+            List<ObjectDataItem> userList = userService.GetUsersByName(userData.Username);
 
             //Testing DeleteUser()
             Assert.False(userList.Exists(x => x.Id == testUserId));
