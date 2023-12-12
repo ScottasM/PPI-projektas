@@ -1,20 +1,21 @@
 ﻿using PPI_projektas.Services;
 using PPI_projektas.Services.Response;
+using PPI_projektas.IntegrationTests.Mocks;
 
 namespace PPI_projektas.IntegrationTests.ServiceTests
 {
-    public class GroupServiceTests : ServiceContext, IClassFixture<DatabaseFixture>
+    [TestCaseOrderer(
+    ordererTypeName: "PPI_projektas.IntegrationTests.PriorityOrderer",
+    ordererAssemblyName: "PPI_projektas.IntegrationTests")]
+    public class GroupServiceTests : GroupServiceSetup, IClassFixture<DatabaseFixture>
     {
-        private readonly DatabaseFixture _factory;
         UserCreateData memberData;
 
-        public GroupServiceTests(DatabaseFixture factory)
+        public GroupServiceTests()
         {
-            _factory = factory;
-
-            memberData.Username = "memeber_username";
-            memberData.Password = "memeber_password";
-            memberData.Email = "memeber_email";
+            memberData.Username = "member_username";
+            memberData.Password = "member_password";
+            memberData.Email = "member_email";
         }
 
         [Fact, TestPriority(2)]

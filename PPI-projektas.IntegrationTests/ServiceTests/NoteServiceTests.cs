@@ -1,15 +1,14 @@
 ﻿using PPI_projektas.objects;
 using PPI_projektas.Utils;
+using PPI_projektas.IntegrationTests.Mocks;
 
 namespace PPI_projektas.IntegrationTests.ServiceTests
 {
-    public class NoteServiceTests : ServiceContext, IClassFixture<DatabaseFixture>
+    [TestCaseOrderer(
+    ordererTypeName: "PPI_projektas.IntegrationTests.PriorityOrderer",
+    ordererAssemblyName: "PPI_projektas.IntegrationTests")]
+    public class NoteServiceTests : NoteServiceSetup, IClassFixture<DatabaseFixture>
     {
-        private readonly DatabaseFixture _factory;
-        public NoteServiceTests(DatabaseFixture factory)
-        {
-            _factory = factory;
-        }
 
         [Fact, TestPriority(5)]
         public void CreateNoteTest()

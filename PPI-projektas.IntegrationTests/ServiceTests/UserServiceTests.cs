@@ -1,19 +1,14 @@
 using PPI_projektas.objects;
 using PPI_projektas.Services.Response;
+using PPI_projektas.IntegrationTests.Mocks;
 
 namespace PPI_projektas.IntegrationTests.ServiceTests
 {
     [TestCaseOrderer(
     ordererTypeName: "PPI_projektas.IntegrationTests.PriorityOrderer",
     ordererAssemblyName: "PPI_projektas.IntegrationTests")]
-    public class UserServiceTests : ServiceContext, IClassFixture<DatabaseFixture>
+    public class UserServiceTests : UserServiceSetup, IClassFixture<DatabaseFixture>
     {
-        private readonly DatabaseFixture _factory;
-
-        public UserServiceTests(DatabaseFixture factory)
-        {
-            _factory = factory;
-        }
 
         [Fact, TestPriority(0)]
         public void ValidateDataTest()
