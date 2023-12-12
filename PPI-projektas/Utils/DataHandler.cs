@@ -16,7 +16,6 @@ namespace PPI_projektas.Utils
         public ConcurrentDictionary<Guid, User> AllUsers = new();
         public ConcurrentDictionary<Guid, Group> AllGroups = new();
         public ConcurrentDictionary<Guid, Note> AllNotes = new();
-        public ConcurrentDictionary<Guid, Tag> AllTags = new();
 
         private SaveHandler _saveHandler;
 

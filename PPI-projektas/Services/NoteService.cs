@@ -87,7 +87,7 @@ public class NoteService : INoteService
         if (note.User.Id != userId) throw new UnauthorizedAccessException();
         
         note.Name = name;
-        if (note.Tags.Count != tags.Count()) note.Tags = ReplaceTags(note.Tags, tags);
+        if (note.Tags.Count != tags.Count()) note.Tags = tags.Select(tag => new Tag(tag)).ToList();
         note.Text = text;
     }
 
@@ -112,15 +112,6 @@ public class NoteService : INoteService
         
         var separators = new char[] {',', ';'};
         return tagFilter.Split(separators, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
-    }
-    
-    private List<EntityString> ReplaceTags(List<EntityString> tags, IEnumerable<string> incomingTags)
-    {
-        foreach (var tag in tags)
-        {
-            if (!incomingTags.Contains(tag.Value))
-                
-        }
     }
 }
 

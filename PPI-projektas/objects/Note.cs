@@ -4,15 +4,12 @@ using System.Text.Json.Serialization;
 
 namespace PPI_projektas.objects;
 
-public class EntityString
+public class Tag : Entity
 {
-	[Key]
-	public readonly Guid Id;
     public string Value { get; set; } = null!;
 
-    public EntityString(string value)
+    public Tag(string value)
     {
-	    Id = Guid.NewGuid();
 	    Value = value;
     }
 }
@@ -28,7 +25,7 @@ public class Note : Entity, IComparable<Note>
 
 
     public string Name { get; set; }
-	public List<EntityString> Tags { get; set; }
+	public List<Tag> Tags { get; set; }
   
 	public string Text { get; set; }
 	
@@ -39,7 +36,7 @@ public class Note : Entity, IComparable<Note>
 
         UserId = authorId;
 		Name = "";
-		Tags = new List<EntityString>();
+		Tags = new List<Tag>();
 		Text = "";
 	}
   
