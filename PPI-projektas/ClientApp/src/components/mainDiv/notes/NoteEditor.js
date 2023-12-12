@@ -13,6 +13,7 @@ export class NoteEditor extends Component {
             tags: this.props.noteData === undefined ? 0 : this.props.noteData.tags,
             saved: true,
             showNotSavedMessage: false,
+            showTagSearch: false,
         }
     }
 
@@ -157,9 +158,15 @@ export class NoteEditor extends Component {
             showDeleteMessage: true
         })
     }
+    
+    toggleTagSearch = () => {
+        this.setState((prevState) => ({
+            showTagSearch: !prevState.showTagSearch
+        }))
+    }
 
     render() {
-        const {name, text, tags} = this.state;
+        const {name, text, tags, showTagSearch} = this.state;
 
         return (
             <div className="note-card selected">
@@ -168,9 +175,20 @@ export class NoteEditor extends Component {
                 </div>
                 <div className="note-tags">
                     {tags !== 0 && tags.map(tag => (
-                            <span>{tag}</span>
+                        <span>{tag}</span>
                         )
                     )}
+                    <span onClick={this.toggleTagSearch}>+</span>
+                    { showTagSearch &&
+                        <div className="tag-select">
+                            <div className="tag-search">
+                                <input type="text"/>
+                            </div>
+                            <div className="tags">
+                                <span>tags</span>
+                            </div>
+                        </div>
+                    }
                 </div>
                 <div className="note-text">
                     <textarea className="note-text-edit" value={text} onChange={(e) => this.handleTextChange(e)} />

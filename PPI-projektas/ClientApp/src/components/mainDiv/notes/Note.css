@@ -95,7 +95,8 @@ textarea.note-text-edit:focus{
     overflow: auto;
 }
 
-.note-tags span {
+.note-tags span,
+.tags span {
     background-color: var(--button-main-color);
     color: var(--bg-color);
     padding: 2px 8px;
@@ -197,4 +198,46 @@ textarea.note-text-edit:focus{
 
 .save-button:hover {
     background-color: #22d72a;
+}
+
+
+
+.tag-select {
+    position: absolute;
+    top: 0;
+    left: 100%;
+    height: 150px;
+    width: 100px;
+    background-color: var(--note-main-color);
+    border-radius: 10%;
+    padding-top: 1px;
+    padding-left: 2px;
+    border: 3px black;
+}
+
+.tag-search {
+    width: 80%;
+    border-radius: 10px;
+    background-color: var(--bg-color);
+    margin-top: 5px;
+    margin-left: 2px;
+}
+
+.tag-search input{
+    width: 100%;
+    background-color: transparent;
+    border: 0;
+}
+
+.tag-search input:focus {
+    outline: none
+}
+
+.tags {
+    padding-left: 4px;
+    padding-top: 2px;
+}
+
+.tags span {
+    cursor: pointer;
 }
