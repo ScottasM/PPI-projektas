@@ -4,11 +4,17 @@ using System.Text.Json.Serialization;
 
 namespace PPI_projektas.objects;
 
-public class EntityStrings
+public class EntityString
 {
-    [Key]
-    public int Id { get; set; }
-    public string value { get; set; } = null!;
+	[Key]
+	public readonly Guid Id;
+    public string Value { get; set; } = null!;
+
+    public EntityString(string value)
+    {
+	    Id = Guid.NewGuid();
+	    Value = value;
+    }
 }
 
 public class Note : Entity, IComparable<Note>
@@ -22,7 +28,7 @@ public class Note : Entity, IComparable<Note>
 
 
     public string Name { get; set; }
-	public List<EntityStrings> Tags { get; set; }
+	public List<EntityString> Tags { get; set; }
   
 	public string Text { get; set; }
 	
@@ -33,7 +39,7 @@ public class Note : Entity, IComparable<Note>
 
         UserId = authorId;
 		Name = "";
-		Tags = new List<EntityStrings>();
+		Tags = new List<EntityString>();
 		Text = "";
 	}
   
@@ -48,11 +54,11 @@ public class Note : Entity, IComparable<Note>
 
     public bool ContainsAny(IEnumerable<string> tags)
     {
-	    return tags.Any(tag => Tags.Contains(new Tag (tag)));
+	    return Tags.Any(tag => tags.Contains(tag.Value));
     }
 
     public bool ContainsAll(IEnumerable<string> tags)
     {
-	    return tags.All(tag => Tags.Contains(new Tag(tag)));
+	    return Tags.Count(tag => tags.Contains(tag.Value)) == tags.Count();
     }	
 }

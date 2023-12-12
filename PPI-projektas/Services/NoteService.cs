@@ -1,3 +1,4 @@
+using System.Collections.Concurrent;
 using PPI_projektas.Exceptions;
 using PPI_projektas.Services.Interfaces;
 using PPI_projektas.objects.Factories;
@@ -24,15 +25,16 @@ public class NoteService : INoteService
     public IEnumerable<ObjectDataItem> GetNotes(Guid userId, SearchType searchType, string? tagFilter, string? nameFilter, Guid? groupId)
     {
         var userGroupIds = groupId == null
-            ? DataHandler.FindObjectById(userId, DataHandler.Instance.AllUsers).GroupsGuids
+            ? DataHandler.FindObjectById(userId, DataHandler.Instance.AllUsers)
+                .Groups.Select(group => group.Id)
             : null;
         var tags = ConvertToArray(tagFilter);
         
-        return DataHandler.Instance.AllNotes
+        return DataHandler.Instance.AllNotes.Values
             .If(groupId == null, query =>
-                query.Where(note => userGroupIds.Contains(note.GroupId)))
+                query.Where(note => userGroupIds.Contains(note.Group.Id)))
             .If(groupId != null, query =>
-                query.Where(note => note.GroupId == groupId))
+                query.Where(note => note.Group.Id == groupId))
             .If(tags.Any(), query =>
                 {
                     return searchType switch
@@ -49,10 +51,11 @@ public class NoteService : INoteService
     
     public OpenedNoteData GetNote(Guid userId, Guid noteId)
     {
-        var userGroupIds = DataHandler.FindObjectById(userId, DataHandler.Instance.AllUsers).GroupsGuids;
+        var userGroupIds = DataHandler.FindObjectById(userId, DataHandler.Instance.AllUsers)
+            .Groups.Select(group => group.Id);
         
-        var note = DataHandler.Instance.AllNotes
-            .Where(note => userGroupIds.Contains(note.GroupId))
+        var note = DataHandler.Instance.AllNotes.Values
+            .Where(note => userGroupIds.Contains(note.Group.Id))
             .FirstOrDefault(note => note.Id == noteId);
 
         if (note == null) throw new ObjectDoesNotExistException(noteId);
@@ -79,13 +82,12 @@ public class NoteService : INoteService
     
     public void UpdateNote(Guid userId, Guid noteId, string name, IEnumerable<string> tags, string text)
     {
-
         var note = DataHandler.FindObjectById(noteId, DataHandler.Instance.AllNotes);
 
-        if (note.AuthorId != userId) throw new UnauthorizedAccessException();
+        if (note.User.Id != userId) throw new UnauthorizedAccessException();
         
         note.Name = name;
-        note.Tags = tags.Select(tag => new Tag(tag)).ToList();
+        if (note.Tags.Count != tags.Count()) note.Tags = ReplaceTags(note.Tags, tags);
         note.Text = text;
     }
 
@@ -97,7 +99,7 @@ public class NoteService : INoteService
         var group = DataHandler.Instance.AllGroups.Values.FirstOrDefault(group => group.Notes.Contains(note));
 
         if (group == null) throw new ObjectDoesNotExistException();
-        if (note.AuthorId != userId) throw new UnauthorizedAccessException();
+        if (note.User.Id != userId) throw new UnauthorizedAccessException();
         
         group.RemoveNote(note);
         user.RemoveCreatedNote(note);
@@ -110,6 +112,15 @@ public class NoteService : INoteService
         
         var separators = new char[] {',', ';'};
         return tagFilter.Split(separators, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+    }
+    
+    private List<EntityString> ReplaceTags(List<EntityString> tags, IEnumerable<string> incomingTags)
+    {
+        foreach (var tag in tags)
+        {
+            if (!incomingTags.Contains(tag.Value))
+                
+        }
     }
 }
 

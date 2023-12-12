@@ -16,6 +16,7 @@ namespace PPI_projektas.Utils
         public ConcurrentDictionary<Guid, User> AllUsers = new();
         public ConcurrentDictionary<Guid, Group> AllGroups = new();
         public ConcurrentDictionary<Guid, Note> AllNotes = new();
+        public ConcurrentDictionary<Guid, Tag> AllTags = new();
 
         private SaveHandler _saveHandler;
 
@@ -39,7 +40,7 @@ namespace PPI_projektas.Utils
             Enqueue(delegate { AllUsers = _saveHandler.LoadList<User>();});
             Enqueue(delegate { AllNotes = _saveHandler.LoadList<Note>();});
             Enqueue(delegate { AllGroups = _saveHandler.LoadList<Group>();});
-
+            
             SaveTimeout(15);
         }
 
