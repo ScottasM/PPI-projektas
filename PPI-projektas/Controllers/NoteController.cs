@@ -87,5 +87,18 @@ namespace PPI_projektas.Controllers
                 return Unauthorized();
             }
         }
+        
+        [HttpGet("searchTags/{groupId:guid}/{search}")]
+        public IActionResult SearchTags(Guid groupId, string search)
+        {
+            try
+            {
+                return Ok(_noteService.SearchTags(groupId, search));
+            }
+            catch (ObjectDoesNotExistException)
+            {
+                return NotFound();
+            }
+        }
     }
 }

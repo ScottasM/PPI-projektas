@@ -72,4 +72,23 @@ public class NoteService : INoteService
         user.RemoveCreatedNote(note);
         DataHandler.Delete(note);
     }
+
+    public List<string> SearchTags(Guid groupId, string search)
+    {
+        var group = DataHandler.FindObjectById(groupId, DataHandler.Instance.AllGroups);
+
+        var tags = new List<string>();
+        foreach (var note in group.Notes)
+        {
+            var uniqueValues = note.Tags
+                .Where(tag => tag.value.Contains(search))
+                .Select(tag => tag.value)
+                .Except(tags)
+                .ToList();
+            
+            tags.AddRange(uniqueValues);
+        }
+
+        return tags;
+    }
 }
