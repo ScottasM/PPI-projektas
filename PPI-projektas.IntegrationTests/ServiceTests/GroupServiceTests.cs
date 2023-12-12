@@ -1,17 +1,23 @@
-﻿using PPI_projektas.Services.Response;
+﻿using PPI_projektas.Services;
+using PPI_projektas.Services.Response;
 
-namespace PPI_projektas.IntegrationTests
+namespace PPI_projektas.IntegrationTests.ServiceTests
 {
     public class GroupServiceTests : ServiceContext, IClassFixture<DatabaseFixture>
     {
         private readonly DatabaseFixture _factory;
+        UserCreateData memberData;
 
         public GroupServiceTests(DatabaseFixture factory)
         {
             _factory = factory;
+
+            memberData.Username = "memeber_username";
+            memberData.Password = "memeber_password";
+            memberData.Email = "memeber_email";
         }
 
-        [Fact, TestPriority(0)]
+        [Fact, TestPriority(2)]
         public void CreateGroupTest()
         {
             var ownerId = userService.CreateUser(userData);
@@ -27,7 +33,7 @@ namespace PPI_projektas.IntegrationTests
             Assert.True(groupId != Guid.Empty);
         }
 
-        [Fact, TestPriority(1)]
+        [Fact, TestPriority(3)]
         public void GetGroupsByOwnerTest()
         {
             var ownerId = userService.CreateUser(userData);
@@ -44,7 +50,7 @@ namespace PPI_projektas.IntegrationTests
             Assert.True(groupList.Any());
         }
 
-        [Fact, TestPriority(2)]
+        [Fact, TestPriority(4)]
         public void EditGroupTest()
         {
             var ownerId = userService.CreateUser(userData);
@@ -63,7 +69,7 @@ namespace PPI_projektas.IntegrationTests
             Assert.True(editedGroup.Id == groupId);
         }
 
-        [Fact, TestPriority(3)]
+        [Fact, TestPriority(4)]
         public void GetUsersInGroupTest()
         {
             var ownerId = userService.CreateUser(userData);
@@ -77,7 +83,7 @@ namespace PPI_projektas.IntegrationTests
 
             //GetUsersInGroup() returns the correct lists of users
             var originalGroupUsers = groupService.GetUsersInGroup(groupId);
-            Assert.Contains(new ObjectDataItem(memberId, "IntegrationTest_username"), originalGroupUsers);
+            Assert.Contains(new ObjectDataItem(memberId, memberData.Username), originalGroupUsers);
         }
 
         [Fact, TestPriority(4)]

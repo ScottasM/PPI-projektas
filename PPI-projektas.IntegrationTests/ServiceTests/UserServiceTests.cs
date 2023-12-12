@@ -1,7 +1,7 @@
 using PPI_projektas.objects;
 using PPI_projektas.Services.Response;
 
-namespace PPI_projektas.IntegrationTests
+namespace PPI_projektas.IntegrationTests.ServiceTests
 {
     [TestCaseOrderer(
     ordererTypeName: "PPI_projektas.IntegrationTests.PriorityOrderer",
@@ -24,7 +24,7 @@ namespace PPI_projektas.IntegrationTests
             Assert.True(userService.ValidateData(userData));
         }
 
-        [Fact, TestPriority(1)]
+        [Fact, TestPriority(0)]
         public void CreateUserTest()
         {
             var newUserId = userService.CreateUser(userData);
@@ -33,7 +33,7 @@ namespace PPI_projektas.IntegrationTests
             Assert.True(newUserId != Guid.Empty);
         }
 
-        [Fact, TestPriority(2)]
+        [Fact, TestPriority(1)]
         public void GetUsersByNameTest()
         {
             var testUserId = userService.CreateUser(userData);
@@ -45,8 +45,8 @@ namespace PPI_projektas.IntegrationTests
             Assert.True(userList.Exists(x => x.Id == testUserId));
         }
 
-        [Fact, TestPriority(3)]
-        public void GetGroupsFromUser() 
+        [Fact, TestPriority(1)]
+        public void GetGroupsFromUser()
         {
             var testUserId = userService.CreateUser(userData);
             List<ObjectDataItem> groupList = userService.GetGroupsFromUser(testUserId);
@@ -55,7 +55,7 @@ namespace PPI_projektas.IntegrationTests
             Assert.NotNull(groupList);
         }
 
-        [Fact, TestPriority(4)]
+        [Fact, TestPriority(1)]
         public void DeleteUserTest()
         {
             var testUserId = userService.CreateUser(userData);
