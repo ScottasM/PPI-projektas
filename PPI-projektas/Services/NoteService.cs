@@ -52,7 +52,7 @@ public class NoteService : INoteService
         if (note.UserId != userId) throw new UnauthorizedAccessException();
         
         note.Name = name;
-        note.Tags = tags.Select(tag => new EntityStrings().value = tag).ToList();
+        note.Tags = tags.Select(tag => new EntityStrings { value = tag }).ToList();
         note.Text = text;
         
         DataHandler.Instance.SaveChanges();
