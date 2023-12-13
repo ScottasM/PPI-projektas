@@ -83,12 +83,13 @@ public class NoteService : INoteService
     public void UpdateNote(Guid userId, Guid noteId, string name, IEnumerable<string> tags, string text)
     {
         var note = DataHandler.FindObjectById(noteId, DataHandler.Instance.AllNotes);
-
-        if (note.User.Id != userId) throw new UnauthorizedAccessException();
+        if (note.UserId != userId) throw new UnauthorizedAccessException();
         
         note.Name = name;
         if (note.Tags.Count != tags.Count()) note.Tags = tags.Select(tag => new Tag(tag)).ToList();
         note.Text = text;
+        
+        DataHandler.Instance.SaveChanges();
     }
 
     public void DeleteNote(Guid userId, Guid noteId)

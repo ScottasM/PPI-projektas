@@ -31,6 +31,7 @@ public class GroupService : IGroupService
         var group = DataHandler.FindObjectById(groupId, DataHandler.Instance.AllGroups);
 
         var users = group.Members
+            .Where(user => user != group.Owner)
             .Select(user => _objectDataItemFactory.Create(user.Id, user.GetUsername()))
             .ToList();
 
@@ -60,7 +61,7 @@ public class GroupService : IGroupService
     {
         var group = DataHandler.FindObjectById(groupId, DataHandler.Instance.AllGroups);
 
-        if (group.OwnerGuid != userId)
+        if (group.Owner.Id != userId)
             throw new UnauthorizedAccessException();
         
         group.Name = newName;
@@ -81,6 +82,7 @@ public class GroupService : IGroupService
             member.RemoveGroup(group);
         }
         
+        DataHandler.Instance.SaveChanges();
     }
 
     public void DeleteGroup(Guid groupId)

@@ -20,16 +20,17 @@ public class Note : Entity, IComparable<Note>
 	public Guid UserId;
 	public User User;
 
-    public List<User> FavoriteByUsers;
-    public Group Group;
+    public List<User> FavoriteByUsers { get; set; }
+    public Group Group { get; set; }
 
 
     public string Name { get; set; }
 	public List<Tag> Tags { get; set; }
   
 	public string Text { get; set; }
-	
-	public Note () {} // For deserialization
+    public DateTime LastEditTime { get; set; }
+
+    public Note () {} // For deserialization
 
 	public Note(Guid authorId, Guid groupId, bool createGUID = true) : base(createGUID)
 	{
