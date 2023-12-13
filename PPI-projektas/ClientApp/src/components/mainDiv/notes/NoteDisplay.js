@@ -1,6 +1,8 @@
 ﻿import React, {Component} from 'react';
 import './NoteDisplay.css'
 import {NoteDisplayElement} from './NoteDisplayElement'
+import {NoteHub} from "./NoteHub";
+import {Note} from "./Note";
 
 export class NoteDisplay extends Component {
     constructor(props) {
@@ -118,27 +120,12 @@ export class NoteDisplay extends Component {
     };
 
     render() {
+        const {selectedNote, notes} = this.state;
+        
         return (
             <div>
-            <div className="note-display">
-                <div className='searchDiv'>
-                    <input className='searchBar' type='search' value={this.state.nameFilter} onChange={this.handleNameFilterChange}></input>
-                    <button onClick={this.handleSearch}>Search</button>
-                    <br/>
-                    <input className='searchBar' type='search' value={this.state.tagFilter} onChange={this.handleTagFilterChange}></input>
-                    <br/>
-                    <div className='tagFilterOptions'>
-                        <label className='tagFilterLabel'>
-                            All
-                            <input type='radio' name='searchType' value='All' defaultChecked={this.state.defaultCheck} onClick={this.handleTypeChange}></input>
-                        </label>
-                        <label className='tagFilterOptions'>
-                            Any
-                            <input type='radio' name='searchType' value='Any' onClick={this.handleTypeChange}></input>
-                        </label>
-                    </div>
-                </div>
-                {this.props.currentGroupId ?
+                <div className="note-display">
+                    {this.props.currentGroupId ?
                         (this.state.isLoading ? (
                             <p>Loading...</p>
                         ) : notes.length > 0 ? (
@@ -174,3 +161,21 @@ export class NoteDisplay extends Component {
         )
     }
 }
+
+/*<div className='searchDiv'>
+    <input className='searchBar' type='search' value={this.state.nameFilter} onChange={this.handleNameFilterChange}></input>
+    <button onClick={this.handleSearch}>Search</button>
+    <br/>
+    <input className='searchBar' type='search' value={this.state.tagFilter} onChange={this.handleTagFilterChange}></input>
+    <br/>
+    <div className='tagFilterOptions'>
+        <label className='tagFilterLabel'>
+            All
+            <input type='radio' name='searchType' value='All' defaultChecked={this.state.defaultCheck} onClick={this.handleTypeChange}></input>
+        </label>
+        <label className='tagFilterOptions'>
+            Any
+            <input type='radio' name='searchType' value='Any' onClick={this.handleTypeChange}></input>
+        </label>
+    </div>
+</div>*/

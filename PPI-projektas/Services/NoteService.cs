@@ -1,11 +1,9 @@
-using System.Collections.Concurrent;
 using PPI_projektas.Exceptions;
 using PPI_projektas.Services.Interfaces;
 using PPI_projektas.objects.Factories;
 using PPI_projektas.objects;
 using PPI_projektas.Services.Response;
 using PPI_projektas.Utils;
-using PPI_projektas.objects;
 
 namespace PPI_projektas.Services;
 
@@ -49,7 +47,7 @@ public class NoteService : INoteService
             .Select(note => _objectDataItemFactory.Create(note.Id, note.Name));
     }
     
-    public OpenedNoteData GetNote(Guid userId, Guid noteId)
+    public NoteData GetNote(Guid userId, Guid noteId)
     {
         var userGroupIds = DataHandler.FindObjectById(userId, DataHandler.Instance.AllUsers)
             .Groups.Select(group => group.Id);
@@ -60,7 +58,7 @@ public class NoteService : INoteService
 
         if (note == null) throw new ObjectDoesNotExistException(noteId);
         
-        return _openedNoteDataFactory.Create(note.Name, note.Tags, note.Text);
+        return _openedNoteDataFactory.Create(note.Id, note.Name, note.Tags, note.Text);
     }
 
     public Guid CreateNote(Guid authorId, Guid groupId)
