@@ -2,6 +2,7 @@ import React, { Component }  from 'react';
 import './NoteHub.css';
 import {TagList} from "../../TagList";
 import {MdDelete, MdEditDocument, MdSave} from "react-icons/md";
+import {Tag} from "reactstrap";
 
 export class NoteEditor extends Component {
     constructor (props) {
@@ -10,10 +11,12 @@ export class NoteEditor extends Component {
             id: this.props.noteData === undefined ? 0 : this.props.noteData.id,
             name: this.props.noteData === undefined ? '' : this.props.noteData.name,
             text: this.props.noteData === undefined ? '' : this.props.noteData.text,
-            tags: this.props.noteData === undefined ? 0 : this.props.noteData.tags,
+            tags: this.props.noteData === undefined ? [] : this.props.noteData.tags,
             saved: true,
             showNotSavedMessage: false,
             showTagSearch: false,
+            tagSearch: '',
+            tagResults: [],
         }
     }
 
@@ -131,32 +134,25 @@ export class NoteEditor extends Component {
     }
 
     handleDeleteTag = (tag) => {
-        const index = this.state.noteTags.indexOf(tag);
+        const index = this.state.tags.indexOf(tag);
         if (index === -1)
             return;
-        const newTags = this.props.tags;
         newTags.splice(index, 1)
-        this.setState({
-            tags: newTags,
-            tag: '',
+        this.setState((prevState) => ({
+            tags: prevState.tags.splice(index, 1),
             saved: false,
             showNotSavedMessage: true,
             showDeleteMessage: true
-        })
+        }));
     }
 
-    handleAddTag = () => {
-        if (this.state.tag === '') return;
-
-        const newTags = this.props.tags
-        newTags.push(this.state.tag);
-        this.setState({
-            tags: newTags,
-            tag: '',
+    handleAddTag = (tag) => {
+        this.setState((prevState) => ({
+            tags: [...prevState.tags, tag],
             saved: false,
             showNotSavedMessage: true,
             showDeleteMessage: true
-        })
+        }));
     }
     
     toggleTagSearch = () => {
@@ -165,8 +161,35 @@ export class NoteEditor extends Component {
         }))
     }
 
+    handleTagSearch = (event) => {
+        this.setState({tagSearch: event.target.value }, () => {
+            if(this.state.tagSearch){
+                this.handleTagGet();
+            }
+        });
+    }
+
+    handleTagGet = async () => {
+        try {
+            const response = await fetch(`http://localhost:5268/api/note/searchTags/${this.props.currentGroupId}/${this.state.tagSearch}`);
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            
+            let tags = await response.json();
+            tags = tags.filter(el =>
+                !this.state.tags.some(tag => tag === el)
+            );
+            if(tags === null) tags = [];
+            this.setState({ tagResults: tags});
+            
+        } catch (error) {
+            console.error('There was a problem with the get operation:', error);
+        }
+    }
+
     render() {
-        const {name, text, tags, showTagSearch} = this.state;
+        const {name, text, tags, showTagSearch, tagSearch, tagResults} = this.state;
 
         return (
             <div className="note-card selected">
@@ -174,18 +197,24 @@ export class NoteEditor extends Component {
                     <input className="note-title-edit" type="text" value={name} onChange={(e) => this.handleTitleChange(e)} />
                 </div>
                 <div className="note-tags">
-                    {tags !== 0 && tags.map(tag => (
-                        <span>{tag}</span>
+                    {tags.map(tag => (
+                        <span key={tag} onClick={() => this.handleDeleteTag(tag)}>{tag}</span>
                         )
                     )}
                     <span onClick={this.toggleTagSearch}>+</span>
                     { showTagSearch &&
                         <div className="tag-select">
                             <div className="tag-search">
-                                <input type="text"/>
+                                <input type="text" value={tagSearch} onChange={(e) => this.handleTagSearch(e)}/>
                             </div>
                             <div className="tags">
-                                <span>tags</span>
+                                {tagResults.map(tag => (
+                                        <span onClick={() => this.handleAddTag(tag)}>{tag}</span>
+                                    )
+                                )}
+                                {tagResults.length <= 3 && tagSearch !== '' &&
+                                    <span onClick={() => this.handleAddTag(tagSearch)}>{tagSearch}</span>
+                                }
                             </div>
                         </div>
                     }
