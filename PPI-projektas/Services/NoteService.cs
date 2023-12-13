@@ -24,14 +24,14 @@ public class NoteService : INoteService
     {
         var group = DataHandler.FindObjectById(groupId, DataHandler.Instance.AllGroups);
 
-        return group.Notes.Select(note => _noteDataFactory.Create(note.Id, note.Name, note.Tags, note.Text)).ToList();
+        return group.Notes.Select(note => _noteDataFactory.Create(note.Id, note.Name, note.Tags.Select(tag => tag.value).ToList(), note.Text)).ToList();
     }
 
     public NoteData GetNote(Guid noteId)
     {
         var note = DataHandler.FindObjectById(noteId, DataHandler.Instance.AllNotes);
         
-        return _noteDataFactory.Create(note.Id, note.Name, note.Tags, note.Text);
+        return _noteDataFactory.Create(note.Id, note.Name, note.Tags.Select(tag => tag.value).ToList(), note.Text);
     }
 
     public Guid CreateNote(Guid groupId, Guid authorId)
