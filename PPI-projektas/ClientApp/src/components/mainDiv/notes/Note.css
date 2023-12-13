@@ -1,0 +1,243 @@
+.note-card {
+    position: relative;
+    min-width: fit-content;
+    width: 450px;
+    height: 300px;
+    border: 2px solid black;
+    border-radius: 25px;
+    background-color: var(--nav-main-color);
+    display: grid;
+    grid-template-columns: 70% 30%;
+    grid-template-rows: 15% 75% 10%;
+    grid-template-areas:
+    "title tags"
+    "text text"
+    "misc buttons";
+}
+
+.unselected {
+    cursor: pointer;
+    transform: scale(0.8);
+}
+
+.selected {
+    z-index: 1;
+    position: absolute;
+    transform: translate(-50%, -50%) scale(1.2);
+    top: 50%;
+    left: 50%;
+}
+
+.note-title,
+.note-tags,
+.note-text {
+    border: 1px solid black;
+    color: var(--bg-color);
+}
+
+.note-title,
+.note-tags {
+    background-color: var(--note-main-color);
+    align-items: center;
+}
+
+.note-title {
+    grid-area: title;
+    padding-left: 10px;
+    border-radius: 20px 0 0 0;
+    display: flex;
+}
+
+.note-title p {
+    margin: 0;
+}
+
+input.note-title-edit[type="text"],
+textarea.note-text-edit
+{
+    background: transparent;
+    border: none;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+input.note-title-edit[type="text"] {
+    color: var(--bg-color);
+}
+
+textarea.note-text-edit {
+    color: var(--note-main-color);
+}
+
+input.note-title-edit[type="text"]:focus,
+textarea.note-text-edit:focus{
+    outline: none;
+}
+
+.note-tags {
+    cursor: default;
+    grid-area: tags;
+    padding: 0 0 0 0;
+    border-radius: 0 20px 0 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2px;
+}
+
+.note-text {
+    background-color: var(--bg-color);
+    color: var(--note-main-color);
+    grid-area: text;
+    padding: 5px;
+    align-items: center;
+    /*   border-radius: 0 0 20px 20px; */
+    overflow: auto;
+}
+
+.note-tags span,
+.tags span {
+    background-color: var(--button-main-color);
+    color: var(--bg-color);
+    padding: 2px 8px;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 10px;
+    border-radius: 50em;
+}
+
+.note-misc {
+    grid-area: misc;
+    display: flex;
+    flex-direction: row;
+    margin-left: 5px;
+}
+
+.note-buttons {
+    grid-area: buttons;
+    display: flex;
+    flex-direction: row-reverse;
+    margin-right: 5px;
+}
+
+.button {
+    width: 25px;
+    height: 25px;
+    margin: 2px;
+    border-radius: 50%;
+    border: none;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: left;
+    box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.164);
+    cursor: pointer;
+    transition-duration: 0.3s;
+    overflow: hidden;
+    position: relative;
+}
+
+.button-hover:hover {
+    width: 75px;
+    border-radius: 50px;
+    transition-duration: 0.3s;
+    align-items: center;
+}
+
+.button-hover::before {
+    position: absolute;
+    right: -10px;
+    color: black;
+    transition-duration: 0.3s;
+    font-size: 2px;
+}
+
+.button-hover:hover::before {
+    font-size: 13px;
+    opacity: 1;
+    transition-duration: 0.3s;
+}
+
+.edit-button {
+    background-color: #d99a3a;
+}
+
+.edit-button-hover:hover {
+    background-color: #d9ad3a;
+}
+
+.edit-button-hover:before {
+    content: "Edit";
+}
+
+.edit-button-hover:hover:before {
+    transform: translateX(-30px);
+}
+
+.delete-button {
+    background-color: #d34037;
+}
+
+.delete-button-hover:hover {
+    background-color: #b7362e;
+}
+
+.delete-button-hover:before {
+    content: "Delete";
+}
+
+.delete-button-hover:hover:before {
+    transform: translateX(-20px);
+}
+
+.save-button {
+    width: 75px;
+    border-radius: 50px;
+    background-color: #17c21e;
+}
+
+.save-button:hover {
+    background-color: #22d72a;
+}
+
+
+
+.tag-select {
+    position: absolute;
+    top: 0;
+    left: 100%;
+    height: 150px;
+    width: 100px;
+    background-color: var(--note-main-color);
+    border-radius: 10%;
+    padding-top: 1px;
+    padding-left: 2px;
+    border: 3px black;
+}
+
+.tag-search {
+    width: 80%;
+    border-radius: 10px;
+    background-color: var(--bg-color);
+    margin-top: 5px;
+    margin-left: 2px;
+}
+
+.tag-search input{
+    width: 100%;
+    background-color: transparent;
+    border: 0;
+}
+
+.tag-search input:focus {
+    outline: none
+}
+
+.tags {
+    padding-left: 4px;
+    padding-top: 2px;
+}
+
+.tags span {
+    cursor: pointer;
+}
