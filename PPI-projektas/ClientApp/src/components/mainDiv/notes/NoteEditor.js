@@ -212,7 +212,7 @@ export class NoteEditor extends Component {
                                         <span onClick={() => this.handleAddTag(tag)}>{tag}</span>
                                     )
                                 )}
-                                {tagResults.length <= 3 && tagSearch !== '' &&
+                                {tagResults.length <= 3 && tagSearch !== '' && !tagResults.includes(tagSearch) &&
                                     <span onClick={() => this.handleAddTag(tagSearch)}>{tagSearch}</span>
                                 }
                             </div>
