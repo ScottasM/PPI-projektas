@@ -59,7 +59,7 @@ namespace PPI_projektas.Controllers
         {
             try
             {
-                _noteService.UpdateNote(noteId, noteData.Id, noteData.Name, noteData.Tags, noteData.Text);
+                _noteService.UpdateNote(noteData.Id, noteId, noteData.Name, noteData.Tags, noteData.Text);
 
                 return Ok();
             }
@@ -73,8 +73,8 @@ namespace PPI_projektas.Controllers
             }
         }
 
-        [HttpDelete("deleteNote/{noteId}")]
-        public IActionResult DeleteNote(Guid noteId, [FromBody] Guid userId)
+        [HttpDelete("deleteNote/{noteId:guid}/${userId:guid}")]
+        public IActionResult DeleteNote(Guid noteId, Guid userId)
         {
             try
             {

@@ -25,7 +25,7 @@ export class NoteEditor extends Component {
             });
         
         const data = {
-            UserId: this.props.currentUserId,
+            Id: this.props.currentUserId,
             Name: this.state.noteName,
             Tags: this.state.noteTags,
             Text: this.state.noteText

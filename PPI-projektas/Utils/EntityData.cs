@@ -49,10 +49,6 @@ namespace PPI_projektas.Utils
                 .HasOne(n => n.Group)
                 .WithMany(u => u.Notes);
 
-            modelBuilder.Entity<Group>()
-                .HasOne(g => g.Owner)
-                .WithMany(u => u.OwnedGroups)
-
             modelBuilder.Entity<Note>()
                 .HasMany(n => n.Tags);
 

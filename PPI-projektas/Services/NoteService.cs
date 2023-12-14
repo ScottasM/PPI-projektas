@@ -58,8 +58,10 @@ public class NoteService : INoteService
             .FirstOrDefault(note => note.Id == noteId);
 
         if (note == null) throw new ObjectDoesNotExistException(noteId);
+
+        var tags = note.Tags?.Any() == null ? new List<Tag>() : note.Tags;
         
-        return _openedNoteDataFactory.Create(note.Id, note.Name, note.Tags, note.Text);
+        return _openedNoteDataFactory.Create(note.Id, note.Name, tags, note.Text);
     }
 
     public Guid CreateNote(Guid authorId, Guid groupId)
@@ -85,7 +87,7 @@ public class NoteService : INoteService
         if (note.UserId != userId) throw new UnauthorizedAccessException();
         
         note.Name = name;
-        if (note.Tags.Count != tags.Count) note.Tags = tags.Select(tag => new Tag(tag)).ToList();
+        note.Tags = tags.Select(tag => new Tag(tag)).ToList();
         note.Text = text;
         
         DataHandler.Instance.SaveChanges();
