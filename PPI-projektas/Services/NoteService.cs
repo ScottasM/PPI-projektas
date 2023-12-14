@@ -24,7 +24,17 @@ public class NoteService : INoteService
     {
         var group = DataHandler.FindObjectById(groupId, DataHandler.Instance.AllGroups);
 
-        return group.Notes.Select(note => _noteDataFactory.Create(note.Id, note.Name, note.Tags.Select(tag => tag.value).ToList(), note.Text)).ToList();
+        if (group != null && group.Notes != null) {
+            return group.Notes.Select(note => _noteDataFactory.Create(
+                note.Id,
+                note.Name,
+                note.Tags != null ? note.Tags.Select(tag => tag.value).ToList() : new List<string>(),
+                note.Text
+            )).ToList();
+        }
+        else return new List<NoteData>();
+
+        //return group.Notes.Select(note => _noteDataFactory.Create(note.Id, note.Name, note.Tags.Select(tag => tag.value).ToList(), note.Text)).ToList();
     }
 
     public NoteData GetNote(Guid noteId)
@@ -78,8 +88,11 @@ public class NoteService : INoteService
         var group = DataHandler.FindObjectById(groupId, DataHandler.Instance.AllGroups);
 
         var tags = new List<string>();
+
         foreach (var note in group.Notes)
         {
+            if (note.Tags == null)
+                continue;
             var uniqueValues = note.Tags
                 .Where(tag => tag.value.Contains(search))
                 .Select(tag => tag.value)

@@ -137,6 +137,7 @@ export class NoteEditor extends Component {
         const index = this.state.tags.indexOf(tag);
         if (index === -1)
             return;
+        // eslint-disable-next-line no-undef
         newTags.splice(index, 1)
         this.setState((prevState) => ({
             tags: prevState.tags.splice(index, 1),

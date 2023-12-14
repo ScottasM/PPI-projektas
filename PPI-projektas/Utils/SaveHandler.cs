@@ -26,7 +26,7 @@ namespace PPI_projektas.Utils
 
         public ConcurrentDictionary<Guid, Note> LoadNotes()
         {
-            var list = _context.Set<Note>().ToList();
+            var list = _context.Notes.Include(u => u.Tags).ToList();
             return new ConcurrentDictionary<Guid, Note>(list.Select(item => new KeyValuePair<Guid, Note>(((dynamic)item).Id, item)));
         }
         public ConcurrentDictionary<Guid, User> LoadUsers()
