@@ -111,7 +111,7 @@ namespace PPI_projektas.Utils
         {
             return Instance.AllUsers.Values.FirstOrDefault(inst => inst.GetUsername() == username);
         }
-
+        
         public static T FindObjectById<T>(Guid objectId, ConcurrentDictionary<Guid, T> objectList) where T : Entity
         {
             if (objectList.TryGetValue(objectId, out var obj)) 

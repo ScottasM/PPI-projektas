@@ -22,6 +22,12 @@ export class MainContainer extends Component {
             displayNote: false,
             noteHubDisplay: 1,
             currentUserName: '',
+            noteDisplay: {
+                notes: [],
+                searchType: 0,
+                tagFilter: [],
+                nameFilter: ''
+            }
         }
     }
     
@@ -45,8 +51,14 @@ export class MainContainer extends Component {
     }
     
     handleCreateNote = async () => {
-        fetch(`http://localhost:5268/api/note/createNote/${this.props.currentGroupId}/${this.props.currentUserId}`, {
+        const data = {
+            AuthorId: this.props.currentUserId,
+            GroupId: this.props.currentGroupId
+        };
+        
+        fetch(`http://localhost:5268/api/note/createNote`, {
             method: 'POST',
+            body: JSON.stringify(data),
             headers: {
                 'Content-Type': 'application/json'
             }
@@ -144,7 +156,8 @@ export class MainContainer extends Component {
                                  noteId={this.state.noteId} 
                                  currentUserId={this.props.currentUserId}
                                  exitNote={this.exitNote} /> :
-                        <NoteDisplay currentGroupId={this.props.currentGroupId}
+                        <NoteDisplay currentUserId={this.props.currentUserId}
+                                     currentGroupId={this.props.currentGroupId}
                                      openNote={this.openNote} />
                         }
                     </>
