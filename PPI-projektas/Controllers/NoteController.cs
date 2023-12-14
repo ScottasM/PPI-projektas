@@ -1,7 +1,9 @@
+using System.Security.AccessControl;
 using Microsoft.AspNetCore.Mvc;
 using PPI_projektas.Exceptions;
 using PPI_projektas.objects;
 using PPI_projektas.Services.Interfaces;
+using PPI_projektas.Services.Request;
 
 namespace PPI_projektas.Controllers
 
@@ -50,6 +52,41 @@ namespace PPI_projektas.Controllers
             }
         }
 
+        [HttpGet("getPrivileges/{noteId:guid}")]
+        public IActionResult GetPrivileges(Guid noteId)
+        {
+            try
+            {
+                return Ok(_noteService.GetPrivileges(noteId));
+            }
+            catch (ObjectDoesNotExistException)
+            {
+                return NotFound();
+            }
+        }
+
+        [HttpPost("updatePrivileges/{noteId:guid}")]
+        public IActionResult UpdatePrivileges(Guid noteId, [FromBody] UpdatePrivilegesData updatePrivileges)
+        {
+            try
+            {
+                return Ok(_noteService.UpdatePrivileges(noteId, updatePrivileges.UserId,
+                    updatePrivileges.UpdatePrivileges));
+            }
+            catch (PrivilegeNotHeldException)
+            {
+                return Unauthorized();
+            }
+            catch (ArgumentOutOfRangeException)
+            {
+                return BadRequest();
+            }
+            catch (ObjectDoesNotExistException)
+            {
+                return NotFound();
+            }
+        }
+        
         [HttpPost("updateNote/{noteId:guid}")]
         public IActionResult UpdateNote(Guid noteId, [FromBody] Note noteData)
         {

@@ -13,9 +13,10 @@ public class EntityStrings
 
 public class Note : Entity, IComparable<Note>
 {
-
 	public Guid UserId;
-	public User User;
+	public User Author;
+	public List<User> EditingPriveleges;
+	public List<User> AdminstratorPrivileges;
 
     public List<User> FavoriteByUsers;
     public Group Group;

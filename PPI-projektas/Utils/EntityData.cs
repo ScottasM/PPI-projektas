@@ -31,7 +31,7 @@ namespace PPI_projektas.Utils
                 .WithMany(u => u.FavoriteNotes);
 
             modelBuilder.Entity<Note>()
-                .HasOne(n => n.User)
+                .HasOne(n => n.Author)
                 .WithMany(u => u.CreatedNotes)
                 .HasForeignKey(n => n.UserId);
 
