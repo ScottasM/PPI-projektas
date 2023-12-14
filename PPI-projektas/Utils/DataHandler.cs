@@ -1,4 +1,4 @@
-
+﻿
 ﻿using PPI_projektas.objects;
 using Microsoft.EntityFrameworkCore;
  using System.Collections.Concurrent;
@@ -70,7 +70,7 @@ namespace PPI_projektas.Utils
             }
             else if (obj is User) {
                 var obje = obj as User;
-                Instance.AllUsers.TyAdd(obje.Id,obje);
+                Instance.AllUsers.TryAdd(obje.Id,obje);
                 Enqueue(() => Instance._saveHandler.SaveObject(obje));
             }
         }
@@ -109,9 +109,10 @@ namespace PPI_projektas.Utils
         
         public static T FindObjectById<T>(Guid objectId, ConcurrentDictionary<Guid, T> objectList) where T : Entity
         {
-            if (objectList.TryGetValue(objectId, out var obj)) throw new ObjectDoesNotExistException(objectId);
-
-            return obj;
+            if (objectList.TryGetValue(objectId, out var obj)) 
+                return obj;
+            
+            throw new ObjectDoesNotExistException(objectId);
         }
 
 

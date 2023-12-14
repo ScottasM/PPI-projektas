@@ -24,40 +24,42 @@ public class NoteService : INoteService
     public IEnumerable<ObjectDataItem> GetNotes(Guid userId, SearchType searchType, string? tagFilter, string? nameFilter, Guid? groupId)
     {
         var userGroupIds = groupId == null
-            ? DataHandler.FindObjectById(userId, DataHandler.Instance.AllUsers).GroupsGuids
+            ? DataHandler.FindObjectById(userId, DataHandler.Instance.AllUsers)
+                .Groups.Select(group => group.Id)
             : null;
         var tags = ConvertToArray(tagFilter);
         
-        return DataHandler.Instance.AllNotes
+        return DataHandler.Instance.AllNotes.Values
             .If(groupId == null, query =>
-                query.Where(note => userGroupIds.Contains(note.GroupId)))
+                query.Where(note => userGroupIds.Contains(note.Group.Id)))
             .If(groupId != null, query =>
-                query.Where(note => note.GroupId == groupId))
+                query.Where(note => note.Group.Id == groupId))
             .If(tags.Any(), query =>
+            {
+                return searchType switch
                 {
-                    return searchType switch
-                    {
-                        SearchType.All => query.Where(note => note.ContainsAll(tags)),
-                        SearchType.Any => query.Where(note => note.ContainsAny(tags)),
-                        _ => throw new ArgumentOutOfRangeException(nameof(searchType), searchType, null)
-                    };
-                })
+                    SearchType.All => query.Where(note => note.ContainsAll(tags)),
+                    SearchType.Any => query.Where(note => note.ContainsAny(tags)),
+                    _ => throw new ArgumentOutOfRangeException(nameof(searchType), searchType, null)
+                };
+            })
             .If(!string.IsNullOrEmpty(nameFilter), query =>
                 query.Where(note => note.Name.Contains(nameFilter)))
             .Select(note => _objectDataItemFactory.Create(note.Id, note.Name));
     }
     
-    public OpenedNoteData GetNote(Guid userId, Guid noteId)
+    public NoteData GetNote(Guid userId, Guid noteId)
     {
-        var userGroupIds = DataHandler.FindObjectById(userId, DataHandler.Instance.AllUsers).GroupsGuids;
+        var userGroupIds = DataHandler.FindObjectById(userId, DataHandler.Instance.AllUsers)
+            .Groups.Select(group => group.Id);
         
-        var note = DataHandler.Instance.AllNotes
-            .Where(note => userGroupIds.Contains(note.GroupId))
+        var note = DataHandler.Instance.AllNotes.Values
+            .Where(note => userGroupIds.Contains(note.Group.Id))
             .FirstOrDefault(note => note.Id == noteId);
 
         if (note == null) throw new ObjectDoesNotExistException(noteId);
         
-        return _openedNoteDataFactory.Create(note.Name, note.Tags, note.Text);
+        return _openedNoteDataFactory.Create(note.Id, note.Name, note.Tags, note.Text);
     }
 
     public Guid CreateNote(Guid authorId, Guid groupId)
@@ -77,15 +79,13 @@ public class NoteService : INoteService
         return note.Id;
     }
     
-    public void UpdateNote(Guid userId, Guid noteId, string name, IEnumerable<string> tags, string text)
+    public void UpdateNote(Guid userId, Guid noteId, string name, List<string> tags, string text)
     {
-
         var note = DataHandler.FindObjectById(noteId, DataHandler.Instance.AllNotes);
-
-        if (note.AuthorId != userId) throw new UnauthorizedAccessException();
+        if (note.UserId != userId) throw new UnauthorizedAccessException();
         
         note.Name = name;
-        note.Tags = tags.Select(tag => new Tag(tag)).ToList();
+        if (note.Tags.Count != tags.Count) note.Tags = tags.Select(tag => new Tag(tag)).ToList();
         note.Text = text;
     }
 
@@ -97,7 +97,7 @@ public class NoteService : INoteService
         var group = DataHandler.Instance.AllGroups.Values.FirstOrDefault(group => group.Notes.Contains(note));
 
         if (group == null) throw new ObjectDoesNotExistException();
-        if (note.AuthorId != userId) throw new UnauthorizedAccessException();
+        if (note.UserId != userId) throw new UnauthorizedAccessException();
         
         group.RemoveNote(note);
         user.RemoveCreatedNote(note);
