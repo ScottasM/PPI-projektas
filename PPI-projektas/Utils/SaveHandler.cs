@@ -19,7 +19,7 @@ namespace PPI_projektas.Utils
 
         public void Save()
         {
-            _context.SaveChanges();
+            _context.SaveChangesAsync();
         }
         
         
@@ -44,13 +44,13 @@ namespace PPI_projektas.Utils
         public void SaveObject<T>(T obj) where T : Entity
         {
             _context.Set<T>().Add(obj);
-            _context.SaveChanges();
+            _context.SaveChangesAsync();
         }
 
         public void RemoveObject<T>(T obj) where T : Entity
         {
             _context.Set<T>().Remove(obj);
-            _context.SaveChanges();
+            _context.SaveChangesAsync();
         }
     }
 }

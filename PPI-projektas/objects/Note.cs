@@ -25,8 +25,9 @@ public class Note : Entity, IComparable<Note>
 	public List<EntityStrings> Tags { get; set; }
   
 	public string Text { get; set; }
-	
-	public Note () {} // For deserialization
+    public DateTime LastEditTime { get; set; }
+
+    public Note () {} // For deserialization
 
 	public Note(Guid authorId, bool createGUID = true) : base(createGUID)
 	{
