@@ -8,6 +8,7 @@ export class Note extends Component {
     }
     render() {
         const { noteData, handleSelect} = this.props;
+        const maxVisibleTags = 3;
         
         return (
             <div className="note-card unselected" onClick={(event) => handleSelect(event, noteData.id)}>
@@ -15,9 +16,12 @@ export class Note extends Component {
                     <p>{noteData.name}</p>
                 </div>
                 <div className="note-tags">
-                    {noteData.tags.map(tag => (
+                    {noteData.tags.slice(0, maxVisibleTags).map(tag => (
                         <span>{tag}</span>
                         )
+                    )}
+                    {noteData.tags.length > maxVisibleTags && (
+                        <span key="ellipsis">...</span>
                     )}
                 </div>
                 <div className="note-text">

@@ -83,6 +83,7 @@ textarea.note-text-edit:focus{
     display: flex;
     flex-wrap: wrap;
     gap: 2px;
+    align-items: flex-start;
 }
 
 .note-text {
@@ -238,6 +239,7 @@ textarea.note-text-edit:focus{
     padding-top: 2px;
 }
 
-.tags span {
+.tags span,
+.cursor-pointer{
     cursor: pointer;
 }

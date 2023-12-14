@@ -32,7 +32,7 @@ public class NoteService : INoteService
                 note.Text
             )).ToList();
         }
-        else return new List<NoteData>();
+        return new List<NoteData>();
 
         //return group.Notes.Select(note => _noteDataFactory.Create(note.Id, note.Name, note.Tags.Select(tag => tag.value).ToList(), note.Text)).ToList();
     }

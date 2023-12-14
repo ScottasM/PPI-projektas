@@ -9,6 +9,7 @@ export class NoteViewer extends Component {
     
     render() {
         const {noteData} = this.props;
+        const maxVisibleTags = 3;
 
         return (
             <div className={"note-card selected"}>
@@ -16,9 +17,12 @@ export class NoteViewer extends Component {
                     <p>{noteData.name}</p>
                 </div>
                 <div className="note-tags">
-                    {noteData !== 0 && noteData.tags.map(tag => (
+                    {noteData !== 0 && noteData.tags.slice(0, maxVisibleTags).map(tag => (
                             <span>{tag}</span>
                         )
+                    )}
+                    {noteData.tags.length > maxVisibleTags && (
+                        <span key="ellipsis">...</span>
                     )}
                 </div>
                 <div className="note-text">

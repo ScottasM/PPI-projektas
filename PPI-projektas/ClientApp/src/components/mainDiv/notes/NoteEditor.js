@@ -137,8 +137,6 @@ export class NoteEditor extends Component {
         const index = this.state.tags.indexOf(tag);
         if (index === -1)
             return;
-        // eslint-disable-next-line no-undef
-        newTags.splice(index, 1)
         this.setState((prevState) => ({
             tags: prevState.tags.splice(index, 1),
             saved: false,
@@ -191,6 +189,7 @@ export class NoteEditor extends Component {
 
     render() {
         const {name, text, tags, showTagSearch, tagSearch, tagResults} = this.state;
+        const maxVisibleTags = 3;
 
         return (
             <div className="note-card selected">
@@ -198,11 +197,14 @@ export class NoteEditor extends Component {
                     <input className="note-title-edit" type="text" value={name} onChange={(e) => this.handleTitleChange(e)} />
                 </div>
                 <div className="note-tags">
-                    {tags.map(tag => (
-                        <span key={tag} onClick={() => this.handleDeleteTag(tag)}>{tag}</span>
+                    {tags.slice(0, maxVisibleTags).map(tag => (
+                        <span className="cursor-pointer" key={tag} onClick={() => this.handleDeleteTag(tag)}>{tag}</span>
                         )
                     )}
-                    <span onClick={this.toggleTagSearch}>+</span>
+                    {tags.length > maxVisibleTags && (
+                        <span key="ellipsis">...</span>
+                    )}
+                    <span className="cursor-pointer" onClick={this.toggleTagSearch}>+</span>
                     { showTagSearch &&
                         <div className="tag-select">
                             <div className="tag-search">
