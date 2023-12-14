@@ -71,7 +71,7 @@ builder.Services.AddScoped<INoteService, NoteService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<ICustomAuthenticationService, AuthenticationService>();
 builder.Services.AddScoped<IObjectDataItemFactory, ObjectDataItemFactory>();
-builder.Services.AddScoped<IOpenedNoteDataFactory, OpenedNoteDataFactory>();
+builder.Services.AddScoped<INoteDataFactory, NoteDataFactory>();
 builder.Services.AddScoped<IAuthReturnFactory, AuthReturnFactory>();
 builder.Services.AddScoped<IGroupFactory, GroupFactory>();
 builder.Services.AddScoped<IUserFactory, UserFactory>();

@@ -17,8 +17,8 @@ public class Note : Entity, IComparable<Note>
 	public Guid UserId;
 	public User User;
 
-    public List<User> FavoriteByUsers;
-    public Group Group;
+    public List<User> FavoriteByUsers { get; set; }
+    public Group Group { get; set; }
 
 
     public string Name { get; set; }

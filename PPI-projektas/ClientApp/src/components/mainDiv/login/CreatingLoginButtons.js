@@ -6,7 +6,7 @@ export class CreatingLoginButtons extends Component {
 
     render() {
         return (
-            <div className="registerButtonsDiv">
+            <div className="register-buttons-div">
                 <button className="create-button" onClick={this.props.toggleMenu}>{this.props.buttonName.name}</button>
             </div>
         );

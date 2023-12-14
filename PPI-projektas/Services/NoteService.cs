@@ -10,28 +10,38 @@ namespace PPI_projektas.Services;
 public class NoteService : INoteService
 {
     private readonly IObjectDataItemFactory _objectDataItemFactory;
-    private readonly IOpenedNoteDataFactory _openedNoteDataFactory;
+    private readonly INoteDataFactory _noteDataFactory;
     private readonly INoteFactory _noteFactory;
 
-    public NoteService(IObjectDataItemFactory objectDataItemFactory, IOpenedNoteDataFactory openedNoteDataFactory, INoteFactory noteFactory)
+    public NoteService(IObjectDataItemFactory objectDataItemFactory, INoteDataFactory noteDataFactory, INoteFactory noteFactory)
     {
         _objectDataItemFactory = objectDataItemFactory;
-        _openedNoteDataFactory = openedNoteDataFactory;
+        _noteDataFactory = noteDataFactory;
         _noteFactory = noteFactory;
     }
 
-    public List<ObjectDataItem> GetNotes(Guid groupId)
+    public List<NoteData> GetNotes(Guid groupId)
     {
         var group = DataHandler.FindObjectById(groupId, DataHandler.Instance.AllGroups);
 
-        return group.Notes.Select(note => _objectDataItemFactory.Create(note.Id, note.Name)).ToList();
+        if (group != null && group.Notes != null) {
+            return group.Notes.Select(note => _noteDataFactory.Create(
+                note.Id,
+                note.Name,
+                note.Tags != null ? note.Tags.Select(tag => tag.value).ToList() : new List<string>(),
+                note.Text
+            )).ToList();
+        }
+        return new List<NoteData>();
+
+        //return group.Notes.Select(note => _noteDataFactory.Create(note.Id, note.Name, note.Tags.Select(tag => tag.value).ToList(), note.Text)).ToList();
     }
 
-    public OpenedNoteData GetNote(Guid noteId)
+    public NoteData GetNote(Guid noteId)
     {
         var note = DataHandler.FindObjectById(noteId, DataHandler.Instance.AllNotes);
         
-        return _openedNoteDataFactory.Create(note.Name, note.Tags, note.Text);
+        return _noteDataFactory.Create(note.Id, note.Name, note.Tags.Select(tag => tag.value).ToList(), note.Text);
     }
 
     public Guid CreateNote(Guid groupId, Guid authorId)
@@ -46,16 +56,16 @@ public class NoteService : INoteService
         return note.Id;
     }
     
-    public void UpdateNote(Guid noteId, Guid userId, string name, List<EntityStrings> tags, string text)
+    public void UpdateNote(Guid noteId, Guid userId, string name, List<string> tags, string text)
     {
-
         var note = DataHandler.FindObjectById(noteId, DataHandler.Instance.AllNotes);
         if (note.UserId != userId) throw new UnauthorizedAccessException();
-
         
         note.Name = name;
-        note.Tags = tags;
+        note.Tags = tags.Select(tag => new EntityStrings { value = tag }).ToList();
         note.Text = text;
+        
+        DataHandler.Instance.SaveChanges();
     }
 
     public void DeleteNote(Guid noteId, Guid userId)
@@ -65,12 +75,33 @@ public class NoteService : INoteService
         
         var group = DataHandler.Instance.AllGroups.Values.FirstOrDefault(group => group.Notes.Contains(note));
         if (group == null) throw new ObjectDoesNotExistException();
-        
 
         if (note.UserId != userId) throw new UnauthorizedAccessException();
         
         group.RemoveNote(note);
         user.RemoveCreatedNote(note);
         DataHandler.Delete(note);
+    }
+
+    public List<string> SearchTags(Guid groupId, string search)
+    {
+        var group = DataHandler.FindObjectById(groupId, DataHandler.Instance.AllGroups);
+
+        var tags = new List<string>();
+
+        foreach (var note in group.Notes)
+        {
+            if (note.Tags == null)
+                continue;
+            var uniqueValues = note.Tags
+                .Where(tag => tag.value.Contains(search))
+                .Select(tag => tag.value)
+                .Except(tags)
+                .ToList();
+            
+            tags.AddRange(uniqueValues);
+        }
+
+        return tags;
     }
 }

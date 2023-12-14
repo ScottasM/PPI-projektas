@@ -39,9 +39,22 @@ namespace PPI_projektas.Utils
                 .HasMany(n => n.Members)
                 .WithMany(u => u.Groups);
 
+            modelBuilder.Entity<User>()
+                .HasMany(n => n.Groups)
+                .WithMany(u => u.Members);
+
             modelBuilder.Entity<Note>()
                 .HasOne(n => n.Group)
                 .WithMany(u => u.Notes);
+
+            modelBuilder.Entity<Group>()
+                .HasOne(g => g.Owner)
+                .WithMany(u => u.OwnedGroups);
+
+            modelBuilder.Entity<EntityStrings>()
+                .HasOne<Note>()
+                .WithMany(n => n.Tags)
+                .HasForeignKey("NoteId"); 
 
         }
     }

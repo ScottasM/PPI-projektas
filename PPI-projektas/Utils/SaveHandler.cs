@@ -1,4 +1,6 @@
 ﻿using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text.Json;
 using Microsoft.EntityFrameworkCore;
 using PPI_projektas.objects;
@@ -19,13 +21,26 @@ namespace PPI_projektas.Utils
         {
             _context.SaveChanges();
         }
-
-        public ConcurrentDictionary<Guid, T> LoadList<T>() where T: class
-        {
-            var list = _context.Set<T>().ToList();
-            return new ConcurrentDictionary<Guid, T>(list.Select(item => new KeyValuePair<Guid, T>(((dynamic)item).Id, item)));
-        }
         
+        
+
+        public ConcurrentDictionary<Guid, Note> LoadNotes()
+        {
+            var list = _context.Notes.Include(u => u.Tags).ToList();
+            return new ConcurrentDictionary<Guid, Note>(list.Select(item => new KeyValuePair<Guid, Note>(((dynamic)item).Id, item)));
+        }
+        public ConcurrentDictionary<Guid, User> LoadUsers()
+        {
+            var list = _context.Users.Include(u => u.Groups).ToList();
+            return new ConcurrentDictionary<Guid, User>(list.Select(item => new KeyValuePair<Guid, User>(item.Id, item)));
+        }
+
+        public ConcurrentDictionary<Guid, Group> LoadGroups()
+        {
+            var list = _context.Groups.Include(g => g.Members).ToList();
+            return new ConcurrentDictionary<Guid, Group>(list.Select(item => new KeyValuePair<Guid, Group>(item.Id, item)));
+        }
+
         public void SaveObject<T>(T obj) where T : Entity
         {
             _context.Set<T>().Add(obj);
