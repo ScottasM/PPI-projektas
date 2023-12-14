@@ -44,7 +44,7 @@ export class NoteDisplay extends Component {
             return;
         }
         
-        fetch(`http://localhost:5268/api/note/${this.props.currentGroupId}`)
+        fetch(`http://185.34.52.6:5268/api/note/${this.props.currentGroupId}`)
             .then(async response => {
                 if (!response.ok)
                     throw new Error(`Network response was not ok`);

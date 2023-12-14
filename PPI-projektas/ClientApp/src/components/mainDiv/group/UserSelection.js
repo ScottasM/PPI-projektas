@@ -72,7 +72,7 @@ export class UserSelection extends Component {
 
     handleUserGet = async () => {
         try {
-            const response = await fetch(`http://localhost:5268/api/user/${this.state.userSearch}`);
+            const response = await fetch(`http://185.34.52.6:5268/api/user/${this.state.userSearch}`);
             if (!response.ok) {
                 throw new Error('Network response was not ok');
             }

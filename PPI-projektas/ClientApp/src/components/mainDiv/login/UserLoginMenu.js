@@ -39,7 +39,7 @@ export class UserLoginMenu extends Component {
             password: password,
         };
 
-        await fetch(`http://localhost:5268/api/Authentication/trylogin`, {
+        await fetch(`http://185.34.52.6:5268/api/Authentication/trylogin`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

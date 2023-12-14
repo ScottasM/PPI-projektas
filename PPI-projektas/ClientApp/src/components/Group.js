@@ -24,7 +24,7 @@ export class Group extends Component {
     
     handleDelete = async () => {
         try {
-            await fetch(`http://localhost:5268/api/group/delete/${this.props.groupId}`, {
+            await fetch(`http://185.34.52.6:5268/api/group/delete/${this.props.groupId}`, {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',

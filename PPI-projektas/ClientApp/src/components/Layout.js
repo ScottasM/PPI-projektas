@@ -63,7 +63,7 @@ export class Layout extends Component {
         }
         
         try {
-            const response = await fetch(`http://localhost:5268/api/user/groups/${userId}`);
+            const response = await fetch(`http://185.34.52.6:5268/api/user/groups/${userId}`);
             if (!response.ok) {
                 throw new Error('Network response was not ok');
             }

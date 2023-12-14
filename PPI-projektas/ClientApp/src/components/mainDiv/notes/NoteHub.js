@@ -51,7 +51,7 @@ export class NoteHub extends Component {
             this.setState({
                 showDeleteMessage: false
             });
-        } else fetch(`http://localhost:5268/api/note/deleteNote/${this.props.noteData.id}/${this.props.currentUserId}`, {
+        } else fetch(`http://185.34.52.6:5268/api/note/deleteNote/${this.props.noteData.id}/${this.props.currentUserId}`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json'
