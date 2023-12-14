@@ -40,6 +40,12 @@ export class NoteHub extends Component {
     }
 
     handleDelete = async () => {
+        if(this.props.noteData === undefined)
+        {
+            this.props.handleClose();
+            return;
+        }
+        
         if (this.state.showDeleteMessage) {
             alert(`You're about to delete this note.`)
             this.setState({

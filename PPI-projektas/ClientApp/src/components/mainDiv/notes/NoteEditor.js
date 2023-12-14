@@ -126,12 +126,6 @@ export class NoteEditor extends Component {
             showDeleteMessage: true
         })
     }
-    
-    handleTagChanged = (event) => { //TODO: Add tag selection
-        this.setState({
-            tags: event.target.value
-        })
-    }
 
     handleDeleteTag = (tag) => {
         const index = this.state.tags.indexOf(tag);
@@ -194,7 +188,13 @@ export class NoteEditor extends Component {
         return (
             <div className="note-card selected">
                 <div className="note-title">
-                    <input className="note-title-edit" type="text" value={name} onChange={(e) => this.handleTitleChange(e)} />
+                    <input 
+                        className="note-title-edit" 
+                        type="text" 
+                        value={name}
+                        placeholder="Enter title..."
+                        onChange={(e) => this.handleTitleChange(e)} 
+                    />
                 </div>
                 <div className="note-tags">
                     {tags.slice(0, maxVisibleTags).map(tag => (
@@ -208,7 +208,11 @@ export class NoteEditor extends Component {
                     { showTagSearch &&
                         <div className="tag-select">
                             <div className="tag-search">
-                                <input type="text" value={tagSearch} onChange={(e) => this.handleTagSearch(e)}/>
+                                <input 
+                                    type="text" 
+                                    value={tagSearch}
+                                    placeholder="Search tags..."
+                                    onChange={(e) => this.handleTagSearch(e)}/>
                             </div>
                             <div className="tags">
                                 {tagResults.map(tag => (
@@ -223,7 +227,11 @@ export class NoteEditor extends Component {
                     }
                 </div>
                 <div className="note-text">
-                    <textarea className="note-text-edit" value={text} onChange={(e) => this.handleTextChange(e)} />
+                    <textarea 
+                        className="note-text-edit" 
+                        value={text}
+                        placeholder="Enter text..."
+                        onChange={(e) => this.handleTextChange(e)} />
                 </div>
                 <div className="note-misc">
                     <button className="button save-button" onClick={this.handleSave}>
