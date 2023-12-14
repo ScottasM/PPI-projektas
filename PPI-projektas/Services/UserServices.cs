@@ -23,7 +23,9 @@ public class UserService : IUserService
     }
     public bool ValidateData<T>(List<T>? data)
     {
-        return data != null;
+        if (data == null) return false;
+
+        return data.Any();
     }
     public bool ValidateData(UserCreateData data)
     {
