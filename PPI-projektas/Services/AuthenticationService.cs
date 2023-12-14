@@ -21,7 +21,20 @@ namespace PPI_projektas.Services
         
         public AuthReturn TryRegister(string name, string password)
         {
+            if (name == null || password == null)
+                return _authReturnFactory.Create(null, false, "Name and password can not be empty");
+
             var hashedPassword = Hash(password);
+
+            string? resp = name.ValidateString(checkProfanity: true, minLength: 5, maxLength: 30, checkSpecialCharacters: true);
+
+            if(resp != null)
+                return _authReturnFactory.Create(null, false, resp);
+
+            resp = password.ValidateString(minLength: 6, maxLength: 30, checkSpecialCharacters: true,checkCommonPasswords:true);
+
+            if (resp != null)
+                return _authReturnFactory.Create(null, false, resp);
 
             if (DataHandler.userExists(name))
                 return _authReturnFactory.Create(null, false, "User with the same username already exists.");
@@ -38,6 +51,9 @@ namespace PPI_projektas.Services
 
         public AuthReturn TryLogin(string name,string password)
         {
+            if (name == string.Empty || password == string.Empty)
+                return _authReturnFactory.Create(null, false, "Name and password can not be empty");
+
             var user = DataHandler.userExistsObject(name);
             if (user == null)
                 return _authReturnFactory.Create(null, false, "User with such username not found.");
