@@ -1,7 +1,6 @@
-using PPI_projektas.Exceptions;
+﻿using PPI_projektas.Exceptions;
 using PPI_projektas.Services.Interfaces;
 using PPI_projektas.objects.Factories;
-using PPI_projektas.objects;
 using PPI_projektas.Services.Response;
 using PPI_projektas.Utils;
 using PPI_projektas.objects;
@@ -21,7 +20,7 @@ public class NoteService : INoteService
         _noteFactory = noteFactory;
     }
 
-    public IEnumerable<ObjectDataItem> GetNotes(Guid userId, SearchType searchType, string? tagFilter, string? nameFilter, Guid? groupId)
+    public List<ObjectDataItem> GetNotes(Guid groupId)
     {
         var userGroupIds = groupId == null
             ? DataHandler.FindObjectById(userId, DataHandler.Instance.AllUsers)
@@ -62,16 +61,11 @@ public class NoteService : INoteService
         return _openedNoteDataFactory.Create(note.Id, note.Name, note.Tags, note.Text);
     }
 
-    public Guid CreateNote(Guid authorId, Guid groupId)
+    public Guid CreateNote(Guid groupId, Guid authorId)
     {
-        var author = DataHandler.FindObjectById(authorId, DataHandler.Instance.AllUsers);
         var group = DataHandler.FindObjectById(groupId, DataHandler.Instance.AllGroups);
-
-        if (author == null) throw new ObjectDoesNotExistException(authorId);
-        if (group == null) throw new ObjectDoesNotExistException(groupId);
-        
-        var note = _noteFactory.Create(authorId, groupId);
-        
+        var author = DataHandler.FindObjectById(authorId, DataHandler.Instance.AllUsers);
+        var note = _noteFactory.Create(authorId);
         DataHandler.Create(note);
         author.AddCreatedNote(note);
         group.AddNote(note);
@@ -91,13 +85,12 @@ public class NoteService : INoteService
         DataHandler.Instance.SaveChanges();
     }
 
-    public void DeleteNote(Guid userId, Guid noteId)
+    public void DeleteNote(Guid noteId, Guid userId)
     {
         var note = DataHandler.FindObjectById(noteId, DataHandler.Instance.AllNotes);
         var user = DataHandler.FindObjectById(userId, DataHandler.Instance.AllUsers);
-
+        
         var group = DataHandler.Instance.AllGroups.Values.FirstOrDefault(group => group.Notes.Contains(note));
-
         if (group == null) throw new ObjectDoesNotExistException();
 
         if (note.UserId != userId) throw new UnauthorizedAccessException();
@@ -106,18 +99,4 @@ public class NoteService : INoteService
         user.RemoveCreatedNote(note);
         DataHandler.Delete(note);
     }
-
-    private IEnumerable<string> ConvertToArray(string tagFilter)
-    {
-        if (string.IsNullOrEmpty(tagFilter)) return Enumerable.Empty<string>();
-        
-        var separators = new char[] {',', ';'};
-        return tagFilter.Split(separators, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
-    }
-}
-
-public enum SearchType
-{
-    All,
-    Any
 }
