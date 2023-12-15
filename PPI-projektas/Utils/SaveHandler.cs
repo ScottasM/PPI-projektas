@@ -19,14 +19,14 @@ namespace PPI_projektas.Utils
 
         public void Save()
         {
-            _context.SaveChanges();
+            _context.SaveChangesAsync();
         }
         
         
 
         public ConcurrentDictionary<Guid, Note> LoadNotes()
         {
-            var list = _context.Set<Note>().ToList();
+            var list = _context.Notes.Include(u => u.Tags).ToList();
             return new ConcurrentDictionary<Guid, Note>(list.Select(item => new KeyValuePair<Guid, Note>(((dynamic)item).Id, item)));
         }
         public ConcurrentDictionary<Guid, User> LoadUsers()
@@ -44,13 +44,13 @@ namespace PPI_projektas.Utils
         public void SaveObject<T>(T obj) where T : Entity
         {
             _context.Set<T>().Add(obj);
-            _context.SaveChanges();
+            _context.SaveChangesAsync();
         }
 
         public void RemoveObject<T>(T obj) where T : Entity
         {
             _context.Set<T>().Remove(obj);
-            _context.SaveChanges();
+            _context.SaveChangesAsync();
         }
     }
 }

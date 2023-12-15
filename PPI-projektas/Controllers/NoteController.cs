@@ -56,6 +56,7 @@ namespace PPI_projektas.Controllers
 
         [HttpPost("updateNote/{noteId:guid}")]
         public IActionResult UpdateNote(Guid noteId, [FromBody] NoteData noteData)
+        public IActionResult UpdateNote(Guid noteId, [FromBody] NoteData noteData)
         {
             try
             {
@@ -88,6 +89,19 @@ namespace PPI_projektas.Controllers
             catch (UnauthorizedAccessException)
             {
                 return Unauthorized();
+            }
+        }
+        
+        [HttpGet("searchTags/{groupId:guid}/{search}")]
+        public IActionResult SearchTags(Guid groupId, string search)
+        {
+            try
+            {
+                return Ok(_noteService.SearchTags(groupId, search));
+            }
+            catch (ObjectDoesNotExistException)
+            {
+                return NotFound();
             }
         }
     }

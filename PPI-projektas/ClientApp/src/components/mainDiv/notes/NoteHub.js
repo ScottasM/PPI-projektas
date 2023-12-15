@@ -6,48 +6,20 @@ import "./NoteHub.css"
 export class NoteHub extends Component {
     constructor(props) {
         super(props);
-    }
-    
-    state = {
-        mounted: false,
-        display: this.props.display,
-        noteName: '',
-        noteTags: [],
-        noteText: ''
+        this.state = {
+            mounted: false,
+            display: this.props.display,
+            error: '',
+            showDeleteMessage: true,
+        }
     }
     
     componentDidMount() {
         if (!this.state.mounted) {
-            this.fetchNote();
+            // this.fetchNote();
             this.setState({
                 mounted: true
             });
-        }
-    }
-
-    fetchNote = async () => {
-        try {
-            fetch(`http://localhost:5268/api/note/openNote/${this.props.noteId}/${this.props.currentUserId}`)
-                .then(async response => {
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok');
-                        
-                    }
-                    return await response.json();
-                })
-                .then(note => {
-                    this.setState({
-                        noteName: note.name,
-                        noteTags: note.tags,
-                        noteText: note.text,
-                    });
-                });
-        }
-    catch (error) {
-            this.setState({
-               error: error 
-            });
-            console.error('There was a problem with the fetch operation:', error);
         }
     }
     
@@ -57,7 +29,7 @@ export class NoteHub extends Component {
             noteTags: tags,
             noteText: text
         })
-    } 
+    }   
     
     changeDisplay = (display, error) => {
         this.setState({
@@ -65,39 +37,61 @@ export class NoteHub extends Component {
             error: error
         });
     }
+
+    handleDelete = async () => {
+        if(this.props.noteData === undefined)
+        {
+            this.props.handleClose();
+            return;
+        }
+        
+        if (this.state.showDeleteMessage) {
+            alert(`You're about to delete this note.`)
+            this.setState({
+                showDeleteMessage: false
+            });
+        } else fetch(`http://localhost:5268/api/note/deleteNote/${this.props.noteData.id}/${this.props.currentUserId}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+            .then(response => {
+                if (!response.ok)
+                    throw new Error('Network response was not ok');
+                this.props.handleClose();
+            })
+            .catch(error =>
+                console.log('There was a problem with the fetch operation:', error));
+    }
     
     render() {
         switch (this.state.display) {
             case 0:
                 return (
-                    <div className='noteHub'>
+                    <div className='note-hub'>
                         <p>{this.state.error}</p>
                     </div>
                 )
             case 1:
                 return (
-                    <div className='noteHub'>
+                    <div className='note-hub'>
                         <NoteViewer
-                            noteName={this.state.noteName}
-                            noteTags={this.state.noteTags}
-                            noteText={this.state.noteText}
-                            exitNote={this.props.exitNote}
+                            noteData={this.props.noteData}
                             changeDisplay={this.changeDisplay}
+                            deleteNote={this.handleDelete}
                         />
                     </div>
                 )
             case 2:
                 return (
-                    <div className='noteHub'>
+                    <div className='note-hub'>
                         <NoteEditor
-                            noteName={this.state.noteName}
-                            noteTags={this.state.noteTags}
-                            noteText={this.state.noteText}
-                            noteId={this.props.noteId}
-                            exitNote={this.props.exitNote}
+                            noteData={this.props.noteData}
+                            currentGroupId={this.props.currentGroupId}
                             currentUserId={this.props.currentUserId}
-                            transferChanges={this.transferChanges}
-                            changeDisplay={this.changeDisplay}
+                            changeDisplay={(display, error) => {this.changeDisplay(display, error); this.props.fetchNotes()}}
+                            deleteNote={this.handleDelete}
                         />
                     </div>
                 )

@@ -11,13 +11,13 @@ namespace PPI_projektas.Services;
 public class NoteService : INoteService
 {
     private readonly IObjectDataItemFactory _objectDataItemFactory;
-    private readonly IOpenedNoteDataFactory _openedNoteDataFactory;
+    private readonly INoteDataFactory _noteDataFactory;
     private readonly INoteFactory _noteFactory;
 
-    public NoteService(IObjectDataItemFactory objectDataItemFactory, IOpenedNoteDataFactory openedNoteDataFactory, INoteFactory noteFactory)
+    public NoteService(IObjectDataItemFactory objectDataItemFactory, INoteDataFactory noteDataFactory, INoteFactory noteFactory)
     {
         _objectDataItemFactory = objectDataItemFactory;
-        _openedNoteDataFactory = openedNoteDataFactory;
+        _noteDataFactory = noteDataFactory;
         _noteFactory = noteFactory;
     }
 
@@ -89,6 +89,8 @@ public class NoteService : INoteService
         note.Name = name;
         note.Tags = tags.Select(tag => new Tag(tag)).ToList();
         note.Text = text;
+        
+        DataHandler.Instance.SaveChanges();
         
         DataHandler.Instance.SaveChanges();
     }

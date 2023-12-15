@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PPI_projektas.Utils;
 
@@ -10,9 +11,11 @@ using PPI_projektas.Utils;
 namespace PPI_projektas.Migrations
 {
     [DbContext(typeof(EntityData))]
-    partial class EntityDataModelSnapshot : ModelSnapshot
+    [Migration("20231211173234_letsgetschwifty4")]
+    partial class letsgetschwifty4
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -47,6 +50,26 @@ namespace PPI_projektas.Migrations
                     b.HasIndex("FavoriteNotesId");
 
                     b.ToTable("NoteUser");
+                });
+
+            modelBuilder.Entity("PPI_projektas.objects.EntityStrings", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<Guid?>("NoteId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<string>("value")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NoteId");
+
+                    b.ToTable("EntityStrings");
                 });
 
             modelBuilder.Entity("PPI_projektas.objects.Group", b =>
@@ -101,26 +124,6 @@ namespace PPI_projektas.Migrations
                     b.ToTable("Notes");
                 });
 
-            modelBuilder.Entity("PPI_projektas.objects.Tag", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("char(36)");
-
-                    b.Property<Guid?>("NoteId")
-                        .HasColumnType("char(36)");
-
-                    b.Property<string>("Value")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("NoteId");
-
-                    b.ToTable("Tags");
-                });
-
             modelBuilder.Entity("PPI_projektas.objects.User", b =>
                 {
                     b.Property<Guid>("Id")
@@ -173,6 +176,13 @@ namespace PPI_projektas.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("PPI_projektas.objects.EntityStrings", b =>
+                {
+                    b.HasOne("PPI_projektas.objects.Note", null)
+                        .WithMany("Tags")
+                        .HasForeignKey("NoteId");
+                });
+
             modelBuilder.Entity("PPI_projektas.objects.Group", b =>
                 {
                     b.HasOne("PPI_projektas.objects.User", "Owner")
@@ -201,13 +211,6 @@ namespace PPI_projektas.Migrations
                     b.Navigation("Group");
 
                     b.Navigation("User");
-                });
-
-            modelBuilder.Entity("PPI_projektas.objects.Tag", b =>
-                {
-                    b.HasOne("PPI_projektas.objects.Note", null)
-                        .WithMany("Tags")
-                        .HasForeignKey("NoteId");
                 });
 
             modelBuilder.Entity("PPI_projektas.objects.Group", b =>

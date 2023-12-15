@@ -12,6 +12,7 @@ namespace PPI_projektas.Utils
             var connectionString = "server=185.34.52.6;user=NotesApp;password=AlioValioIrInternetas;database=NotesApp";
             var serverVersion = MariaDbServerVersion.AutoDetect(connectionString);
             optionsBuilder.UseMySql(connectionString, serverVersion);
+            optionsBuilder.AddInterceptors(new LastEditTimeInterceptor());
         }
         public  EntityData(DbContextOptions<EntityData> options) : base(options) { Database.EnsureCreated(); }
 
@@ -51,6 +52,10 @@ namespace PPI_projektas.Utils
 
             modelBuilder.Entity<Note>()
                 .HasMany(n => n.Tags);
+
+            modelBuilder.Entity<Group>()
+                .HasOne(g => g.Owner)
+                .WithMany(u => u.OwnedGroups);
 
         }
     }

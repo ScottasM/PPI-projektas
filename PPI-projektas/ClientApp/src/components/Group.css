@@ -1,23 +1,21 @@
 ﻿.group {
+    background-color: var(--button-main-color);
     width: 50px;
     aspect-ratio: 1/1;
     display: flex;
     justify-content: center;
     align-items: center;
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: .8px;
+    line-height: 20px;
+    color: #FFFFFF;
+    text-shadow: 0.5px 0.5px 3px #000;
 }
 
 .group p {
     margin: 0;
     line-height: 1;
-}
-
-.groupCreateMenu {
-    width: 600px;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background-color: #1899D6;
-    overflow: hidden;
 }
 
 .group-container {
@@ -46,9 +44,10 @@
     justify-content: space-between;
     align-items: center;
 }
-    
+
 .context-menu ul li:hover {
     background-color: #1899D6;
+    border-radius: 8px;
 }
 
 .context-button {
@@ -61,13 +60,13 @@
 }
 
 .scroll-container {
+    margin-top: 10px;
+    margin-bottom: 5px;
     height: fit-content;
     white-space: nowrap;
     display: inline-block;
     flex-direction: row;
-
     transition: transform 0.3s ease;
-    
     scrollbar-width: none;
     -webkit-scrollbar-width: none;
 }
@@ -80,13 +79,14 @@
     flex: 0 0 auto;
     padding-left: 5px;
     padding-right: 5px;
-    background-color: #f0f0f0;
+    background-color: var(--bg-color);
     border: 1px solid #ccc;
     margin-right: 10px;
     color: black;
     white-space: normal;
     display: inline-block;
     flex-direction: row;
+    border-radius: 8px;
 }
 
 .item-content {

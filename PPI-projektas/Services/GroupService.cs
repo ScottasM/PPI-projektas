@@ -31,6 +31,7 @@ public class GroupService : IGroupService
         var group = DataHandler.FindObjectById(groupId, DataHandler.Instance.AllGroups);
 
         var users = group.Members
+            .Where(user => user != group.Owner)
             .Select(user => _objectDataItemFactory.Create(user.Id, user.GetUsername()))
             .ToList();
 

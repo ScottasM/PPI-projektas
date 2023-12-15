@@ -8,7 +8,7 @@ export class CreatingNotesButton extends Component {
     
     render() {
         return (
-        <div className='createNoteDiv'>
+        <div className='create-note-div'>
             <button className='create-button' onClick={this.props.handleCreateNote}>
                 Create New Note
             </button>

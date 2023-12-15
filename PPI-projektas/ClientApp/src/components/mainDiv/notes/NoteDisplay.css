@@ -1,32 +1,18 @@
-﻿.noteDisplay {
-    margin-left: 75px;
-    display: grid;
+﻿.note-display {
+    padding-left: 75px;
+    width: 100%;
+    white-space: nowrap;
+    display: inline-flex;
+    flex-direction: row;
+    overflow-x: scroll;
 }
 
-.noteList {
+.note-list {
     list-style-type: none;
     margin: 0;
     padding: 0;
 }
 
-.noteDisplayElement {
+.note-display-element {
     font-size: 25px;
-}
-
-.searchDiv {
-    margin: 0 auto;
-}
-
-.searchBar {
-    width: 50%;
-    display: inline-block;
-}
-
-.tagFilterOptions {
-    margin: 0 auto;
-    display: inline-block;
-}
-
-.tagFilterLabel {
-    margin-right: 5px;
 }

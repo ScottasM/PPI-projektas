@@ -1,21 +1,24 @@
 ﻿import React, {Component} from 'react';
 import './NoteDisplay.css'
-import {NoteDisplayElement} from './NoteDisplayElement'
+import {Note} from "./Note";
+import {NoteHub} from "./NoteHub";
 
 export class NoteDisplay extends Component {
     constructor(props) {
         super(props)
+        this.state = {
+            mounted: false,
+            notes: [],
+            isLoading: true,
+            selectedNote: 0,
+            //defaultCheck: true,
+            //searchType: 0,
+            //tagFilter: '',
+            //nameFilter: ''
+        }
     }
-        
-    state = {
-        mounted: false,
-        notes: [],
-        isLoading: true,
-        defaultCheck: true,
-        searchType: 0,
-        tagFilter: '',
-        nameFilter: ''
-    }
+
+    noteHubRef = React.createRef();
     
     componentDidMount() {
         if (!this.state.mounted)
@@ -25,7 +28,14 @@ export class NoteDisplay extends Component {
                 mounted: true
             });
         }
+
+        document.addEventListener('click', this.handleGlobalClick);
     }
+
+    componentWillUnmount() {
+        document.removeEventListener('click', this.handleGlobalClick);
+    }
+
 
     componentDidUpdate(prevProps) {
         if (this.props.currentGroupId !== prevProps.currentGroupId) {
@@ -47,9 +57,13 @@ export class NoteDisplay extends Component {
                 return await response.json();
             })
             .then(data => {
-                const notes = data.map(note => ({
+                const notes = data
+                    .filter(note => note.name !== null)
+                    .map(note => ({
+                    id: note.id,
                     name: note.name,
-                    id: note.id
+                    tags: note.tags === null ? [] : note.tags,
+                    text: note.text,
                 }));
                 this.setState({
                     notes: notes,
@@ -58,76 +72,121 @@ export class NoteDisplay extends Component {
             })
             .catch(error =>
                 console.error('There was a problem with the fetch operation:', error));
+        
+        if(this.props.createNote)
+            this.props.noteCreated();
     }
     
-    handleNameFilterChange = (event) => {
+    handleNoteSelect = (event, noteId) => {
         this.setState({
-            nameFilter: event.target.value
+            selectedNote: noteId,
         })
-    }
-    
-    handleTagFilterChange = (event) => {
-        this.setState({
-            tagFilter: event.target.value
-        })
+        event.stopPropagation();
     }
 
-    handleTypeChange = (event) => {
-        if (event.target.value === "Any")
+    handleGlobalClick = (event) => {
+        const noteCard = document.querySelector('.note-card.selected');
+        const isNoteHubClick = event.target.closest('.note-hub');
+        const isNoCloseButtonClick = event.target.classList.contains('no-close-button');
+        
+        if (noteCard && !noteCard.contains(event.target) && !isNoteHubClick && !isNoCloseButtonClick) {
             this.setState({
-                searchType: 1 
-            })
-        else
-            this.setState({
-                searchType: 0
-            })
-    }
-    
-    handleSearch = () => {
-        this.setState({
-            isLoading: true,
-            defaultCheck: true,
-            tagFilter: [],
-            searchType: 0,
-            nameFilter: ''
-        })
-        this.fetchNotes();
-    }
+                selectedNote: 0,
+            });
+        }
+    };
 
+    //handleNameFilterChange = (event) => {
+    //    this.setState({
+    //        nameFilter: event.target.value
+    //    })
+    //}
+    //
+    //handleTagFilterChange = (event) => {
+    //    this.setState({
+    //        tagFilter: event.target.value
+    //    })
+    //}
+//
+    //handleTypeChange = (event) => {
+    //    if (event.target.value === "Any")
+    //        this.setState({
+    //            searchType: 1 
+    //        })
+    //    else
+    //        this.setState({
+    //            searchType: 0
+    //        })
+    //}
+    //
+    //handleSearch = () => {
+    //    this.setState({
+    //        isLoading: true,
+    //        defaultCheck: true,
+    //        tagFilter: [],
+    //        searchType: 0,
+    //        nameFilter: ''
+    //    })
+    //    this.fetchNotes();
+    //}
+    
     render() {
+        const {selectedNote, notes} = this.state;
+        
         return (
-            <div className="noteDisplay">
-                <div className='searchDiv'>
-                    <input className='searchBar' type='search' value={this.state.nameFilter} onChange={this.handleNameFilterChange}></input>
-                    <button onClick={this.handleSearch}>Search</button>
-                    <br/>
-                    <input className='searchBar' type='search' value={this.state.tagFilter} onChange={this.handleTagFilterChange}></input>
-                    <br/>
-                    <div className='tagFilterOptions'>
-                        <label className='tagFilterLabel'>
-                            All
-                            <input type='radio' name='searchType' value='All' defaultChecked={this.state.defaultCheck} onClick={this.handleTypeChange}></input>
-                        </label>
-                        <label className='tagFilterOptions'>
-                            Any
-                            <input type='radio' name='searchType' value='Any' onClick={this.handleTypeChange}></input>
-                        </label>
-                    </div>
+            <div>
+                <div className="note-display">
+                    {this.props.currentGroupId ?
+                        (this.state.isLoading ? (
+                            <p>Loading...</p>
+                        ) : notes.length > 0 ? (
+                            notes.map((note) => (
+                                <Note
+                                    key={note.id}
+                                    noteData={note}
+                                    handleSelect={this.handleNoteSelect}
+                                />
+                            ))
+                        ) : (
+                            <p>No notes found.</p>
+                        )) : (
+                            <p>Please select a group</p>
+                        )
+                    }
                 </div>
-                {this.state.isLoading
-                    ? <p>Loading...</p>
-                    : this.state.notes.length > 0
-                        ? this.state.notes.map((note) => (
-                            <NoteDisplayElement
-                                noteName={note.name}
-                                noteId={note.id}
-                                openNote={this.props.openNote}
-                                key={note.id}
-                            />
-                        ))
-                        : <p>No notes found.</p>
+                {(selectedNote !== 0 || this.props.createNote) &&
+                    <NoteHub
+                        display={selectedNote !== 0 ? 1 : 2}
+                        ref={this.noteHubRef}
+                        noteData={notes.find(note => note.id === selectedNote)}
+                        currentGroupId={this.props.currentGroupId}
+                        currentUserId={this.props.currentUserId}
+                        fetchNotes={this.fetchNotes}
+                        handleClose={() => this.setState({selectedNote: 0}, () => {
+                            this.fetchNotes();
+                        })}
+                        
+                    />
                 }
             </div>
         )
     }
 }
+
+//<div className='searchDiv'>
+//                    <input className='searchBar' type='search' value={this.state.nameFilter} onChange={this.handleNameFilterChange}></input>
+//                    <button onClick={this.handleSearch}>Search</button>
+//                    <br/>
+//                    <input className='searchBar' type='search' value={this.state.tagFilter} onChange={this.handleTagFilterChange}></input>
+//                    <br/>
+//                    <div className='tagFilterOptions'>
+//                        <label className='tagFilterLabel'>
+//                            All
+//                            <input type='radio' name='searchType' value='All' defaultChecked={this.state.defaultCheck} onClick={this.handleTypeChange}></input>
+//                        </label>
+//                        <label className='tagFilterOptions'>
+//                            Any
+//                            <input type='radio' name='searchType' value='Any' onClick={this.handleTypeChange}></input>
+//                        </label>
+//                    </div>
+//                </div>
