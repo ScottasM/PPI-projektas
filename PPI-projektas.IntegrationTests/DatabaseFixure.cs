@@ -10,7 +10,7 @@ namespace PPI_projektas.IntegrationTests
         public DatabaseFixture()
         {
             var builder = WebApplication.CreateBuilder();
-            var connectionString = "server=185.34.52.6;user=NotesApp;password=AlioValioIrInternetas;database=NotesApp";
+            var connectionString = "server=localhost;user=NotesApp;password=AlioValioIrInternetas;database=NotesApp";
             var serverVersion = MariaDbServerVersion.AutoDetect(connectionString);
 
             DataHandler dataHandler = new DataHandler(connectionString);

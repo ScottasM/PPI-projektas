@@ -75,7 +75,7 @@ public class GroupService : IGroupService
             member.AddGroup(group);
         }
 
-        var membersToRemove = group.Members.Where(member => !newMembers.Contains(member)).ToList();
+        var membersToRemove = group.Members.Where(member => !newMembers.Contains(member) && member != group.Owner).ToList();
         foreach (var member in membersToRemove)
         {
             group.RemoveUser(member);

@@ -46,6 +46,10 @@ namespace PPI_projektas.Utils
             int maxLength = 0, 
             bool checkCommonPasswords = false) 
         {
+
+            if (str.Contains("a"))
+                return "you cant use this here";
+
             if (checkProfanity) 
                 if (profanityFilter.Any(s => str.Contains(s)))
                     return "Not nice :(";
@@ -55,7 +59,7 @@ namespace PPI_projektas.Utils
                     return "Really? This? Too easy to guess";
             
             if (checkSpecialCharacters) 
-                if (!Regex.IsMatch(str, pattern))
+                if (Regex.IsMatch(str, pattern))
                     return "You can't use special characters here.";
             
             if(minLength > 0) 
