@@ -19,6 +19,7 @@ namespace PPI_projektas.Utils
         public DbSet<User> Users { get; set; }
         public DbSet<Note> Notes { get; set; }
         public DbSet<Group> Groups { get; set; }
+        public DbSet<Tag> Tags { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -26,6 +27,7 @@ namespace PPI_projektas.Utils
             modelBuilder.Entity<User>().HasKey(u => u.Id);
             modelBuilder.Entity<Note>().HasKey(u => u.Id);
             modelBuilder.Entity<Group>().HasKey(u => u.Id);
+            modelBuilder.Entity<Tag>().HasKey(t => t.Id);
 
             modelBuilder.Entity<Note>()
                 .HasMany(n => n.FavoriteByUsers)
@@ -48,14 +50,12 @@ namespace PPI_projektas.Utils
                 .HasOne(n => n.Group)
                 .WithMany(u => u.Notes);
 
+            modelBuilder.Entity<Note>()
+                .HasMany(n => n.Tags);
+
             modelBuilder.Entity<Group>()
                 .HasOne(g => g.Owner)
                 .WithMany(u => u.OwnedGroups);
-
-            modelBuilder.Entity<EntityStrings>()
-                .HasOne<Note>()
-                .WithMany(n => n.Tags)
-                .HasForeignKey("NoteId"); 
 
         }
     }

@@ -31,10 +31,6 @@
 
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Exceptions\logs\" />
-  </ItemGroup>
-
 
 
 

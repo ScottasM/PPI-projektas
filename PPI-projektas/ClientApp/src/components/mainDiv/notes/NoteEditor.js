@@ -11,7 +11,7 @@ export class NoteEditor extends Component {
             id: this.props.noteData === undefined ? 0 : this.props.noteData.id,
             name: this.props.noteData === undefined ? '' : this.props.noteData.name,
             text: this.props.noteData === undefined ? '' : this.props.noteData.text,
-            tags: this.props.noteData === undefined ? [] : this.props.noteData.tags,
+            tags: this.props.noteData === undefined ? [] : (this.props.noteData.tags == null ? [] : this.props.noteData.tags),
             saved: true,
             showNotSavedMessage: false,
             showTagSearch: false,
@@ -62,7 +62,7 @@ export class NoteEditor extends Component {
         const noteData = {
             Id: this.props.currentUserId,
             Name: this.state.name,
-            Tags: this.state.tags === 0 ? [] : this.state.tags,
+            Tags: this.state.tags == null ? [] : this.state.tags,
             Text: this.state.text
         };
 
@@ -197,11 +197,11 @@ export class NoteEditor extends Component {
                     />
                 </div>
                 <div className="note-tags">
-                    {tags.slice(0, maxVisibleTags).map(tag => (
+                    {tags != null && tags.slice(0, maxVisibleTags).map(tag => (
                         <span className="cursor-pointer" key={tag} onClick={() => this.handleDeleteTag(tag)}>{tag}</span>
                         )
                     )}
-                    {tags.length > maxVisibleTags && (
+                    {tags != null && tags.length > maxVisibleTags && (
                         <span key="ellipsis">...</span>
                     )}
                     <span className="cursor-pointer" onClick={this.toggleTagSearch}>+</span>

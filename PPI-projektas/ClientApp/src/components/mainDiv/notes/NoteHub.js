@@ -2,7 +2,6 @@
 import {NoteViewer} from "./NoteViewer";
 import {NoteEditor} from "./NoteEditor";
 import "./NoteHub.css"
-import {NoteDisplay} from "./NoteDisplay";
 
 export class NoteHub extends Component {
     constructor(props) {

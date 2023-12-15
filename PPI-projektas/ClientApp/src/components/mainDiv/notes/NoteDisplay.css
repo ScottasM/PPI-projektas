@@ -16,3 +16,16 @@
 .note-display-element {
     font-size: 25px;
 }
+
+.note-search {
+    padding-top: 10px;
+    padding-left: 75px;
+    width: 100%;
+    white-space: nowrap;
+    display: inline-block;
+    text-align: center;
+}
+
+.note-search-bar {
+    margin-right: 15px;
+}
