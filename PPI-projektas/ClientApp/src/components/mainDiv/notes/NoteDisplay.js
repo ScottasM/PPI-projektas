@@ -11,10 +11,10 @@ export class NoteDisplay extends Component {
             notes: [],
             isLoading: true,
             selectedNote: 0,
-            //defaultCheck: true,
-            //searchType: 0,
-            //tagFilter: '',
-            //nameFilter: ''
+            defaultCheck: true,
+            searchType: 0,
+            tagFilter: '',
+            nameFilter: ''
         }
     }
 
@@ -96,45 +96,61 @@ export class NoteDisplay extends Component {
         }
     };
 
-    //handleNameFilterChange = (event) => {
-    //    this.setState({
-    //        nameFilter: event.target.value
-    //    })
-    //}
-    //
-    //handleTagFilterChange = (event) => {
-    //    this.setState({
-    //        tagFilter: event.target.value
-    //    })
-    //}
-//
-    //handleTypeChange = (event) => {
-    //    if (event.target.value === "Any")
-    //        this.setState({
-    //            searchType: 1 
-    //        })
-    //    else
-    //        this.setState({
-    //            searchType: 0
-    //        })
-    //}
-    //
-    //handleSearch = () => {
-    //    this.setState({
-    //        isLoading: true,
-    //        defaultCheck: true,
-    //        tagFilter: [],
-    //        searchType: 0,
-    //        nameFilter: ''
-    //    })
-    //    this.fetchNotes();
-    //}
+    handleNameFilterChange = (event) => {
+        this.setState({
+            nameFilter: event.target.value
+        })
+    }
+    
+    handleTagFilterChange = (event) => {
+        this.setState({
+            tagFilter: event.target.value
+        })
+    }
+
+    handleTypeChange = (event) => {
+        if (event.target.value === "Any")
+            this.setState({
+                searchType: 1 
+            })
+        else
+            this.setState({
+                searchType: 0
+            })
+    }
+    
+    handleSearch = () => {
+        this.setState({
+            isLoading: true,
+            defaultCheck: true,
+            tagFilter: [],
+            searchType: 0,
+            nameFilter: ''
+        })
+        this.fetchNotes();
+    }
     
     render() {
         const {selectedNote, notes} = this.state;
         
         return (
             <div>
+                <div className='note-search'>
+                    <div className='note-search-bar'>
+                        <input type='search' value={this.state.nameFilter} onChange={this.handleNameFilterChange}></input>
+                        <br/>
+                        <input type='search' value={this.state.tagFilter} onChange={this.handleTagFilterChange}></input>
+                    </div>
+                    <button className='create-button' onClick={this.handleSearch}>Search</button>
+                        <label className='tagFilterLabel'>
+                            All
+                            <input type='radio' name='searchType' value='All' defaultChecked={this.state.defaultCheck} onClick={this.handleTypeChange}></input>
+                        </label>
+                        <label className='tagFilterOptions'>
+                            Any
+                            <input type='radio' name='searchType' value='Any' onClick={this.handleTypeChange}></input>
+                        </label>
+                </div>
                 <div className="note-display">
                     {this.props.currentGroupId ?
                         (this.state.isLoading ? (
@@ -173,20 +189,3 @@ export class NoteDisplay extends Component {
     }
 }
 
-//<div className='searchDiv'>
-//                    <input className='searchBar' type='search' value={this.state.nameFilter} onChange={this.handleNameFilterChange}></input>
-//                    <button onClick={this.handleSearch}>Search</button>
-//                    <br/>
-//                    <input className='searchBar' type='search' value={this.state.tagFilter} onChange={this.handleTagFilterChange}></input>
-//                    <br/>
-//                    <div className='tagFilterOptions'>
-//                        <label className='tagFilterLabel'>
-//                            All
-//                            <input type='radio' name='searchType' value='All' defaultChecked={this.state.defaultCheck} onClick={this.handleTypeChange}></input>
-//                        </label>
-//                        <label className='tagFilterOptions'>
-//                            Any
-//                            <input type='radio' name='searchType' value='Any' onClick={this.handleTypeChange}></input>
-//                        </label>
-//                    </div>
-//                </div>

@@ -56,7 +56,6 @@ namespace PPI_projektas.Controllers
 
         [HttpPost("updateNote/{noteId:guid}")]
         public IActionResult UpdateNote(Guid noteId, [FromBody] NoteData noteData)
-        public IActionResult UpdateNote(Guid noteId, [FromBody] NoteData noteData)
         {
             try
             {

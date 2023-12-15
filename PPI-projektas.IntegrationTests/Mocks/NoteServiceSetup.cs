@@ -14,7 +14,7 @@ namespace PPI_projektas.IntegrationTests.Mocks
             var mockODIF = new Mock<IObjectDataItemFactory>();
             mockODIF.Setup(x => x.Create(It.IsAny<Guid>(), It.IsAny<string>())).Returns((Guid a, string b) => new ObjectDataItem(a, b));
 
-            var mockONDF = new Mock<IOpenedNoteDataFactory>();
+            var mockONDF = new Mock<INoteDataFactory>();
             mockONDF.Setup(x => x.Create(It.IsAny<string>(), It.IsAny<List<EntityStrings>>(), It.IsAny<string>())).Returns((string a, List<EntityStrings> b, string c) => new OpenedNoteData(a, b, c));
 
             var mockNF = new Mock<INoteFactory>();

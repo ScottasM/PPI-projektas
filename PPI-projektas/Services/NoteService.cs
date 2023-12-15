@@ -4,7 +4,6 @@ using PPI_projektas.objects.Factories;
 using PPI_projektas.objects;
 using PPI_projektas.Services.Response;
 using PPI_projektas.Utils;
-using PPI_projektas.objects;
 
 namespace PPI_projektas.Services;
 
@@ -21,7 +20,7 @@ public class NoteService : INoteService
         _noteFactory = noteFactory;
     }
 
-    public IEnumerable<ObjectDataItem> GetNotes(Guid userId, SearchType searchType, string? tagFilter, string? nameFilter, Guid? groupId)
+    public IEnumerable<NoteData> GetNotes(Guid userId, SearchType searchType, string? tagFilter, string? nameFilter, Guid? groupId)
     {
         var userGroupIds = groupId == null
             ? DataHandler.FindObjectById(userId, DataHandler.Instance.AllUsers)
@@ -45,7 +44,7 @@ public class NoteService : INoteService
             })
             .If(!string.IsNullOrEmpty(nameFilter), query =>
                 query.Where(note => note.Name.Contains(nameFilter)))
-            .Select(note => _objectDataItemFactory.Create(note.Id, note.Name));
+            .Select(note => _noteDataFactory.Create(note.Id, note.Name, note.Tags.Select(tag => tag.Value).ToList(), note.Text));
     }
     
     public NoteData GetNote(Guid userId, Guid noteId)
@@ -61,7 +60,7 @@ public class NoteService : INoteService
 
         var tags = note.Tags?.Any() == null ? new List<Tag>() : note.Tags;
         
-        return _openedNoteDataFactory.Create(note.Id, note.Name, tags, note.Text);
+        return _noteDataFactory.Create(note.Id, note.Name, tags.Select(tag => tag.Value).ToList(), note.Text);
     }
 
     public Guid CreateNote(Guid authorId, Guid groupId)
@@ -89,9 +88,7 @@ public class NoteService : INoteService
         note.Name = name;
         note.Tags = tags.Select(tag => new Tag(tag)).ToList();
         note.Text = text;
-        
-        DataHandler.Instance.SaveChanges();
-        
+
         DataHandler.Instance.SaveChanges();
     }
 
@@ -117,6 +114,28 @@ public class NoteService : INoteService
         
         var separators = new char[] {',', ';'};
         return tagFilter.Split(separators, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+    }
+
+    public List<string> SearchTags(Guid groupId, string search)
+    {
+        var group = DataHandler.FindObjectById(groupId, DataHandler.Instance.AllGroups);
+
+        var tags = new List<string>();
+
+        foreach (var note in group.Notes)
+        {
+            if (note.Tags == null)
+                continue;
+            var uniqueValues = note.Tags
+                .Where(tag => tag.Value.Contains(search))
+                .Select(tag => tag.Value)
+                .Except(tags)
+                .ToList();
+            
+            tags.AddRange(uniqueValues);
+        }
+
+        return tags;
     }
 }
 

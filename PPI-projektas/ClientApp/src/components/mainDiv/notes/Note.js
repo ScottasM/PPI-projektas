@@ -16,11 +16,11 @@ export class Note extends Component {
                     <p>{noteData.name}</p>
                 </div>
                 <div className="note-tags">
-                    {noteData.tags.slice(0, maxVisibleTags).map(tag => (
+                    {noteData.tags != null && noteData.tags.length > 0 && noteData.tags.slice(0, maxVisibleTags).map(tag => (
                         <span>{tag}</span>
                         )
                     )}
-                    {noteData.tags.length > maxVisibleTags && (
+                    {noteData.tags != null && noteData.tags.length > maxVisibleTags && (
                         <span key="ellipsis">...</span>
                     )}
                 </div>

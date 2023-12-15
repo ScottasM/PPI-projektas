@@ -2,16 +2,16 @@ using PPI_projektas.objects;
 
 namespace PPI_projektas.Services.Response;
 
-public interface IOpenedNoteDataFactory
+public interface INoteDataFactory
 {
-    NoteData Create(Guid id, string name, List<Tag> tags, string text);
+    NoteData Create(Guid id, string name, List<string> tags, string text);
 }
 
-public class OpenedNoteDataFactory : IOpenedNoteDataFactory
+public class NoteDataFactory : INoteDataFactory
 {
-    public NoteData Create(Guid id, string name, List<Tag> tags, string text)
+    public NoteData Create(Guid id, string name, List<string> tags, string text)
     {
-        return new NoteData(id, name, tags.Select(tag => tag.Value).ToList(), text);
+        return new NoteData(id, name, tags, text);
     }
 }
 
