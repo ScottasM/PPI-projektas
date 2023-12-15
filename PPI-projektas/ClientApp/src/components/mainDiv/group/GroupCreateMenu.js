@@ -36,7 +36,7 @@ export class GroupCreateMenu extends Component {
 
     handleMemberGet = async () => {
         try {
-            const response = await fetch(`http://185.34.52.6:5268/api/group/group-members/${this.props.toggledGroup.id}`);
+            const response = await fetch(`http://localhost:5268/api/group/group-members/${this.props.toggledGroup.id}`);
             if (!response.ok) {
                 throw new Error('Network response was not ok');
             }
@@ -86,7 +86,7 @@ export class GroupCreateMenu extends Component {
            groupData.groupId = this.props.toggledGroup.id;
        }
 
-       await fetch(`http://185.34.52.6:5268/api/group/${this.props.configType}group`, { // temporary localhost api url
+       await fetch(`http://localhost:5268/api/group/${this.props.configType}group`, { // temporary localhost api url
            method: this.props.configType === 'create' ? 'POST' : 'PUT',
            headers: {
                'Content-Type': 'application/json',

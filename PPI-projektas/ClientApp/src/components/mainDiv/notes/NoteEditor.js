@@ -22,7 +22,7 @@ export class NoteEditor extends Component {
 
     handleCreateNote = async () => {
         try {
-            const response = await fetch(`http://185.34.52.6:5268/api/note/createNote/${this.props.currentGroupId}/${this.props.currentUserId}`, {
+            const response = await fetch(`http://localhost:5268/api/note/createNote/${this.props.currentGroupId}/${this.props.currentUserId}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -67,7 +67,7 @@ export class NoteEditor extends Component {
         };
 
         try {
-            const response = await fetch(`http://185.34.52.6:5268/api/note/updateNote/${this.state.id}`, {
+            const response = await fetch(`http://localhost:5268/api/note/updateNote/${this.state.id}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -164,7 +164,7 @@ export class NoteEditor extends Component {
 
     handleTagGet = async () => {
         try {
-            const response = await fetch(`http://185.34.52.6:5268/api/note/searchTags/${this.props.currentGroupId}/${this.state.tagSearch}`);
+            const response = await fetch(`http://localhost:5268/api/note/searchTags/${this.props.currentGroupId}/${this.state.tagSearch}`);
             if (!response.ok) {
                 throw new Error('Network response was not ok');
             }

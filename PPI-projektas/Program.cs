@@ -22,7 +22,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews();
 
-var connectionString = "server=localhost;user=NotesApp;password=AlioValioIrInternetas;database=NotesApp";//builder.Configuration.GetConnectionString("DefaultConnection");
+var connectionString = "server=185.34.52.6;user=NotesApp;password=AlioValioIrInternetas;database=NotesApp";//builder.Configuration.GetConnectionString("DefaultConnection");
 
 Console.WriteLine(connectionString);
 
@@ -57,7 +57,7 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowLocalhost", builder =>
     {
-        builder.WithOrigins("http://185.34.52.6:44488")
+        builder.WithOrigins("http://localhost:44488")
             .AllowAnyHeader()
             .AllowAnyMethod();
     });

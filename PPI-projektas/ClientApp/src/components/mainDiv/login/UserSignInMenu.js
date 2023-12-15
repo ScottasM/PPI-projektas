@@ -44,7 +44,7 @@ export class UserSignInMenu extends Component {
             password: password,
         };
 
-        await fetch(`http://185.34.52.6:5268/api/Authentication/tryregister`, {
+        await fetch(`http://localhost:5268/api/Authentication/tryregister`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
