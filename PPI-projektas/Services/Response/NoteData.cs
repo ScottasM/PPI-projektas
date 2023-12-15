@@ -18,8 +18,9 @@ public class NoteDataFactory : INoteDataFactory
 public struct NoteData
 {
     public Guid Id { get; set; }
+    
     public string Name { get; set; }
-        
+    
     public List<string> Tags { get; set; }
 
     public string Text { get; set; }

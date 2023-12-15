@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PPI_projektas.Utils;
 
@@ -10,9 +11,11 @@ using PPI_projektas.Utils;
 namespace PPI_projektas.Migrations
 {
     [DbContext(typeof(EntityData))]
-    partial class EntityDataModelSnapshot : ModelSnapshot
+    [Migration("20231215013134_renameEntityStringsToTags")]
+    partial class renameEntityStringsToTags
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -176,7 +179,7 @@ namespace PPI_projektas.Migrations
             modelBuilder.Entity("PPI_projektas.objects.Group", b =>
                 {
                     b.HasOne("PPI_projektas.objects.User", "Owner")
-                        .WithMany("OwnedGroups")
+                        .WithMany()
                         .HasForeignKey("OwnerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -223,8 +226,6 @@ namespace PPI_projektas.Migrations
             modelBuilder.Entity("PPI_projektas.objects.User", b =>
                 {
                     b.Navigation("CreatedNotes");
-
-                    b.Navigation("OwnedGroups");
                 });
 #pragma warning restore 612, 618
         }

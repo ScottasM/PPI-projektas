@@ -11,6 +11,10 @@ export class NoteDisplay extends Component {
             notes: [],
             isLoading: true,
             selectedNote: 0,
+            defaultCheck: true,
+            searchType: 0,
+            tagFilter: '',
+            nameFilter: ''
         }
     }
 
@@ -40,11 +44,13 @@ export class NoteDisplay extends Component {
     }
 
     fetchNotes = async () => {
-        if(this.props.currentGroupId === 0){
-            return;
-        }
+        const parameters = `search?UserId=${this.props.currentUserId}`
+            + `&SearchType=${this.state.searchType}`
+            + (this.state.tagFilter !== '' ? `&TagFilter=${this.state.tagFilter}` : '')
+            + (this.state.nameFilter !== '' ? `&NameFilter=${this.state.nameFilter}` : '')
+            + (this.props.currentGroupId !== 0 ? `&GroupId=${this.props.currentGroupId}` : '');
         
-        fetch(`http://localhost:5268/api/note/${this.props.currentGroupId}`)
+        fetch(`http://localhost:5268/api/note/` + parameters)
             .then(async response => {
                 if (!response.ok)
                     throw new Error(`Network response was not ok`);
@@ -89,12 +95,62 @@ export class NoteDisplay extends Component {
             });
         }
     };
+
+    handleNameFilterChange = (event) => {
+        this.setState({
+            nameFilter: event.target.value
+        })
+    }
+    
+    handleTagFilterChange = (event) => {
+        this.setState({
+            tagFilter: event.target.value
+        })
+    }
+
+    handleTypeChange = (event) => {
+        if (event.target.value === "Any")
+            this.setState({
+                searchType: 1 
+            })
+        else
+            this.setState({
+                searchType: 0
+            })
+    }
+    
+    handleSearch = () => {
+        this.setState({
+            isLoading: true,
+            defaultCheck: true,
+            tagFilter: [],
+            searchType: 0,
+            nameFilter: ''
+        })
+        this.fetchNotes();
+    }
     
     render() {
         const {selectedNote, notes} = this.state;
         
         return (
             <div>
+                <div className='note-search'>
+                    <div className='note-search-bar'>
+                        <input type='search' value={this.state.nameFilter} onChange={this.handleNameFilterChange}></input>
+                        <br/>
+                        <input type='search' value={this.state.tagFilter} onChange={this.handleTagFilterChange}></input>
+                    </div>
+                    <button className='create-button' onClick={this.handleSearch}>Search</button>
+                        <label className='tagFilterLabel'>
+                            All
+                            <input type='radio' name='searchType' value='All' defaultChecked={this.state.defaultCheck} onClick={this.handleTypeChange}></input>
+                        </label>
+                        <label className='tagFilterOptions'>
+                            Any
+                            <input type='radio' name='searchType' value='Any' onClick={this.handleTypeChange}></input>
+                        </label>
+                </div>
                 <div className="note-display">
                     {this.props.currentGroupId ?
                         (this.state.isLoading ? (
@@ -129,7 +185,7 @@ export class NoteDisplay extends Component {
                     />
                 }
             </div>
-        );
+        )
     }
-
 }
+

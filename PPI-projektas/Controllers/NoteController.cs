@@ -1,7 +1,10 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using PPI_projektas.Exceptions;
 using PPI_projektas.objects;
+using PPI_projektas.Services;
 using PPI_projektas.Services.Interfaces;
+using PPI_projektas.Services.Request;
 using PPI_projektas.Services.Response;
 
 namespace PPI_projektas.Controllers
@@ -18,18 +21,18 @@ namespace PPI_projektas.Controllers
             _noteService = noteService;
         }
         
-        [HttpGet("{groupId:guid}")]
-        public IActionResult Get(Guid groupId)
+        [HttpGet("search")]
+        public IActionResult Get([FromQuery] Guid userId, [FromQuery] SearchType searchType, [FromQuery] string? tagFilter, [FromQuery] string? nameFilter, [FromQuery] Guid? groupId)
         {
-            return Ok(_noteService.GetNotes(groupId));
+            return Ok(_noteService.GetNotes(userId, searchType, tagFilter, nameFilter, groupId));
         }
 
-        [HttpGet("openNote/{noteId:guid}")]
-        public IActionResult OpenNote(Guid noteId)
+        [HttpGet("openNote/{noteId:guid}/{userId:guid}")]
+        public IActionResult OpenNote(Guid noteId, Guid userId)
         {
             try
             {
-                return Ok(_noteService.GetNote(noteId));
+                return Ok(_noteService.GetNote(userId, noteId));
             }
             catch (ObjectDoesNotExistException)
             {
@@ -37,12 +40,12 @@ namespace PPI_projektas.Controllers
             }
         }
 
-        [HttpPost("createNote/{groupId:guid}/{authorId:guid}")]
-        public IActionResult CreateNote(Guid groupId, Guid authorId)
+        [HttpPost("createNote")]
+        public IActionResult CreateNote([FromBody] NoteCreationData data)
         {
             try
             {
-                var noteId = _noteService.CreateNote(groupId, authorId);
+                var noteId = _noteService.CreateNote(data.AuthorId, data.GroupId);
                 return CreatedAtAction("CreateNote", noteId);
             }
             catch (ObjectDoesNotExistException)
@@ -56,7 +59,7 @@ namespace PPI_projektas.Controllers
         {
             try
             {
-                _noteService.UpdateNote(noteId, noteData.Id, noteData.Name, noteData.Tags, noteData.Text);
+                _noteService.UpdateNote(noteData.Id, noteId, noteData.Name, noteData.Tags, noteData.Text);
 
                 return Ok();
             }
@@ -70,7 +73,7 @@ namespace PPI_projektas.Controllers
             }
         }
 
-        [HttpDelete("deleteNote/{noteId}/{userId}")]
+        [HttpDelete("deleteNote/{noteId:guid}/${userId:guid}")]
         public IActionResult DeleteNote(Guid noteId, Guid userId)
         {
             try
