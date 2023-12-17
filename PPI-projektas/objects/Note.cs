@@ -18,8 +18,8 @@ public class Tag : Entity
 public class Note : Entity, IComparable<Note>
 {
 
-    public Guid UserId;
-    public User User;
+	public Guid UserId;
+	public User Author;
 
     public List<User> FavoriteByUsers { get; set; }
     public Group Group { get; set; }

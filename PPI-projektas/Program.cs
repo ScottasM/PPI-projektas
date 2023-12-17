@@ -76,6 +76,7 @@ builder.Services.AddScoped<IAuthReturnFactory, AuthReturnFactory>();
 builder.Services.AddScoped<IGroupFactory, GroupFactory>();
 builder.Services.AddScoped<IUserFactory, UserFactory>();
 builder.Services.AddScoped<INoteFactory, NoteFactory>();
+builder.Services.AddScoped<IGroupPrivilegeDataFactory, GroupPrivilegeDataFactory>();
 
 
 var app = builder.Build();

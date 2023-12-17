@@ -73,7 +73,25 @@ namespace PPI_projektas.Controllers
             }
         }
 
-        [HttpDelete("deleteNote/{noteId:guid}/${userId:guid}")]
+        [HttpPost("updatePrivileges/{noteId:guid}")]
+        public IActionResult UpdatePrivileges(Guid noteId, [FromBody] NotePrivilegeUpdateData privilegeUpdateData)
+        {
+            try
+            {
+                _noteService.UpdatePrivileges(noteId, privilegeUpdateData.UserId, privilegeUpdateData.EditorIds);
+                return Ok();
+            }
+            catch (ObjectDoesNotExistException)
+            {
+                return NotFound();
+            }
+            catch (UnauthorizedAccessException)
+            {
+                return Unauthorized();
+            }
+        }
+
+        [HttpDelete("deleteNote/{noteId:guid}/{userId:guid}")]
         public IActionResult DeleteNote(Guid noteId, Guid userId)
         {
             try

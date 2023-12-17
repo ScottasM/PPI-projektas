@@ -22,7 +22,7 @@ export class GroupCreateMenu extends Component {
                 this.handleMemberGet();
             });
         }
-        else{
+        else {
             this.setState({
                 groupName: '',
                 members: [],

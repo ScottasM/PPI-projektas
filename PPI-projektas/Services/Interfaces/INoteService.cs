@@ -9,6 +9,7 @@ public interface INoteService
     public NoteData GetNote(Guid userId, Guid noteId);
     public Guid CreateNote(Guid userId, Guid groupId);
     public void UpdateNote(Guid userId, Guid noteId, string name, List<string> tags, string text);
+    public void UpdatePrivileges(Guid userId, Guid noteId, List<Guid> newEditorIds);
     public void DeleteNote(Guid userId, Guid noteId);
     List<string> SearchTags(Guid groupId, string search);
 }

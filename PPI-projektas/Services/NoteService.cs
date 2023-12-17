@@ -84,7 +84,13 @@ public class NoteService : INoteService
     public void UpdateNote(Guid userId, Guid noteId, string name, List<string> tags, string text)
     {
         var note = DataHandler.FindObjectById(noteId, DataHandler.Instance.AllNotes);
-        if (note.UserId != userId) throw new UnauthorizedAccessException();
+        if (note == null) throw new ObjectDoesNotExistException(noteId);
+        
+        if (note.Author.Id != userId
+            && note.Group.Owner.Id != userId
+            && !note.Editors.Select(user => user.Id).Contains(userId)
+            && !note.Group.Administrators.Select(user => userId).Contains(userId))
+            throw new UnauthorizedAccessException();
         
         note.Name = name;
         note.Tags = tags.Select(tag => new Tag(tag)).ToList();
@@ -93,7 +99,25 @@ public class NoteService : INoteService
         DataHandler.Instance.SaveChanges();
     }
 
-    public void DeleteNote(Guid userId, Guid noteId)
+    public void UpdatePrivileges(Guid noteId, Guid userId, List<Guid> newEditorIds)
+    {
+        var note = DataHandler.FindObjectById(noteId, DataHandler.Instance.AllNotes);
+        if (note == null) throw new ObjectDoesNotExistException(noteId);
+
+        if (note.Author.Id != userId
+            && note.Group.Owner.Id != userId
+            && note.Group.Administrators.Select(user => user.Id).Contains(userId))
+            throw new UnauthorizedAccessException();
+
+        note.Editors = newEditorIds
+            .Select(editorId => DataHandler.FindObjectById(editorId, DataHandler.Instance.AllUsers))
+            .ToList();
+        
+        DataHandler.Instance.SaveChanges();
+    }
+    
+
+    public void DeleteNote(Guid noteId, Guid userId)
     {
         var note = DataHandler.FindObjectById(noteId, DataHandler.Instance.AllNotes);
         var user = DataHandler.FindObjectById(userId, DataHandler.Instance.AllUsers);
@@ -125,7 +149,7 @@ public class NoteService : INoteService
 
         foreach (var note in group.Notes)
         {
-            if (note.Tags == null)
+            if (!note.Tags?.Any() ?? false)
                 continue;
             var uniqueValues = note.Tags
                 .Where(tag => tag.Value.Contains(search))

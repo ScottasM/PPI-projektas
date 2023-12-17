@@ -9,18 +9,20 @@ public class GroupService : IGroupService
 {
     private readonly IObjectDataItemFactory _objectDataItemFactory;
     private readonly IGroupFactory _groupFactory;
+    private readonly IGroupPrivilegeDataFactory _groupPrivilegeDataFactory;
 
-    public GroupService(IObjectDataItemFactory objectDataItemFactory, IGroupFactory groupFactory)
+    public GroupService(IObjectDataItemFactory objectDataItemFactory, IGroupFactory groupFactory, IGroupPrivilegeDataFactory groupPrivilegeDataFactory)
     {
         _objectDataItemFactory = objectDataItemFactory;
         _groupFactory = groupFactory;
+        _groupPrivilegeDataFactory = groupPrivilegeDataFactory;
     }
     
-    public List<ObjectDataItem> GetGroupsByOwner(Guid ownerId)
+    public List<GroupPrivilegeData> GetGroupsByOwner(Guid ownerId)
     {
         var data = DataHandler.Instance.AllGroups.Values
             //.Where(group => group.OwnerGuid == ownerId) Will be uncommented when user is associated on the frontend
-            .Select(group => _objectDataItemFactory.Create(group.Id, group.Name))
+            .Select(group => _groupPrivilegeDataFactory.Create(group.Id, group.Name, group.Owner.Id == ownerId, group.Administrators.Select(admin => admin.Id).Contains(ownerId)))
             .ToList();
         
         return data;
@@ -65,7 +67,7 @@ public class GroupService : IGroupService
     {
         var group = DataHandler.FindObjectById(groupId, DataHandler.Instance.AllGroups);
 
-        if (group.Owner.Id != userId)
+        if (group.Owner.Id != userId && !group.Administrators.Select(user => user.Id).Contains(userId))
             throw new UnauthorizedAccessException();
         
         group.Name = newName;
@@ -78,7 +80,7 @@ public class GroupService : IGroupService
             group.AddUser(member);
             member.AddGroup(group);
         }
-
+        
         var membersToRemove = group.Members.Where(member => !newMembers.Contains(member) && member != group.Owner).ToList();
         foreach (var member in membersToRemove)
         {
@@ -86,9 +88,10 @@ public class GroupService : IGroupService
             member.RemoveGroup(group);
         }
 
-        group.Administrators = newAdministratorIds
-            .Select(id => DataHandler.FindObjectById(id, DataHandler.Instance.AllUsers))
-            .ToList();
+        if (group.Owner.Id == userId)
+            group.Administrators = newAdministratorIds
+                .Select(id => DataHandler.FindObjectById(id, DataHandler.Instance.AllUsers))
+                .ToList();
         
         DataHandler.Instance.SaveChanges();
     }
