@@ -7,6 +7,10 @@
     --note-main-color: #4A4E69;
 }
 
+html, body {
+    height: 100%;
+}
+
 ::-webkit-scrollbar {
     width: 10px;
 }
@@ -26,6 +30,17 @@
 input[type=text] {
     border-radius: 8px;
     background-color: var(--bg-color);
+    border-style: solid;
+    border-color: var(--note-main-color);
+}
+
+input[type=search] {
+    margin-left: 1.5em;
+    width: 300px;
+    border-radius: 8px;
+    background-color: var(--bg-color);
+    border-style: solid;
+    border-color: var(--button-secondary-color);
 }
 
 h2 {

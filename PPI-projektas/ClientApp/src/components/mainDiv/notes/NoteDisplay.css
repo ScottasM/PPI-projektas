@@ -1,9 +1,21 @@
-﻿.note-display {
+﻿.content-display {
+    width: 100%;
+    height: 100%;
+}
+
+.group-note-display {
     padding-left: 75px;
     width: 100%;
+    height: 100%;
     white-space: nowrap;
     display: inline-flex;
     flex-direction: row;
+    overflow-x: scroll;
+}
+.favorite-note-display {
+    padding-left: 75px;
+    width: 100%;
+    height: 100%;
     overflow-x: scroll;
 }
 

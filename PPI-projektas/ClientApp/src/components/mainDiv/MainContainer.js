@@ -134,7 +134,7 @@ export class MainContainer extends Component {
                 
                 {this.props.currentUserId === 0 && (
                     <div className="top-nav">
-                        <CreatingLoginButtons toggleMenu={this.toggleSignInMenu} buttonName={{name: "Sign In"}}/>
+                        <CreatingLoginButtons toggleMenu={this.toggleSignInMenu} buttonName={{name: "Sign Up"}}/>
                         <CreatingLoginButtons toggleMenu={this.toggleLoginMenu} buttonName={{name: "Login"}}/>
                     </div>
                 )}
