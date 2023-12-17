@@ -57,6 +57,12 @@ namespace PPI_projektas.Utils
                 .HasOne(g => g.Owner)
                 .WithMany(u => u.OwnedGroups);
 
+            modelBuilder.Entity<Group>()
+                .HasMany(g => g.Administrators);
+
+            modelBuilder.Entity<Note>()
+                .HasMany(n => n.Editors);
+
         }
     }
 }

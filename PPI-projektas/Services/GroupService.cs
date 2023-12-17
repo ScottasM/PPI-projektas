@@ -9,35 +9,42 @@ public class GroupService : IGroupService
 {
     private readonly IObjectDataItemFactory _objectDataItemFactory;
     private readonly IGroupFactory _groupFactory;
-    private readonly IGroupPrivilegeDataFactory _groupPrivilegeDataFactory;
+    private readonly IGroupIconDataFactory _groupIconDataFactory;
+    private readonly IGroupEditDataFactory _groupEditDataFactory;
 
-    public GroupService(IObjectDataItemFactory objectDataItemFactory, IGroupFactory groupFactory, IGroupPrivilegeDataFactory groupPrivilegeDataFactory)
+    public GroupService(IObjectDataItemFactory objectDataItemFactory, IGroupFactory groupFactory, IGroupIconDataFactory groupIconDataFactory, IGroupEditDataFactory groupEditDataFactory)
     {
         _objectDataItemFactory = objectDataItemFactory;
         _groupFactory = groupFactory;
-        _groupPrivilegeDataFactory = groupPrivilegeDataFactory;
+        _groupIconDataFactory = groupIconDataFactory;
+        _groupEditDataFactory = groupEditDataFactory;
     }
     
-    public List<GroupPrivilegeData> GetGroupsByOwner(Guid ownerId)
+    public List<GroupIconData> GetGroupsByOwner(Guid ownerId)
     {
         var data = DataHandler.Instance.AllGroups.Values
             //.Where(group => group.OwnerGuid == ownerId) Will be uncommented when user is associated on the frontend
-            .Select(group => _groupPrivilegeDataFactory.Create(group.Id, group.Name, group.Owner.Id == ownerId, group.Administrators.Select(admin => admin.Id).Contains(ownerId)))
+            .Select(group => _groupIconDataFactory.Create(group.Id, group.Name, group.Owner.Id == ownerId, group.Administrators.Select(admin => admin.Id).Contains(ownerId)))
             .ToList();
         
         return data;
     }
 
-    public List<ObjectDataItem> GetUsersInGroup(Guid groupId)
+    public GroupEditData GetUsersInGroup(Guid groupId)
     {
         var group = DataHandler.FindObjectById(groupId, DataHandler.Instance.AllGroups);
-
-        var users = group.Members
+        
+        var members = group.Members
+            .Except(group.Administrators)
             .Where(user => user != group.Owner)
             .Select(user => _objectDataItemFactory.Create(user.Id, user.GetUsername()))
             .ToList();
+    
+        var administrators = group.Administrators
+            .Select(administrator => _objectDataItemFactory.Create(administrator.Id, administrator.GetUsername()))
+            .ToList();
 
-        return users;
+        return _groupEditDataFactory.Create(members, administrators);
     }
 
     public Guid CreateGroup(Guid ownerId, string groupName, IEnumerable<Guid> groupMemberIds, IEnumerable<Guid> groupAdministratorIds)

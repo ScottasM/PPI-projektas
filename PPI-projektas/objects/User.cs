@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace PPI_projektas.objects;
 
-public class User : Entity
+public class User : Entity, IEquatable<User>
 {
 
     public string Username { get; set; }
@@ -73,5 +73,12 @@ public class User : Entity
         {
             Groups.Remove(group);
         }
+    }
+    
+    public bool Equals(User? other)
+    {
+        if (other == null) return false;
+
+        return Id == other.Id;
     }
 }
