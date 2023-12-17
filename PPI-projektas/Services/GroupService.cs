@@ -38,7 +38,7 @@ public class GroupService : IGroupService
         return users;
     }
 
-    public Guid CreateGroup(Guid ownerId, string groupName, IEnumerable<Guid> groupMemberIds)
+    public Guid CreateGroup(Guid ownerId, string groupName, IEnumerable<Guid> groupMemberIds, IEnumerable<Guid> groupAdministratorIds)
     {
         var owner = DataHandler.FindObjectById(ownerId, DataHandler.Instance.AllUsers);
 
@@ -49,6 +49,10 @@ public class GroupService : IGroupService
         foreach (var user in groupMembers)
             user.AddGroup(group);
         
+        group.Administrators = groupAdministratorIds
+            .Select(id => DataHandler.FindObjectById(id, DataHandler.Instance.AllUsers))
+            .ToList();
+        
         owner.AddGroup(group);
         
         DataHandler.Create(group);
@@ -57,7 +61,7 @@ public class GroupService : IGroupService
     }
     
 
-    public void EditGroup(Guid groupId, string newName, IEnumerable<Guid> newMemberIds, Guid userId)
+    public void EditGroup(Guid groupId, string newName, IEnumerable<Guid> newMemberIds, IEnumerable<Guid> newAdministratorIds, Guid userId)
     {
         var group = DataHandler.FindObjectById(groupId, DataHandler.Instance.AllGroups);
 
@@ -81,6 +85,10 @@ public class GroupService : IGroupService
             group.RemoveUser(member);
             member.RemoveGroup(group);
         }
+
+        group.Administrators = newAdministratorIds
+            .Select(id => DataHandler.FindObjectById(id, DataHandler.Instance.AllUsers))
+            .ToList();
         
         DataHandler.Instance.SaveChanges();
     }
