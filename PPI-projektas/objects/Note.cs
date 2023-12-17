@@ -1,4 +1,5 @@
 ﻿using PPI_projektas.objects.abstractions;
+using PPI_projektas.Utils;
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
@@ -38,6 +39,7 @@ public class Note : Entity, IComparable<Note>
         Name = "";
         Tags = new List<Tag>();
         Text = "";
+        Group = DataHandler.FindObjectById(groupId, DataHandler.Instance.AllGroups);
     }
   
     public int CompareTo(Note otherNote)

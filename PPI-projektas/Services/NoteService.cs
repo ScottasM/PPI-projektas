@@ -63,8 +63,9 @@ public class NoteService : INoteService
         return _noteDataFactory.Create(note.Id, note.Name, tags.Select(tag => tag.Value).ToList(), note.Text);
     }
 
-    public Guid CreateNote(Guid authorId, Guid groupId)
+    public Guid CreateNote(Guid groupId, Guid authorId)
     {
+
         var author = DataHandler.FindObjectById(authorId, DataHandler.Instance.AllUsers);
         var group = DataHandler.FindObjectById(groupId, DataHandler.Instance.AllGroups);
 

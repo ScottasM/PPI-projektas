@@ -47,12 +47,7 @@ namespace PPI_projektas.Utils
             bool checkCommonPasswords = false) 
         {
 
-            if (str.Contains("a"))
-                return "you cant use this here";
 
-            if (checkProfanity) 
-                if (profanityFilter.Any(s => str.Contains(s)))
-                    return "Not nice :(";
             
             if (checkCommonPasswords) 
                 if (commonPasswords.Any(s => str.Contains(s)))

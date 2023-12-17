@@ -40,12 +40,12 @@ namespace PPI_projektas.Controllers
             }
         }
 
-        [HttpPost("createNote")]
-        public IActionResult CreateNote([FromBody] NoteCreationData data)
+        [HttpPost("createNote/{groupId:guid}/{userId:guid}")]
+        public IActionResult CreateNote(Guid groupId, Guid userId)
         {
             try
             {
-                var noteId = _noteService.CreateNote(data.AuthorId, data.GroupId);
+                var noteId = _noteService.CreateNote(groupId, userId);
                 return CreatedAtAction("CreateNote", noteId);
             }
             catch (ObjectDoesNotExistException)
