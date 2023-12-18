@@ -130,12 +130,13 @@ export class GroupUserSelection extends Component {
                     behaviour={this.removeMember}
                     iconType={(<MdOutlinePersonRemove/>)}/>
                 {this.props.isOwner && <div>
-                    <p className="m-0">Group Administrators</p>
+                    <p className="m-0">Add Administrators</p>
                     <ScrollContainer
                         elements={this.props.members}
                         buttonClassName={"add-user rounded-circle"}
                         behaviour={this.addAdministrator}
                         iconType={(<MdPersonAddAlt/>)}/>
+                    <p className="m-0">Group Administrators</p>
                     <ScrollContainer
                         elements={this.props.administrators}
                         buttonClassName={"remove-user rounded-circle"}
