@@ -149,8 +149,9 @@ export class NoteDisplay extends Component {
                             Any
                             <input type='radio' name='searchType' value='Any' onClick={this.handleTypeChange}></input>
                         </label>
-                        <hr/>
+                        <hr />
                 </div>
+                <h5 className="display-title">Group Notes</h5>
                 <div className="group-note-display">
                     {this.props.currentGroupId ?
                         (this.state.isLoading ? (
@@ -164,9 +165,9 @@ export class NoteDisplay extends Component {
                                 />
                             ))
                         ) : (
-                            <p>No notes found.</p>
+                            <p className="display-message">No notes found for this group.</p>
                         )) : (
-                            <p>Please select a group</p>
+                            <p className="display-message">Please select a group</p>
                         )
                     }
                 </div>
@@ -184,8 +185,9 @@ export class NoteDisplay extends Component {
                         
                     />
                 }
+                <h5 className="display-title">Favorite Notes</h5>
                 <div className="favorite-note-display">
-                    <p>No notes found.</p>
+                    <p className="display-message">No favorite notes found.</p>
                 </div>
             </div>
         )

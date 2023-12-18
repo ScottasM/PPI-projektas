@@ -1,6 +1,6 @@
 .note-card {
     position: relative;
-    min-width: fit-content;
+    min-width: 300px;
     width: 450px;
     height: 300px;
     border: 2px solid black;
@@ -13,6 +13,11 @@
     "title tags"
     "text text"
     "misc buttons";
+}
+
+#tag-search-bar {
+    height: 20px;
+    font-size: 10px;
 }
 
 .unselected {
@@ -33,6 +38,8 @@
 .note-text {
     border: 1px solid black;
     color: var(--bg-color);
+    overflow-wrap: break-word;
+    overflow-x: auto;
 }
 
 .note-title,
@@ -46,24 +53,29 @@
     padding-left: 10px;
     border-radius: 20px 0 0 0;
     display: flex;
+    overflow: hidden;
+   
 }
 
 .note-title p {
     margin: 0;
+    width: 300px;
+    overflow: hidden;
 }
 
 input.note-title-edit[type="text"],
-textarea.note-text-edit
-{
+textarea.note-text-edit {
     background: transparent;
     border: none;
     width: 100%;
+    height: 90%;
     margin: 0;
     padding: 0;
 }
 
 input.note-title-edit[type="text"] {
     color: var(--bg-color);
+    width: 300px;
 }
 
 textarea.note-text-edit {
@@ -86,14 +98,14 @@ textarea.note-text-edit:focus{
     align-items: flex-start;
 }
 
-.note-text {
+.note-text, .note-text0 {
     background-color: var(--bg-color);
     color: var(--note-main-color);
     grid-area: text;
     padding: 5px;
     align-items: center;
+    /*overflow: hidden;*/
     /*   border-radius: 0 0 20px 20px; */
-    overflow: auto;
 }
 
 .note-tags span,
@@ -243,3 +255,86 @@ textarea.note-text-edit:focus{
 .cursor-pointer{
     cursor: pointer;
 }
+
+.fav-button {
+    right: 0;
+    width: 60px;
+    transform: scale(0.8);
+}
+
+.star-outline-container {
+    transform: scale(0.15);
+    position: relative;
+}
+
+.star-container {
+    z-index: 10;
+    transform: scale(0.75);
+    position: absolute;
+    top: -50px;
+    left: 0;
+}
+
+.fav-star, .fav-star-outline {
+    position: relative;
+    display: block;
+    width: 0px;
+    height: 0px;
+    margin: 50px 0;
+    color: yellow;
+    border-left: 100px solid transparent;
+    border-right: 100px solid transparent;
+    transform: rotate(35deg);
+}
+
+    .fav-star::before, .fav-star-outline::before {
+        content: '';
+        position: absolute;
+        top: -45px;
+        left: -65px;
+        display: block;
+        height: 0;
+        width: 0;
+        border-left: 30px solid transparent;
+        border-right: 30px solid transparent;
+        transform: rotate(-35deg);
+    }
+
+    .fav-star::after, .fav-star-outline::after {
+        content: '';
+        position: absolute;
+        top: 3px;
+        left: -105px;
+        display: block;
+        width: 0px;
+        height: 0px;
+        color: yellow;
+        border-left: 100px solid transparent;
+        border-right: 100px solid transparent;
+        transform: rotate(-70deg);
+    }
+
+.fav-star {
+    border-bottom: 70px solid #FFB000;
+}
+
+    .fav-star::before {
+        border-bottom: 80px solid #FFB000;
+    }
+
+    .fav-star::after {
+        border-bottom: 70px solid #FFB000;
+    }
+
+.fav-star-outline {
+border-bottom: 70px solid #000333;
+}
+
+    .fav-star-outline::before {
+        border-bottom: 80px solid #000333;
+    }
+
+    .fav-star-outline::after {
+        border-bottom: 70px solid #000333;
+    }
+

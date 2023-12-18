@@ -59,12 +59,18 @@ h6 {
     margin-top: 14px;
 }
 
+hr {
+    margin-left:75px;
+    width: 90%;
+}
+
 body {
-    background-color: var(--bg-color);
+    background-color: #8e9aaf;
 }
 
 .main-container {
     background-color: #8e9aaf;
+    height: 100vh;
 }
 
 .top-nav {

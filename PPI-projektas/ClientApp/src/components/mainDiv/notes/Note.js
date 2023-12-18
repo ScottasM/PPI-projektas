@@ -25,7 +25,7 @@ export class Note extends Component {
                     )}
                 </div>
                 <div className="note-text">
-                    <p>{noteData.text}</p>
+                    {noteData.text}
                 </div>
                 <div className="note-buttons">
                     <button className="button delete-button">

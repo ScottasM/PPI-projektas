@@ -181,6 +181,10 @@ export class NoteEditor extends Component {
         }
     }
 
+    handleFavoriteNote = () => {
+
+    }
+
     render() {
         const {name, text, tags, showTagSearch, tagSearch, tagResults} = this.state;
         const maxVisibleTags = 3;
@@ -195,6 +199,15 @@ export class NoteEditor extends Component {
                         placeholder="Enter title..."
                         onChange={(e) => this.handleTitleChange(e)} 
                     />
+                    <div className="fav-button">
+                        <div className="star-outline-container">
+                            <div className="fav-star-outline" />
+                            <div className="star-container">
+                                <div className="fav-star" onClick={() => this.handleFavoriteNote()} />
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
                 <div className="note-tags">
                     {tags != null && tags.slice(0, maxVisibleTags).map(tag => (
@@ -209,6 +222,7 @@ export class NoteEditor extends Component {
                         <div className="tag-select">
                             <div className="tag-search">
                                 <input 
+                                    id="tag-search-bar"
                                     type="text" 
                                     value={tagSearch}
                                     placeholder="Search tags..."
