@@ -2,13 +2,21 @@
 import {TagList} from "../../TagList";
 import {MdDelete, MdEditDocument} from "react-icons/md";
 import { AiFillStar } from "react-icons/ai";
+import { PiAddressBook } from "react-icons/pi";
 
 export class NoteViewer extends Component {
     constructor (props) {
         super(props)
+        this.state = {
+            favorited: false
+        }
     }
 
     handleFavoriteNote = () => {
+
+    }
+
+    openPrivilegesDisplay = () => {
 
     }
 
@@ -23,9 +31,9 @@ export class NoteViewer extends Component {
                     <div className="fav-button">
                         <AiFillStar
                             className="star"
-                            color={"#e4e5e9"}
+                            color={this.state.favorited ? "#ffc107" : "#e4e5e9"}
                             size={25}
-                            onClick={() => this.handleFavoriteNote()}
+                            onClick={() => this.handleFavoriteNote() & this.setState({ favorited: (this.state.favorited ? false : true) })}
                         />
                     </div>
                 </div>
@@ -47,6 +55,9 @@ export class NoteViewer extends Component {
                     </button>
                     <button className="button button-hover edit-button edit-button-hover no-close-button" onClick={() => this.props.changeDisplay(2, '')}>
                         <MdEditDocument />
+                    </button>
+                    <button className="button button-hover privileges-button privileges-button-hover" onClick={() => this.openPrivilegesDisplay()}>
+                        <PiAddressBook />
                     </button>
                 </div>
             </div>

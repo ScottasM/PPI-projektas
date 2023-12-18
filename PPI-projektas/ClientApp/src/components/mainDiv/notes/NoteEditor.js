@@ -4,6 +4,7 @@ import {TagList} from "../../TagList";
 import {MdDelete, MdEditDocument, MdSave} from "react-icons/md";
 import { Tag } from "reactstrap";
 import { AiFillStar } from "react-icons/ai";
+import { PiAddressBook } from "react-icons/pi";
 
 export class NoteEditor extends Component {
     constructor (props) {
@@ -18,6 +19,7 @@ export class NoteEditor extends Component {
             showTagSearch: false,
             tagSearch: '',
             tagResults: [],
+            favorited: false
         }
     }
 
@@ -183,6 +185,11 @@ export class NoteEditor extends Component {
     }
 
     handleFavoriteNote = () => {
+
+    }
+
+    openPrivilegesDisplay = () => {
+
     }
 
     render() {
@@ -202,9 +209,9 @@ export class NoteEditor extends Component {
                     <div className="fav-button">
                         <AiFillStar
                             className="star"
-                            color="#ffc107"
+                            color={this.state.favorited ? "#ffc107" : "#e4e5e9"} 
                             size={25}
-                            onClick={() => this.handleFavoriteNote()}
+                            onClick={() => this.handleFavoriteNote() & this.setState({ favorited: (this.state.favorited ? false : true)})}
                         />
                     </div>
 
@@ -258,6 +265,9 @@ export class NoteEditor extends Component {
                     </button>
                     <button className="button button-hover edit-button edit-button-hover" onClick={() => this.props.changeDisplay(2, '')}>
                         <MdEditDocument />
+                    </button>
+                    <button className="button button-hover privileges-button privileges-button-hover" onClick={() => this.openPrivilegesDisplay()}>
+                        <PiAddressBook />
                     </button>
                 </div>
             </div>
