@@ -118,12 +118,12 @@ export class GroupUserSelection extends Component {
                     value={this.state.userSearch}
                     onChange={this.handleUserSearch}/>
                 <br />
-                <p className="m-0">Group Members</p>
                 <ScrollContainer
                     elements={this.state.users}
                     buttonClassName={"add-user rounded-circle"}
                     behaviour={this.addMember}
                     iconType={(<MdPersonAddAlt/>)}/>
+                <p className="m-0">Group Members</p>
                 <ScrollContainer
                     elements={this.props.members}
                     buttonClassName={"remove-user rounded-circle"}
