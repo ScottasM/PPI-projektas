@@ -1,49 +1,63 @@
 ﻿using PPI_projektas.objects.abstractions;
+using PPI_projektas.Utils;
+using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
 namespace PPI_projektas.objects;
 
+public class Tag : Entity
+{
+    public string Value { get; set; } = null!;
+
+    public Tag(string value)
+    {
+        Value = value;
+    }
+}
+
 public class Note : Entity, IComparable<Note>
 {
-	public string Name { get; set; }
 
-	[JsonIgnore] public User Author;
+    public Guid UserId;
+    public User User;
 
-	[JsonInclude] public Guid AuthorGuid;
+    public List<User> FavoriteByUsers { get; set; }
+    public Group Group { get; set; }
 
-  [JsonInclude] public string text;
+    public string Name { get; set; }
+    public List<Tag> Tags { get; set; }
+  
+    public string Text { get; set; }
+    public DateTime LastEditTime { get; set; }
 
-	public List<string> Tags { get; set; } 
+    public Note () {} // For deserialization
 
-	[JsonInclude] public string Text;
-	
-	public Note () {} // For deserialization
+    public Note(Guid authorId, Guid groupId, bool createGUID = true) : base(createGUID)
+    {
 
-	public Note(User author, bool createGuid = true) : base(createGuid)
-  {
-    Name = "";
-		Author = author;
-		AuthorGuid = author.Id;
-		Tags = new List<string>();
-		Text = "";
-	}
+        UserId = authorId;
+        Name = "";
+        Tags = new List<Tag>();
+        Text = "";
+        Group = DataHandler.FindObjectById(groupId, DataHandler.Instance.AllGroups);
+    }
   
     public int CompareTo(Note otherNote)
     {
         var tagComparison = Tags.Count.CompareTo(otherNote.Tags.Count);
-        if (tagComparison != 0) {
+        if (tagComparison != 0)
             return tagComparison;
-        }
-
-        var authorComparison = String.Compare(Author.GetUsername(), otherNote.Author.GetUsername(), StringComparison.OrdinalIgnoreCase);
-        if (authorComparison != 0) {
-            return authorComparison;
-        }
-        var textComparison = String.Compare(Text, otherNote.Text, StringComparison.OrdinalIgnoreCase);
-        if (textComparison != 0) {
-            return textComparison;
-        }
-
-        return 0;
+        
+        return String.Compare(Text, otherNote.Text, StringComparison.OrdinalIgnoreCase);
     }
+
+    public bool ContainsAny(IEnumerable<string> tags)
+    {
+        return Tags.Any(tag => tags.Contains(tag.Value));
+    }
+
+    public bool ContainsAll(IEnumerable<string> tags)
+    {
+        return Tags.Count(tag => tags.Contains(tag.Value)) == tags.Count();
+    }	
 }

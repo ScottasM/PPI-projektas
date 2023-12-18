@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
-import { NoteDisplay } from "./Notes/NoteDisplay";
-import {NoteHub} from "./Notes/NoteHub";
+import { NoteDisplay } from "./notes/NoteDisplay";
+import { NoteHub } from "./notes/NoteHub";
 import { GroupCreateMenu } from "./group/GroupCreateMenu";
 import { UserLoginMenu } from "./login/UserLoginMenu";
 import { UserSignInMenu } from "./login/UserSignInMenu";
 import { CreatingButtons } from "./CreatingButtons";
 import { CreatingLoginButtons } from "./login/CreatingLoginButtons";
+import { CreatingNotesButton } from "./notes/CreatingNotesButton";
+import './MainContainer.css';
 
 export class MainContainer extends Component {
     static displayName = MainContainer.name;
@@ -13,24 +15,20 @@ export class MainContainer extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            mounted: false,
-            displayGroupCreateMenu: false,
+            displayGroupCreateMenu: this.props.displayGroupEditMenu,
             groupConfigMenuType: 'create',
             displayLoginMenu: false,
             displaySignInMenu: false,
-            noteId: '',
             notes: [],
-            showNote: false
+            displayNote: false,
+            noteHubDisplay: 1,
+            currentUserName: '',
+            createNote: false,
         }
     }
     
     componentDidMount() {
-       if(!this.state.mounted) {
-           this.fetchNotes();
-           this.setState({
-               mounted: true
-           });
-       }
+        // this.fetchNotes();
     }
 
     componentDidUpdate(prevProps) {
@@ -51,28 +49,10 @@ export class MainContainer extends Component {
             }
         }
     }
-    
-    fetchNotes = async () => {
-        try {
-            fetch('http://localhost:5268/api/note')
-                .then(async response => {
-                    if (!response.ok)
-                        throw new Error(`Network response was not ok`);
-                    return await response.json();
-                })
-                .then(data => {
-                    const notes = data.map(note => ({
-                        id: note.id,
-                        name: note.name,
-                    }));
-                    this.setState({
-                        notes: notes
-                    });
-                })
-        }
-        catch (error) { 
-                console.error('There was a problem with the fetch operation:', error);
-        }
+    handleCreateNote = (createNote) => {
+        this.setState({
+            createNote: createNote,
+        });
     }
     
     toggleGroupConfigMenu = () => {
@@ -80,9 +60,10 @@ export class MainContainer extends Component {
             this.setState({ displayLoginMenu: false, displaySignInMenu: false })
         }
         else{
-            this.setState({
+            this.setState((prevState) => ({
                 groupConfigMenuType: 'create',
-            })
+            }));
+            if(this.props.displayGroupEditMenu) this.props.toggleGroupEditMenu();
         }
         
         this.setState((prevState) => ({
@@ -110,42 +91,75 @@ export class MainContainer extends Component {
         }));
  
     }
-    
-    openNote = id => {
-        this.setState(prevState => ({
-            noteId: id,
-            showNote: !prevState.showNote
-        }));
+
+    handleLogout = () => {
+        this.props.setCurrentUser(0);
+        this.setState({ displayGroupCreateMenu: false });
     }
     
-    exitNote = () => {
-        this.fetchNotes();
-        this.setState(prevState => ({
-            noteId: '',
-            showNote: !prevState.showNote
-        }));
+    setUserName = (username) => {
+        this.setState({
+            currentUserName: username,
+        })
     }
     
     render() {
         return (
-            <div className="bg-white">
-                <CreatingButtons toggleMenu={this.toggleGroupConfigMenu}/>
-                {this.state.displayGroupCreateMenu && 
+            <div className="main-container">
+                {this.props.currentUserId !== 0 && (
+                    <>
+                        <div className="top-nav">
+                        <CreatingButtons toggleMenu={this.toggleGroupConfigMenu} />
+                        <CreatingLoginButtons toggleMenu={this.handleLogout} buttonName={{ name: 'Log out' }} />
+                        <div className="register-buttons-div">
+                            <h6>Logged in as: {this.state.currentUserName}</h6>
+                        </div>
+
+                        {this.props.currentGroupId !== 0 &&
+                            <CreatingNotesButton
+                                handleCreateNote={this.handleCreateNote}
+                                groupId={this.props.currentGroupId}
+                            />
+                        }
+                        </div>
+                        
+                        <NoteDisplay currentGroupId={this.props.currentGroupId}
+                                     currentUserId={this.props.currentUserId}
+                                     createNote={this.state.createNote}
+                                     noteCreated={() => this.handleCreateNote(false)}
+                        />
+                    </>
+                )}
+
+                
+                {this.props.currentUserId === 0 && (
+                    <div className="top-nav">
+                        <CreatingLoginButtons toggleMenu={this.toggleSignInMenu} buttonName={{name: "Sign In"}}/>
+                        <CreatingLoginButtons toggleMenu={this.toggleLoginMenu} buttonName={{name: "Login"}}/>
+                    </div>
+                )}
+                        
+                {this.state.displayGroupCreateMenu &&
                     <GroupCreateMenu 
                         configType = {this.state.groupConfigMenuType}
                         toggledGroup={this.props.toggledGroup}
-                        fetchGroupList={this.props.fetchGroupList} toggleGroupCreateMenu={this.toggleGroupConfigMenu} />
+                        fetchGroupList={this.props.fetchGroupList} toggleGroupCreateMenu={this.toggleGroupConfigMenu} 
+                        currentUserId={this.props.currentUserId}/>
                 }
-                        
-                <CreatingLoginButtons toggleMenu={this.toggleSignInMenu} buttonName={{name: "Sign In"}} />
-                {this.state.displaySignInMenu && <UserSignInMenu toggleMenu={this.toggleSignInMenu}/>}
+                
+                {this.state.displaySignInMenu && 
+                    <UserSignInMenu 
+                        toggleMenu={this.toggleSignInMenu}
+                        setUserName={this.setUserName}
+                        setCurrentUser={this.props.setCurrentUser}
+                    />}
 
-                <CreatingLoginButtons toggleMenu={this.toggleLoginMenu} buttonName={{name: "Login"}} />
-                {this.state.displayLoginMenu && <UserLoginMenu />}
-
-                {this.state.notes == null || this.state.notes.length === 0 ? <p>No notes found.</p> : !this.state.showNote && <NoteDisplay notes={this.state.notes} openNote={this.openNote}/>}
-                {this.state.showNote && <NoteHub noteId={this.state.noteId} exitNote={this.exitNote}/>}
-
+                {this.state.displayLoginMenu && 
+                    <UserLoginMenu
+                        toggleMenu={this.toggleLoginMenu}
+                        setUserName={this.setUserName}
+                        setCurrentUser={this.props.setCurrentUser}
+                    />}
             </div>
         );
     }

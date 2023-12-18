@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import '../../LoginWindow.css'
+import '../InputWindow.css';
 
 export class UserLoginMenu extends Component {
     static displayName = UserLoginMenu.name;
@@ -21,19 +21,66 @@ export class UserLoginMenu extends Component {
     };
 
     handleSubmit = (event) => {
-        //to do
+        event.preventDefault();
+        const { username, password } = this.state;
+
+        this.handlePost(username, password);
+
+        this.setState({
+            username: '',
+            email: '',
+            password: '',
+        });
+    };
+
+    async handlePost(username, password) {
+        const userData = {
+            username: username,
+            password: password,
+        };
+
+        await fetch(`http://localhost:5268/api/Authentication/trylogin`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(userData),
+        })
+            .then(async (response) => {
+                if(response.status === 400){
+                    alert(await response.text());
+                }
+                else if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                else{
+                    const data = await response.json();
+                    
+                    if (data)
+                    {
+                        this.props.setCurrentUser(data);
+                        this.props.setUserName(username);
+                    }
+                }
+
+            })
+            .catch((error) => {
+                console.error('There was a problem with the fetch operation:', error);
+            });
+
+        this.props.toggleMenu();
     };
 
     render() {
         const { username, password } = this.state;
 
         return (
-            <div className="userLoginMenu position-absolute translate-middle text-white">
+            <div className="user-login-menu position-fixed translate-middle text-white">
                 <div className="title">
                     <h2>Login</h2>
                 </div>
                 <form onSubmit={this.handleSubmit}>
-                    <label><b>Username: </b></label>
+                    <label>Username: </label>
                     <br />
                     <input
                         type = "text"
@@ -43,7 +90,7 @@ export class UserLoginMenu extends Component {
                         onChange = { this.handleUsernameInputChange }
                     />
                     <br />
-                    <label><b>Password: </b></label>
+                    <label>Password: </label>
                     <br />
                     <input
                         type = "text"
@@ -53,7 +100,7 @@ export class UserLoginMenu extends Component {
                         onChange = { this.handlePasswordInputChange }
                     />
                     <br />
-                    <input className="submitButton" type="submit" value="Login" />
+                    <input className="submit-button" type="submit" value="Login" />
                 </form>
             </div>
         );

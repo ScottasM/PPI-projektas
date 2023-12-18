@@ -1,19 +1,26 @@
-using PPI_projektas.Exceptions;
-using PPI_projektas.objects;
-using PPI_projektas.objects.abstractions;
+using PPI_projektas.objects.Factories;
+using PPI_projektas.Services.Interfaces;
 using PPI_projektas.Services.Response;
 using PPI_projektas.Utils;
 
 namespace PPI_projektas.Services;
 
-public class GroupService
+public class GroupService : IGroupService
 {
+    private readonly IObjectDataItemFactory _objectDataItemFactory;
+    private readonly IGroupFactory _groupFactory;
+
+    public GroupService(IObjectDataItemFactory objectDataItemFactory, IGroupFactory groupFactory)
+    {
+        _objectDataItemFactory = objectDataItemFactory;
+        _groupFactory = groupFactory;
+    }
     
     public List<ObjectDataItem> GetGroupsByOwner(Guid ownerId)
     {
-        var data = DataHandler.Instance.AllGroups
+        var data = DataHandler.Instance.AllGroups.Values
             //.Where(group => group.OwnerGuid == ownerId) Will be uncommented when user is associated on the frontend
-            .Select(group => new ObjectDataItem(group.Id, group.Name))
+            .Select(group => _objectDataItemFactory.Create(group.Id, group.Name))
             .ToList();
         
         return data;
@@ -21,65 +28,78 @@ public class GroupService
 
     public List<ObjectDataItem> GetUsersInGroup(Guid groupId)
     {
-        var group = FindObjectById(groupId, DataHandler.Instance.AllGroups);
+        var group = DataHandler.FindObjectById(groupId, DataHandler.Instance.AllGroups);
 
         var users = group.Members
-            .Select(user => new ObjectDataItem(user.Id, user.GetUsername()))
+            .Where(user => user != group.Owner)
+            .Select(user => _objectDataItemFactory.Create(user.Id, user.GetUsername()))
             .ToList();
 
         return users;
     }
-    
-    public Guid CreateGroup(Guid ownerId, string groupName)
-    {
 
-        // var owner = FindObjectById(ownerId, DataHandler.Instance.AllUsers);
+    public Guid CreateGroup(Guid ownerId, string groupName, IEnumerable<Guid> groupMemberIds)
+    {
+        var owner = DataHandler.FindObjectById(ownerId, DataHandler.Instance.AllUsers);
+
+        var groupMembers = groupMemberIds.Select(id => DataHandler.FindObjectById(id, DataHandler.Instance.AllUsers)).ToList();
+
+        var group = _groupFactory.Create(groupName, owner, groupMembers);
+
+        foreach (var user in groupMembers)
+            user.AddGroup(group);
         
-        // var group = new Group(groupName, owner);
-        var group = new Group(groupName, new User());
-        DataHandler.Create(group);
-
-        return group.Id;
-    }
-
-    public Guid CreateGroup(Guid ownerId, string groupName, List<Guid> groupMemberIds)
-    {
-        // var owner = FindObjectById(ownerId, DataHandler.Instance.AllUsers);
-
-        var groupMembers = groupMemberIds.Select(id => FindObjectById(id, DataHandler.Instance.AllUsers)).ToList();
-
-        // var group = new Group(groupName, owner, groupMembers);
-        var group = new Group(groupName, new User(), groupMembers);
+        owner.AddGroup(group);
+        
         DataHandler.Create(group);
 
         return group.Id;
     }
     
 
-    public void EditGroup(Guid groupId, string? optionalNewName = null, List<User>? optionalNewUsers = null)
+    public void EditGroup(Guid groupId, string newName, IEnumerable<Guid> newMemberIds, Guid userId)
     {
-        var group = FindObjectById(groupId, DataHandler.Instance.AllGroups);
+        var group = DataHandler.FindObjectById(groupId, DataHandler.Instance.AllGroups);
+
+        if (group.Owner.Id != userId)
+            throw new UnauthorizedAccessException();
         
-        if (optionalNewName != null) group.Name = optionalNewName;
-        if (optionalNewUsers != null)
+        group.Name = newName;
+        
+        var newMembers = newMemberIds.Select(id => DataHandler.FindObjectById(id, DataHandler.Instance.AllUsers)).ToList();
+
+        var membersToAdd = newMembers.Where(user => !group.Members.Contains(user)).ToList();
+        foreach (var member in membersToAdd)
         {
-            foreach (var user in optionalNewUsers.Where(user => !group.Members.Contains(user)))
-                group.AddUser(user);
+            group.AddUser(member);
+            member.AddGroup(group);
         }
+
+        var membersToRemove = group.Members.Where(member => !newMembers.Contains(member) && member != group.Owner).ToList();
+        foreach (var member in membersToRemove)
+        {
+            group.RemoveUser(member);
+            member.RemoveGroup(group);
+        }
+        
+        DataHandler.Instance.SaveChanges();
     }
 
     public void DeleteGroup(Guid groupId)
     {
-        var group = FindObjectById(groupId, DataHandler.Instance.AllGroups);
+        var group = DataHandler.FindObjectById(groupId, DataHandler.Instance.AllGroups);
 
+        foreach (var member in group.Members)
+            member.RemoveGroup(group);
+
+        for (int i = group.Notes.Count-1;i>=0; i--)
+        {
+            var note = group.Notes[i];
+            var user = DataHandler.FindObjectById(note.UserId, DataHandler.Instance.AllUsers);
+            user.RemoveCreatedNote(note);
+            DataHandler.Delete(note);
+        }
+        
         DataHandler.Delete(group);
-    }
-    
-    private T FindObjectById<T>(Guid objectId, List<T> objectList) where T : Entity
-    {
-        var obj = objectList.Find(obj => obj.Id == objectId);
-        if (obj == null) throw new ObjectDoesNotExistException(objectId);
-
-        return obj;
     }
 }

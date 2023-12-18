@@ -1,19 +1,31 @@
 using PPI_projektas.Exceptions;
-using PPI_projektas.objects;
+using PPI_projektas.objects.Factories;
+using PPI_projektas.Services.Interfaces;
 using PPI_projektas.Services.Response;
 using PPI_projektas.Utils;
 
 namespace PPI_projektas.Services;
 
-public class UserService
+public class UserService : IUserService
 {
+    private readonly IObjectDataItemFactory _objectDataItemFactory;
+    private readonly IUserFactory _userFactory;
+
+    public UserService(IObjectDataItemFactory objectDataItemFactory, IUserFactory userFactory)
+    {
+        _objectDataItemFactory = objectDataItemFactory;
+        _userFactory = userFactory;
+    }
+    
     public bool ValidateData(string data)
     {
         return !String.IsNullOrEmpty(data);
     }
     public bool ValidateData<T>(List<T>? data)
     {
-        return data != null;
+        if (data == null) return false;
+
+        return data.Any();
     }
     public bool ValidateData(UserCreateData data)
     {
@@ -30,10 +42,22 @@ public class UserService
 
         return users;
     }
+    
+    public List<ObjectDataItem> GetGroupsFromUser(Guid userId)
+    {
+        var user = DataHandler.FindObjectById(userId, DataHandler.Instance.AllUsers);
+
+        if (user == null)
+            throw new ObjectDoesNotExistException();
+
+        var groups = user.Groups.Select(group => _objectDataItemFactory.Create(group.Id, group.Name)).ToList();
+        
+        return groups;
+    }
 
     public Guid CreateUser(UserCreateData userData)
     {
-        var newUser = new User(userData.Username, userData.Password, userData.Email);
+        var newUser = _userFactory.Create(userData.Username, userData.Password, userData.Email);
         DataHandler.Create(newUser);
 
         return newUser.Id;
@@ -41,8 +65,11 @@ public class UserService
 
     public void DeleteUser(Guid userId)
     {
-        var user = DataHandler.Instance.AllUsers.Find(user => user.Id == userId);
-        if(user == null) throw new ObjectDoesNotExistException(userId);
+        var user = DataHandler.FindObjectById(userId, DataHandler.Instance.AllUsers);
+
+        foreach (var group in user.Groups)
+            group.RemoveUser(user);
+        
         DataHandler.Delete(user);
     }
 }

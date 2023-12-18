@@ -1,0 +1,31 @@
+﻿.note-display {
+    padding-left: 75px;
+    width: 100%;
+    white-space: nowrap;
+    display: inline-flex;
+    flex-direction: row;
+    overflow-x: scroll;
+}
+
+.note-list {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+.note-display-element {
+    font-size: 25px;
+}
+
+.note-search {
+    padding-top: 10px;
+    padding-left: 75px;
+    width: 100%;
+    white-space: nowrap;
+    display: inline-block;
+    text-align: center;
+}
+
+.note-search-bar {
+    margin-right: 15px;
+}

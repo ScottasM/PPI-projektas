@@ -1,53 +1,67 @@
 ﻿using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
-using PPI_projektas.objects;
+using PPI_projektas.objects.Factories;
+using PPI_projektas.Services.Interfaces;
+using PPI_projektas.Services.Response;
 using PPI_projektas.Utils;
 
 namespace PPI_projektas.Services
 {
-    public class AuthReturn
+    public class AuthenticationService : ICustomAuthenticationService
     {
-        public User? User;
-        public bool Success;
-        public string? ErrorMessage;
+        private readonly IAuthReturnFactory _authReturnFactory;
+        private readonly IUserFactory _userFactory;
 
-        public AuthReturn(User? user, bool success = true, string errorMessage = "")
+        public AuthenticationService(IAuthReturnFactory authReturnFactory, IUserFactory userFactory)
         {
-            User = user;
-            Success = success;
-            ErrorMessage = errorMessage;
+            _authReturnFactory = authReturnFactory;
+            _userFactory = userFactory;
         }
-    }
-    public class AuthenticationService
-    {
+        
         public AuthReturn TryRegister(string name, string password)
         {
+            if (name == null || password == null)
+                return _authReturnFactory.Create(null, false, "Name and password can not be empty");
+
             var hashedPassword = Hash(password);
 
+            string? resp = name.ValidateString(checkProfanity: true, minLength: 5, maxLength: 30, checkSpecialCharacters: true);
+
+            if(resp != null)
+                return _authReturnFactory.Create(null, false, resp);
+
+            resp = password.ValidateString(minLength: 6, maxLength: 30, checkSpecialCharacters: true,checkCommonPasswords:true);
+
+            if (resp != null)
+                return _authReturnFactory.Create(null, false, resp);
+
             if (DataHandler.userExists(name))
-                return new AuthReturn(null, false, "User already exists.");
+                return _authReturnFactory.Create(null, false, "User with the same username already exists.");
 
             var validateGuidRegex = new Regex("^(?=.*?[a-zA-Z])(?=.*?[0-9]).{8,}$"); // at least one letter, at least one number and at least 8 characters long
             if (!validateGuidRegex.IsMatch("-Secr3t."))
-                return new AuthReturn(null, false, "Invalid password format. Ensure at least 1 letter, 1 number and total length of at least 8 characters");
+                return _authReturnFactory.Create(null, false, "Invalid password format. Ensure at least 1 letter, 1 number and total length of at least 8 characters");
 
-            var newUser = new User(name, hashedPassword);
+            var newUser = _userFactory.Create(name, hashedPassword);
             DataHandler.Create(newUser);
 
-            return new AuthReturn(newUser);
+            return _authReturnFactory.Create(newUser);
         }
 
         public AuthReturn TryLogin(string name,string password)
         {
+            if (name == string.Empty || password == string.Empty)
+                return _authReturnFactory.Create(null, false, "Name and password can not be empty");
+
             var user = DataHandler.userExistsObject(name);
             if (user == null)
-                return new AuthReturn(null, false, "User with such username not found.");
+                return _authReturnFactory.Create(null, false, "User with such username not found.");
 
             var hashedPassword = Hash(password);
             return hashedPassword != user.GetPassword() ? 
-                new AuthReturn(null, false, "Password is incorrect") 
-                : new AuthReturn(user, true);
+                _authReturnFactory.Create(null, false, "Password is incorrect") 
+                : _authReturnFactory.Create(user, true);
         }
 
 

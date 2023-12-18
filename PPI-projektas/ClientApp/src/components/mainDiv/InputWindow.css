@@ -1,0 +1,51 @@
+.group-create-menu, .user-login-menu {
+    top: 50%;
+    left: 50%;
+    padding: 16px;
+    transform: translate(-50%, -50%);
+    background-color: #4a4e59;
+    border: .5px solid var(--nav-main-color);
+    box-shadow: 3px 3px 0px 2px var(--nav-main-color);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.group-create-menu {
+    width: 600px;
+}
+
+.submit-button {
+    position: relative;
+    margin-top: 10px;
+    border-radius: 8px;
+    background-color: var(--button-main-color);
+    color: #FFFFFF;
+    font-weight: 600;
+    letter-spacing: .8px;
+    text-shadow: .5px .5px 3px #000;
+    border: solid transparent;
+    border-width: 0 0 4px;
+    border-color: var(--button-secondary-color);
+    cursor: pointer;
+    transition: filter .2s;
+    user-select: none;
+    -webkit-user-select: none;
+    margin-right: 5px;
+}
+
+.submit-button:focus {
+    user-select: auto;
+}
+
+.submit-button:hover:not(:disabled) {
+    filter: brightness(1.1);
+}
+
+.submit-button:active {
+    bottom: -2px;
+}
+
+
+#group-name, #user-search {
+    width: 350px;
+}
