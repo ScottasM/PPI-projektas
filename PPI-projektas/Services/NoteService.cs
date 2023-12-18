@@ -93,7 +93,7 @@ public class NoteService : INoteService
         DataHandler.Instance.SaveChanges();
     }
 
-    public void DeleteNote(Guid userId, Guid noteId)
+    public void DeleteNote(Guid noteId, Guid userId)
     {
         var note = DataHandler.FindObjectById(noteId, DataHandler.Instance.AllNotes);
         var user = DataHandler.FindObjectById(userId, DataHandler.Instance.AllUsers);
