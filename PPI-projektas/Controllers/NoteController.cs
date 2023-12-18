@@ -41,11 +41,11 @@ namespace PPI_projektas.Controllers
         }
 
         [HttpPost("createNote/{groupId:guid}/{userId:guid}")]
-        public IActionResult CreateNote(Guid groupId, Guid userId)
+        public IActionResult CreateNote(Guid userId, Guid groupId)
         {
             try
             {
-                var noteId = _noteService.CreateNote(groupId, userId);
+                var noteId = _noteService.CreateNote(userId, groupId);
                 return CreatedAtAction("CreateNote", noteId);
             }
             catch (ObjectDoesNotExistException)
@@ -78,7 +78,7 @@ namespace PPI_projektas.Controllers
         {
             try
             {
-                _noteService.UpdatePrivileges(noteId, privilegeUpdateData.UserId, privilegeUpdateData.EditorIds);
+                _noteService.UpdatePrivileges(privilegeUpdateData.UserId, noteId, privilegeUpdateData.EditorIds);
                 return Ok();
             }
             catch (ObjectDoesNotExistException)
@@ -96,7 +96,7 @@ namespace PPI_projektas.Controllers
         {
             try
             {
-                _noteService.DeleteNote(noteId, userId);
+                _noteService.DeleteNote(userId, noteId);
                 return NoContent();
             }
             catch (ObjectDoesNotExistException)

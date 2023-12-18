@@ -14,6 +14,7 @@ export class Layout extends Component {
             mounted: false,
             groups: [],
             toggledGroupId: 0,
+            toggledGroupOwner: false,
             currentUserId: 0,
             currentGroupId: 0,
         };
@@ -36,10 +37,11 @@ export class Layout extends Component {
         
     }
 
-    toggleGroupEditMenu = (groupId) => {
+    toggleGroupEditMenu = (groupId, isOwner) => {
         this.setState((prevState) => ({
             displayGroupEditMenu: !prevState.displayGroupEditMenu,
             toggledGroupId: groupId,
+            toggledGroupOwner: isOwner
         }));
     }
     
@@ -91,6 +93,7 @@ export class Layout extends Component {
                    groups={this.state.groups}
           />
           <MainContainer fetchGroupList={this.fetchGroupList} toggleGroupEditMenu={this.toggleGroupEditMenu}
+                         isOwner={this.state.toggledGroupOwner}
                          toggledGroup={this.state.groups.find(group => group.id === this.state.toggledGroupId)}
                          displayGroupEditMenu={this.state.displayGroupEditMenu}
                          setCurrentUser={this.setCurrentUser}

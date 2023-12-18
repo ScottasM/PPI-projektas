@@ -12,9 +12,6 @@ export class Group extends Component {
     }
 
     showContextMenu = (event) => {
-        if (!this.props.isOwner && !this.props.isAdministrator)
-            return;
-        
         event.preventDefault();
         this.setState({ isContextMenuVisible: true });
         
@@ -48,11 +45,11 @@ export class Group extends Component {
                 <button className="group rounded-circle" onClick={() => this.props.toggleGroup(this.props.groupId)} onContextMenu={this.showContextMenu}>
                     {this.props.groupInitials}
                 </button>
-                {isContextMenuVisible && (
+                {(this.props.isOwner || this.props.isAdministrator) && isContextMenuVisible && (
                     <div className="context-menu">
                         <ul>
                             <li>
-                                <button className="context-button" onClick={() => this.props.toggleGroupEditMenu(this.props.groupId)}>Edit</button>
+                                <button className="context-button" onClick={() => this.props.toggleGroupEditMenu(this.props.groupId, this.props.isOwner)}>Edit</button>
                             </li>
                             {this.props.isOwner && (
                                 <li>

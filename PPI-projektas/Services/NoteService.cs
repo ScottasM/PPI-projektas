@@ -63,16 +63,16 @@ public class NoteService : INoteService
         return _noteDataFactory.Create(note.Id, note.Name, tags.Select(tag => tag.Value).ToList(), note.Text);
     }
 
-    public Guid CreateNote(Guid groupId, Guid authorId)
+    public Guid CreateNote(Guid userId, Guid groupId)
     {
 
-        var author = DataHandler.FindObjectById(authorId, DataHandler.Instance.AllUsers);
+        var author = DataHandler.FindObjectById(userId, DataHandler.Instance.AllUsers);
         var group = DataHandler.FindObjectById(groupId, DataHandler.Instance.AllGroups);
 
-        if (author == null) throw new ObjectDoesNotExistException(authorId);
+        if (author == null) throw new ObjectDoesNotExistException(userId);
         if (group == null) throw new ObjectDoesNotExistException(groupId);
         
-        var note = _noteFactory.Create(authorId, groupId);
+        var note = _noteFactory.Create(userId, groupId);
         
         DataHandler.Create(note);
         author.AddCreatedNote(note);
@@ -99,7 +99,7 @@ public class NoteService : INoteService
         DataHandler.Instance.SaveChanges();
     }
 
-    public void UpdatePrivileges(Guid noteId, Guid userId, List<Guid> newEditorIds)
+    public void UpdatePrivileges(Guid userId, Guid noteId, List<Guid> newEditorIds)
     {
         var note = DataHandler.FindObjectById(noteId, DataHandler.Instance.AllNotes);
         if (note == null) throw new ObjectDoesNotExistException(noteId);
@@ -117,7 +117,7 @@ public class NoteService : INoteService
     }
     
 
-    public void DeleteNote(Guid noteId, Guid userId)
+    public void DeleteNote(Guid userId, Guid noteId)
     {
         var note = DataHandler.FindObjectById(noteId, DataHandler.Instance.AllNotes);
         var user = DataHandler.FindObjectById(userId, DataHandler.Instance.AllUsers);

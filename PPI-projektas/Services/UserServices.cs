@@ -10,11 +10,13 @@ public class UserService : IUserService
 {
     private readonly IObjectDataItemFactory _objectDataItemFactory;
     private readonly IUserFactory _userFactory;
+    private readonly IGroupIconDataFactory _groupIconDataFactory;
 
-    public UserService(IObjectDataItemFactory objectDataItemFactory, IUserFactory userFactory)
+    public UserService(IObjectDataItemFactory objectDataItemFactory, IUserFactory userFactory, IGroupIconDataFactory groupIconDataFactory)
     {
         _objectDataItemFactory = objectDataItemFactory;
         _userFactory = userFactory;
+        _groupIconDataFactory = groupIconDataFactory;
     }
     
     public bool ValidateData(string data)
@@ -42,14 +44,16 @@ public class UserService : IUserService
         return users;
     }
     
-    public List<ObjectDataItem> GetGroupsFromUser(Guid userId)
+    public List<GroupIconData> GetGroupsFromUser(Guid userId)
     {
         var user = DataHandler.FindObjectById(userId, DataHandler.Instance.AllUsers);
 
         if (user == null)
             throw new ObjectDoesNotExistException();
 
-        var groups = user.Groups.Select(group => _objectDataItemFactory.Create(group.Id, group.Name)).ToList();
+        var groups = user.Groups
+            .Select(group => _groupIconDataFactory.Create(group.Id, group.Name, group.Owner.Id == userId, group.Administrators.Select(admin => admin.Id).Contains(userId)))
+            .ToList();
         
         return groups;
     }

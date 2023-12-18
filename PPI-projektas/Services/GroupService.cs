@@ -12,11 +12,10 @@ public class GroupService : IGroupService
     private readonly IGroupIconDataFactory _groupIconDataFactory;
     private readonly IGroupEditDataFactory _groupEditDataFactory;
 
-    public GroupService(IObjectDataItemFactory objectDataItemFactory, IGroupFactory groupFactory, IGroupIconDataFactory groupIconDataFactory, IGroupEditDataFactory groupEditDataFactory)
+    public GroupService(IObjectDataItemFactory objectDataItemFactory, IGroupFactory groupFactory, IGroupEditDataFactory groupEditDataFactory)
     {
         _objectDataItemFactory = objectDataItemFactory;
         _groupFactory = groupFactory;
-        _groupIconDataFactory = groupIconDataFactory;
         _groupEditDataFactory = groupEditDataFactory;
     }
     
@@ -30,7 +29,7 @@ public class GroupService : IGroupService
         return data;
     }
 
-    public GroupEditData GetUsersInGroup(Guid groupId)
+    public GroupUserData GetUsersInGroup(Guid groupId)
     {
         var group = DataHandler.FindObjectById(groupId, DataHandler.Instance.AllGroups);
         

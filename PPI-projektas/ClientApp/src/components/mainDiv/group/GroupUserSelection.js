@@ -118,30 +118,30 @@ export class GroupUserSelection extends Component {
                     value={this.state.userSearch}
                     onChange={this.handleUserSearch}/>
                 <br />
-                <p className="m-0">Add Members</p>
+                <p className="m-0">Group Members</p>
                 <ScrollContainer
                     elements={this.state.users}
                     buttonClassName={"add-user rounded-circle"}
                     behaviour={this.addMember}
                     iconType={(<MdPersonAddAlt/>)}/>
-                <p className="m-0">Remove Members</p>
                 <ScrollContainer
                     elements={this.props.members}
                     buttonClassName={"remove-user rounded-circle"}
                     behaviour={this.removeMember}
                     iconType={(<MdOutlinePersonRemove/>)}/>
-                <p className="m-0">Add Administrators</p>
-                <ScrollContainer
-                    elements={this.props.members}
-                    buttonClassName={"add-user rounded-circle"}
-                    behaviour={this.addAdministrator}
-                    iconType={(<MdPersonAddAlt/>)}/>
-                <p className="m-0">Remove Administrators</p>
-                <ScrollContainer
-                    elements={this.state.administrators}
-                    buttonClassName={"remove-user rounded-circle"}
-                    behaviour={this.removeAdministrator}
-                    iconType={(<MdOutlinePersonRemove/>)}/>
+                {this.props.isOwner && <div>
+                    <p className="m-0">Group Administrators</p>
+                    <ScrollContainer
+                        elements={this.props.members}
+                        buttonClassName={"add-user rounded-circle"}
+                        behaviour={this.addAdministrator}
+                        iconType={(<MdPersonAddAlt/>)}/>
+                    <ScrollContainer
+                        elements={this.props.administrators}
+                        buttonClassName={"remove-user rounded-circle"}
+                        behaviour={this.removeAdministrator}
+                        iconType={(<MdOutlinePersonRemove/>)}/>
+                </div>}
             </div>
         );
     }

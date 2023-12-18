@@ -11,6 +11,7 @@ export class GroupCreateMenu extends Component {
         this.state = {
             groupName: '',
             members: [],
+            administrators: []
         };
     }
     
@@ -93,11 +94,12 @@ export class GroupCreateMenu extends Component {
        let groupData = {
            GroupName: groupName,
            Id: this.props.currentUserId,
-           MemberIds : this.state.members.map(member => member.id)
+           MemberIds: this.state.members.map(member => member.id),
+           AdministratorIds: this.state.administrators.map(administrator => administrator.id)
        };
        
        if(this.props.configType === 'edit'){
-           groupData.groupId = this.props.toggledGroup.id;
+           groupData.GroupId = this.props.toggledGroup.id;
        }
 
        await fetch(`http://localhost:5268/api/group/${this.props.configType}group`, { // temporary localhost api url
@@ -136,8 +138,7 @@ export class GroupCreateMenu extends Component {
                         id="group-name" 
                         name="group-name" 
                         value={groupName}
-                        onChange={this.handleInputChange}
-                    />
+                        onChange={this.handleInputChange}/>
                     <br />
                     <br />
                     <GroupUserSelection
@@ -145,7 +146,8 @@ export class GroupCreateMenu extends Component {
                         members = {this.state.members}
                         updateMembers = {this.updateMembers}
                         administrators = {this.state.administrators}
-                        updateAdministrators = {this.updateAdministrators}/>
+                        updateAdministrators = {this.updateAdministrators}
+                        isOwner={this.props.isOwner}/>
                     <br />
                     <input className="submit-button" type="submit" name="createButton" value={this.props.configType.charAt(0).toUpperCase() + this.props.configType.slice(1)} />
                 </form>

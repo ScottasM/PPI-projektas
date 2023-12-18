@@ -139,12 +139,13 @@ export class MainContainer extends Component {
                     </div>
                 )}
                         
-                {this.state.displayGroupCreateMenu &&
+                {this.props.isOwner && this.state.displayGroupCreateMenu &&
                     <GroupCreateMenu 
                         configType = {this.state.groupConfigMenuType}
                         toggledGroup={this.props.toggledGroup}
                         fetchGroupList={this.props.fetchGroupList} toggleGroupCreateMenu={this.toggleGroupConfigMenu} 
-                        currentUserId={this.props.currentUserId}/>
+                        currentUserId={this.props.currentUserId}
+                        isOwner={this.props.isOwner}/>
                 }
                 
                 {this.state.displaySignInMenu && 

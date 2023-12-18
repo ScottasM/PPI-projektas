@@ -35,8 +35,8 @@ export class ScrollContainer extends Component {
     
     render () {
         return (
-            <div className="scroll-container" ref={this.addMemberScrollContainerRef}>
-                {this.props.elements.map((element) => (
+            <div className="scroll-container" ref={this.scrollContainerRef}>
+                {this.props.elements != null && this.props.elements.map((element) => (
                     <div key={element.id} className="scroll-item">
                         <div className="item-content">
                             <p>{element.name}</p>

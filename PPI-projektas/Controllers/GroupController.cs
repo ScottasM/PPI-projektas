@@ -63,7 +63,7 @@ namespace PPI_projektas.Controllers
 
             try
             {
-                _groupService.EditGroup(groupData.groupId, groupData.GroupName, groupData.MemberIds, groupData.AdministratorIds, groupData.Id);
+                _groupService.EditGroup(groupData.GroupId, groupData.GroupName, groupData.MemberIds, groupData.AdministratorIds, groupData.Id);
                 return Ok();
             }
             catch (UnauthorizedAccessException)
@@ -101,6 +101,6 @@ namespace PPI_projektas.Controllers
 
     public record GroupEditData : GroupCreateData
     {
-        public Guid groupId { get; set; }
+        public Guid GroupId { get; set; }
     }
 }
