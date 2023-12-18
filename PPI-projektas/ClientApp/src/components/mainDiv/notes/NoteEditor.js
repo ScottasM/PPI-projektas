@@ -2,7 +2,8 @@ import React, { Component }  from 'react';
 import './NoteHub.css';
 import {TagList} from "../../TagList";
 import {MdDelete, MdEditDocument, MdSave} from "react-icons/md";
-import {Tag} from "reactstrap";
+import { Tag } from "reactstrap";
+import { AiFillStar } from "react-icons/ai";
 
 export class NoteEditor extends Component {
     constructor (props) {
@@ -182,7 +183,6 @@ export class NoteEditor extends Component {
     }
 
     handleFavoriteNote = () => {
-
     }
 
     render() {
@@ -200,12 +200,12 @@ export class NoteEditor extends Component {
                         onChange={(e) => this.handleTitleChange(e)} 
                     />
                     <div className="fav-button">
-                        <div className="star-outline-container">
-                            <div className="fav-star-outline" />
-                            <div className="star-container">
-                                <div className="fav-star" onClick={() => this.handleFavoriteNote()} />
-                            </div>
-                        </div>
+                        <AiFillStar
+                            className="star"
+                            color="#ffc107"
+                            size={25}
+                            onClick={() => this.handleFavoriteNote()}
+                        />
                     </div>
 
                 </div>

@@ -257,8 +257,7 @@ textarea.note-text-edit:focus{
 }
 
 .fav-button {
-    right: 0;
-    width: 60px;
+    width: 40px;
     transform: scale(0.8);
 }
 

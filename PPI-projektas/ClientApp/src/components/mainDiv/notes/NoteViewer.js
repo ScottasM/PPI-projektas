@@ -1,6 +1,7 @@
 ﻿import React, {Component} from 'react'
 import {TagList} from "../../TagList";
 import {MdDelete, MdEditDocument} from "react-icons/md";
+import { AiFillStar } from "react-icons/ai";
 
 export class NoteViewer extends Component {
     constructor (props) {
@@ -20,12 +21,12 @@ export class NoteViewer extends Component {
                 <div className="note-title">
                     <p>{noteData.name}</p>
                     <div className="fav-button">
-                        <div className="star-outline-container">
-                            <div className="fav-star-outline" />
-                            <div className="star-container">
-                                <div className="fav-star" onClick={() => this.handleFavoriteNote()} />
-                            </div>
-                        </div>
+                        <AiFillStar
+                            className="star"
+                            color={"#e4e5e9"}
+                            size={25}
+                            onClick={() => this.handleFavoriteNote()}
+                        />
                     </div>
                 </div>
                 <div className="note-tags">
