@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿﻿using Microsoft.EntityFrameworkCore;
 using PPI_projektas.objects;
 
 namespace PPI_projektas.Utils
@@ -58,11 +58,12 @@ namespace PPI_projektas.Utils
                 .WithMany(u => u.OwnedGroups);
 
             modelBuilder.Entity<Group>()
-                .HasMany(g => g.Administrators);
+                .HasMany(g => g.Administrators)
+                .WithMany(u => u.AdministratorOfGroups);
 
             modelBuilder.Entity<Note>()
-                .HasMany(n => n.Editors);
-
+                .HasMany(n => n.Editors)
+                .WithMany(u => u.EditorOfNotes);
         }
     }
 }

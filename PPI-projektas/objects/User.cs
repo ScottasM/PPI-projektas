@@ -11,13 +11,12 @@ public class User : Entity, IEquatable<User>
     public string Username { get; set; }
     public string _password { get; set; }
     public string? _email { get; set; }
-
-
-
+    
     public List<Note> CreatedNotes { get; set; } = new();
+    public List<Note> EditorOfNotes { get; set; } = new();
     public List<Note> FavoriteNotes { get; set; } = new();
     public List<Group> Groups { get; set; } = new();
-    
+    public List<Group> AdministratorOfGroups { get; set; } = new();
     public List<Group> OwnedGroups { get; set; } = new();
     
     private object listLock = new();
