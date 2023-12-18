@@ -67,7 +67,6 @@ public class GroupService : IGroupService
 
         return group.Id;
     }
-    
 
     public void EditGroup(Guid groupId, string newName, IEnumerable<Guid> newMemberIds, IEnumerable<Guid> newAdministratorIds, Guid userId)
     {

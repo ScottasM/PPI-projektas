@@ -95,7 +95,6 @@ export class NoteHub extends Component {
                         />
                     </div>
                 )
-
         }
     }
 }

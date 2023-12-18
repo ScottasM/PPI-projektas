@@ -10,7 +10,6 @@ export class NoteDisplay extends Component {
             mounted: false,
             notes: [],
             isLoading: true,
-            selectedNote: 0,
             defaultCheck: true,
             searchType: 0,
             tagFilter: '',
@@ -77,12 +76,6 @@ export class NoteDisplay extends Component {
             this.props.noteCreated();
     }
     
-    handleNoteSelect = (event, noteId) => {
-        this.setState({
-            selectedNote: noteId,
-        })
-        event.stopPropagation();
-    }
 
     handleGlobalClick = (event) => {
         const noteCard = document.querySelector('.note-card.selected');
@@ -90,9 +83,7 @@ export class NoteDisplay extends Component {
         const isNoCloseButtonClick = event.target.classList.contains('no-close-button');
         
         if (noteCard && !noteCard.contains(event.target) && !isNoteHubClick && !isNoCloseButtonClick) {
-            this.setState({
-                selectedNote: 0,
-            });
+            this.props.resetSelectedNote();
         }
     };
 
@@ -131,7 +122,8 @@ export class NoteDisplay extends Component {
     }
     
     render() {
-        const {selectedNote, notes} = this.state;
+        const {notes} = this.state;
+        const {selectedNote} = this.props.selectedNote;
         
         return (
             <div>
@@ -160,7 +152,7 @@ export class NoteDisplay extends Component {
                                 <Note
                                     key={note.id}
                                     noteData={note}
-                                    handleSelect={this.handleNoteSelect}
+                                    handleSelect={this.props.handleNoteSelect}
                                 />
                             ))
                         ) : (
@@ -178,9 +170,10 @@ export class NoteDisplay extends Component {
                         currentGroupId={this.props.currentGroupId}
                         currentUserId={this.props.currentUserId}
                         fetchNotes={this.fetchNotes}
-                        handleClose={() => this.setState({selectedNote: 0}, () => {
+                        handleClose={() => {
+                            this.props.resetSelectedNote();
                             this.fetchNotes();
-                        })}
+                        }}
                         
                     />
                 }

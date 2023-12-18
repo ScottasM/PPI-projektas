@@ -73,7 +73,20 @@ namespace PPI_projektas.Controllers
             }
         }
 
-        [HttpPost("updatePrivileges/{noteId:guid}")]
+        [HttpGet("getPrivileges/{noteId:guid}")]
+        public IActionResult GetPrivileges(Guid noteId)
+        {
+            try
+            {
+                return Ok(_noteService.GetPrivileges(noteId));
+            }
+            catch (ObjectDoesNotExistException)
+            {
+                return NotFound();
+            }
+        }
+        
+        [HttpPut("updatePrivileges/{noteId:guid}")]
         public IActionResult UpdatePrivileges(Guid noteId, [FromBody] NotePrivilegeUpdateData privilegeUpdateData)
         {
             try

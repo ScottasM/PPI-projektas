@@ -8,6 +8,7 @@ import { CreatingButtons } from "./CreatingButtons";
 import { CreatingLoginButtons } from "./login/CreatingLoginButtons";
 import { CreatingNotesButton } from "./notes/CreatingNotesButton";
 import './MainContainer.css';
+import {NotePrivilegeMenu} from "./notes/privileges/NotePrivilegeMenu";
 
 export class MainContainer extends Component {
     static displayName = MainContainer.name;
@@ -19,7 +20,9 @@ export class MainContainer extends Component {
             groupConfigMenuType: 'create',
             displayLoginMenu: false,
             displaySignInMenu: false,
+            displayNotePrivilegeMenu: false,
             notes: [],
+            selectedNote: 0,
             displayNote: false,
             noteHubDisplay: 1,
             currentUserName: '',
@@ -53,6 +56,12 @@ export class MainContainer extends Component {
         this.setState({
             createNote: createNote,
         });
+    }
+    
+    toggleNotePrivilegeMenu = () => {
+        this.setState((prevState) => ({
+            displayNotePrivilegeMenu: !prevState.displayNotePrivilegeMenu
+        }));
     }
     
     toggleGroupConfigMenu = () => {
@@ -103,6 +112,20 @@ export class MainContainer extends Component {
         })
     }
     
+    handleNoteSelect = (event, noteId) => {
+        this.setState({
+            selectedNote: noteId,
+        })
+
+        event.stopPropagation();
+    }
+    
+    resetSelectedNote = () => {
+        this.setState({
+            selectedNote: 0
+        });
+    }
+    
     render() {
         return (
             <div className="main-container">
@@ -123,7 +146,10 @@ export class MainContainer extends Component {
                         }
                         </div>
                         
-                        <NoteDisplay currentGroupId={this.props.currentGroupId}
+                        <NoteDisplay selectedNote={this.state.selectedNote}
+                                     handleNoteSelect={this.handleNoteSelect}
+                                     resetSelectedNote={this.resetSelectedNote}
+                                     currentGroupId={this.props.currentGroupId}
                                      currentUserId={this.props.currentUserId}
                                      createNote={this.state.createNote}
                                      noteCreated={() => this.handleCreateNote(false)}
@@ -146,6 +172,13 @@ export class MainContainer extends Component {
                         fetchGroupList={this.props.fetchGroupList} toggleGroupCreateMenu={this.toggleGroupConfigMenu} 
                         currentUserId={this.props.currentUserId}
                         isOwner={this.props.isOwner}/>
+                }
+
+                {this.state.displayNotePrivilegeMenu &&
+                    <NotePrivilegeMenu
+                        noteId={this.state.selectedNote}
+                        currentUserId={this.props.currentUserId}
+                        toggleNotePrivilegeMenu={this.toggleNotePrivilegeMenu}/>
                 }
                 
                 {this.state.displaySignInMenu && 
