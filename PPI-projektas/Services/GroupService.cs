@@ -9,36 +9,45 @@ public class GroupService : IGroupService
 {
     private readonly IObjectDataItemFactory _objectDataItemFactory;
     private readonly IGroupFactory _groupFactory;
+    private readonly IGroupIconDataFactory _groupIconDataFactory;
+    private readonly IGroupEditDataFactory _groupEditDataFactory;
 
-    public GroupService(IObjectDataItemFactory objectDataItemFactory, IGroupFactory groupFactory)
+    public GroupService(IObjectDataItemFactory objectDataItemFactory, IGroupFactory groupFactory, IGroupIconDataFactory groupIconDataFactory, IGroupEditDataFactory groupEditDataFactory)
     {
         _objectDataItemFactory = objectDataItemFactory;
         _groupFactory = groupFactory;
+        _groupIconDataFactory = groupIconDataFactory;
+        _groupEditDataFactory = groupEditDataFactory;
     }
     
-    public List<ObjectDataItem> GetGroupsByOwner(Guid ownerId)
+    public List<GroupIconData> GetGroupsByOwner(Guid ownerId)
     {
         var data = DataHandler.Instance.AllGroups.Values
             //.Where(group => group.OwnerGuid == ownerId) Will be uncommented when user is associated on the frontend
-            .Select(group => _objectDataItemFactory.Create(group.Id, group.Name))
+            .Select(group => _groupIconDataFactory.Create(group.Id, group.Name, group.Owner.Id == ownerId, group.Administrators.Select(admin => admin.Id).Contains(ownerId)))
             .ToList();
         
         return data;
     }
 
-    public List<ObjectDataItem> GetUsersInGroup(Guid groupId)
+    public GroupEditData GetUsersInGroup(Guid groupId)
     {
         var group = DataHandler.FindObjectById(groupId, DataHandler.Instance.AllGroups);
-
-        var users = group.Members
+        
+        var members = group.Members
+            .Except(group.Administrators)
             .Where(user => user != group.Owner)
             .Select(user => _objectDataItemFactory.Create(user.Id, user.GetUsername()))
             .ToList();
+    
+        var administrators = group.Administrators
+            .Select(administrator => _objectDataItemFactory.Create(administrator.Id, administrator.GetUsername()))
+            .ToList();
 
-        return users;
+        return _groupEditDataFactory.Create(members, administrators);
     }
 
-    public Guid CreateGroup(Guid ownerId, string groupName, IEnumerable<Guid> groupMemberIds)
+    public Guid CreateGroup(Guid ownerId, string groupName, IEnumerable<Guid> groupMemberIds, IEnumerable<Guid> groupAdministratorIds)
     {
         var owner = DataHandler.FindObjectById(ownerId, DataHandler.Instance.AllUsers);
 
@@ -49,6 +58,10 @@ public class GroupService : IGroupService
         foreach (var user in groupMembers)
             user.AddGroup(group);
         
+        group.Administrators = groupAdministratorIds
+            .Select(id => DataHandler.FindObjectById(id, DataHandler.Instance.AllUsers))
+            .ToList();
+        
         owner.AddGroup(group);
         
         DataHandler.Create(group);
@@ -57,11 +70,11 @@ public class GroupService : IGroupService
     }
     
 
-    public void EditGroup(Guid groupId, string newName, IEnumerable<Guid> newMemberIds, Guid userId)
+    public void EditGroup(Guid groupId, string newName, IEnumerable<Guid> newMemberIds, IEnumerable<Guid> newAdministratorIds, Guid userId)
     {
         var group = DataHandler.FindObjectById(groupId, DataHandler.Instance.AllGroups);
 
-        if (group.Owner.Id != userId)
+        if (group.Owner.Id != userId && !group.Administrators.Select(user => user.Id).Contains(userId))
             throw new UnauthorizedAccessException();
         
         group.Name = newName;
@@ -74,13 +87,18 @@ public class GroupService : IGroupService
             group.AddUser(member);
             member.AddGroup(group);
         }
-
+        
         var membersToRemove = group.Members.Where(member => !newMembers.Contains(member) && member != group.Owner).ToList();
         foreach (var member in membersToRemove)
         {
             group.RemoveUser(member);
             member.RemoveGroup(group);
         }
+
+        if (group.Owner.Id == userId)
+            group.Administrators = newAdministratorIds
+                .Select(id => DataHandler.FindObjectById(id, DataHandler.Instance.AllUsers))
+                .ToList();
         
         DataHandler.Instance.SaveChanges();
     }

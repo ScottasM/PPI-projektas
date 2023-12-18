@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using PPI_projektas.Exceptions;
 using PPI_projektas.Services.Interfaces;
+using PPI_projektas.Services.Response;
 
 namespace PPI_projektas.Controllers
 
@@ -46,7 +47,7 @@ namespace PPI_projektas.Controllers
             
             try
             {
-                var groupId = _groupService.CreateGroup(groupData.Id, groupData.GroupName, groupData.MemberIds);
+                var groupId = _groupService.CreateGroup(groupData.Id, groupData.GroupName, groupData.MemberIds, groupData.AdministratorIds);
                 return CreatedAtAction("CreateGroup", groupId);
             }
             catch (ObjectDoesNotExistException)
@@ -62,7 +63,7 @@ namespace PPI_projektas.Controllers
 
             try
             {
-                _groupService.EditGroup(groupData.groupId, groupData.GroupName, groupData.MemberIds, groupData.Id);
+                _groupService.EditGroup(groupData.groupId, groupData.GroupName, groupData.MemberIds, groupData.AdministratorIds, groupData.Id);
                 return Ok();
             }
             catch (UnauthorizedAccessException)
@@ -95,6 +96,7 @@ namespace PPI_projektas.Controllers
         public string GroupName { get; set; }
         public Guid Id { get; set; }
         public List<Guid> MemberIds { get; set; }
+        public List<Guid> AdministratorIds { get; set; }
     }
 
     public record GroupEditData : GroupCreateData

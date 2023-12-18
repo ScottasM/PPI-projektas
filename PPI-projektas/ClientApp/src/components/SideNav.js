@@ -20,7 +20,8 @@ export class SideNav extends Component {
                         fetchGroupList={this.props.fetchGroupList} 
                         toggleGroupEditMenu={this.props.toggleGroupEditMenu} 
                         toggleGroup={this.props.toggleGroup}
-                        groupId={group.id} key={group.id} groupInitials={group.name.substring(0, 3)} />
+                        groupId={group.id} key={group.id} groupInitials={group.name.substring(0, 3)}
+                        isOwner={group.isOwner} isAdministrator{group.isAdministrator}/>
                 ))}
                 <div className="settings-div position-absolute">
                     <IconContext.Provider value={{ size: "2em" }}>

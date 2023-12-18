@@ -31,7 +31,7 @@ namespace PPI_projektas.Migrations
 
                     b.HasIndex("MembersId");
 
-                    b.ToTable("GroupUser");
+                    b.ToTable("GroupUser", (string)null);
                 });
 
             modelBuilder.Entity("NoteUser", b =>
@@ -46,7 +46,7 @@ namespace PPI_projektas.Migrations
 
                     b.HasIndex("FavoriteNotesId");
 
-                    b.ToTable("NoteUser");
+                    b.ToTable("NoteUser", (string)null);
                 });
 
             modelBuilder.Entity("PPI_projektas.objects.Group", b =>
@@ -66,7 +66,7 @@ namespace PPI_projektas.Migrations
 
                     b.HasIndex("OwnerId");
 
-                    b.ToTable("Groups");
+                    b.ToTable("Groups", (string)null);
                 });
 
             modelBuilder.Entity("PPI_projektas.objects.Note", b =>
@@ -98,7 +98,7 @@ namespace PPI_projektas.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Notes");
+                    b.ToTable("Notes", (string)null);
                 });
 
             modelBuilder.Entity("PPI_projektas.objects.Tag", b =>
@@ -118,7 +118,7 @@ namespace PPI_projektas.Migrations
 
                     b.HasIndex("NoteId");
 
-                    b.ToTable("Tags");
+                    b.ToTable("Tags", (string)null);
                 });
 
             modelBuilder.Entity("PPI_projektas.objects.User", b =>
@@ -140,7 +140,7 @@ namespace PPI_projektas.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users");
+                    b.ToTable("Users", (string)null);
                 });
 
             modelBuilder.Entity("GroupUser", b =>
@@ -176,7 +176,7 @@ namespace PPI_projektas.Migrations
             modelBuilder.Entity("PPI_projektas.objects.Group", b =>
                 {
                     b.HasOne("PPI_projektas.objects.User", "Owner")
-                        .WithMany("OwnedGroups")
+                        .WithMany()
                         .HasForeignKey("OwnerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -223,8 +223,6 @@ namespace PPI_projektas.Migrations
             modelBuilder.Entity("PPI_projektas.objects.User", b =>
                 {
                     b.Navigation("CreatedNotes");
-
-                    b.Navigation("OwnedGroups");
                 });
 #pragma warning restore 612, 618
         }

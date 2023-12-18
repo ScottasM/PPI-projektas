@@ -71,7 +71,9 @@ export class Layout extends Component {
 
             const groupData = responseData.map(group => ({
                 id: group.id,
-                name: group.name
+                name: group.name,
+                isOwner: group.isOwner,
+                isAdministrator: group.isAdministrator
             }));
             
             this.setState({ groups: groupData });
