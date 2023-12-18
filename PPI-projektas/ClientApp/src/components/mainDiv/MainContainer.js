@@ -133,10 +133,13 @@ export class MainContainer extends Component {
 
                 
                 {this.props.currentUserId === 0 && (
-                    <div className="top-nav">
-                        <CreatingLoginButtons toggleMenu={this.toggleSignInMenu} buttonName={{name: "Sign Up"}}/>
-                        <CreatingLoginButtons toggleMenu={this.toggleLoginMenu} buttonName={{name: "Login"}}/>
-                    </div>
+                    <>
+                        <div className="top-nav">
+                            <CreatingLoginButtons toggleMenu={this.toggleSignInMenu} buttonName={{name: "Sign Up"}}/>
+                            <CreatingLoginButtons toggleMenu={this.toggleLoginMenu} buttonName={{name: "Login"}}/>
+                        </div>
+                        <h1><b>Welcome to NoteNest</b><br /> Login or sign up to start sharing notes</h1>
+                    </>
                 )}
                         
                 {this.state.displayGroupCreateMenu &&

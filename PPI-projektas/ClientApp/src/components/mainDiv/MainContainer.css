@@ -43,6 +43,16 @@ input[type=search] {
     border-color: var(--button-secondary-color);
 }
 
+h1 {
+    position: absolute;
+    top: 20%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    color: var(--bg-color);
+    text-shadow: 0.5px 0.5px 6px #000;
+}
+
 h2 {
     color: #FFFFFF;
     letter-spacing: .8px;
