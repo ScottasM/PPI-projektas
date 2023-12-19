@@ -126,14 +126,13 @@ export class NoteDisplay extends Component {
         const {selectedNote} = this.props.selectedNote;
         
         return (
-            <div>
+            <div className='content-display'>
                 <div className='note-search'>
                     <div className='note-search-bar'>
-                        <input type='search' value={this.state.nameFilter} onChange={this.handleNameFilterChange}></input>
-                        <br/>
-                        <input type='search' value={this.state.tagFilter} onChange={this.handleTagFilterChange}></input>
+                        <input placeholder='Search by name...' type='search' value={this.state.nameFilter} onChange={this.handleNameFilterChange} />
+                        <input placeholder='Search by tag...' type='search' value={this.state.tagFilter} onChange={this.handleTagFilterChange} />
                     </div>
-                    <button className='create-button' onClick={this.handleSearch}>Search</button>
+                    <button className='submit-button' onClick={this.handleSearch}>Search</button>
                         <label className='tagFilterLabel'>
                             All
                             <input type='radio' name='searchType' value='All' defaultChecked={this.state.defaultCheck} onClick={this.handleTypeChange}></input>
@@ -143,7 +142,9 @@ export class NoteDisplay extends Component {
                             <input type='radio' name='searchType' value='Any' onClick={this.handleTypeChange}></input>
                         </label>
                 </div>
-                <div className="note-display">
+                <hr />
+                <h5 className="display-title">Group Notes</h5>
+                <div className="group-note-display">
                     {this.props.currentGroupId ?
                         (this.state.isLoading ? (
                             <p>Loading...</p>
@@ -156,9 +157,9 @@ export class NoteDisplay extends Component {
                                 />
                             ))
                         ) : (
-                            <p>No notes found.</p>
+                            <p className="display-message">No notes found for this group.</p>
                         )) : (
-                            <p>Please select a group</p>
+                            <p className="display-message">Please select a group</p>
                         )
                     }
                 </div>
@@ -177,6 +178,11 @@ export class NoteDisplay extends Component {
                         
                     />
                 }
+                <hr />
+                <h5 className="display-title">Favorite Notes</h5>
+                <div className="favorite-note-display">
+                    <p className="display-message">No favorite notes found.</p>
+                </div>
             </div>
         )
     }

@@ -1,6 +1,7 @@
 import React, {Component} from 'react'
 import './Note.css'
 import { MdDelete, MdEditDocument } from "react-icons/md";
+import { PiAddressBook } from "react-icons/pi";
 
 export class Note extends Component {
     constructor(props) {
@@ -25,7 +26,7 @@ export class Note extends Component {
                     )}
                 </div>
                 <div className="note-text">
-                    <p>{noteData.text}</p>
+                    {noteData.text}
                 </div>
                 <div className="note-buttons">
                     <button className="button delete-button">
@@ -33,6 +34,9 @@ export class Note extends Component {
                     </button>
                     <button className="button edit-button">
                         <MdEditDocument />
+                    </button>
+                    <button className="button privileges-button">
+                        <PiAddressBook />
                     </button>
                 </div>
             </div>

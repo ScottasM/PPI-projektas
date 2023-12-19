@@ -127,6 +127,34 @@ public class NoteService : INoteService
     }
     
 
+    public List<ObjectDataItem> GetPrivileges(Guid noteId)
+    {
+        var note = DataHandler.FindObjectById(noteId, DataHandler.Instance.AllNotes);
+        if (note == null) throw new ObjectDoesNotExistException(noteId);
+
+        return note.Editors
+            .Select(editor => _objectDataItemFactory.Create(editor.Id, editor.GetUsername()))
+            .ToList();
+    }
+
+    public void UpdatePrivileges(Guid userId, Guid noteId, List<Guid> newEditorIds)
+    {
+        var note = DataHandler.FindObjectById(noteId, DataHandler.Instance.AllNotes);
+        if (note == null) throw new ObjectDoesNotExistException(noteId);
+
+        if (note.Author.Id != userId
+            && note.Group.Owner.Id != userId
+            && note.Group.Administrators.Select(user => user.Id).Contains(userId))
+            throw new UnauthorizedAccessException();
+
+        note.Editors = newEditorIds
+            .Select(editorId => DataHandler.FindObjectById(editorId, DataHandler.Instance.AllUsers))
+            .ToList();
+        
+        DataHandler.Instance.SaveChanges();
+    }
+    
+
     public void DeleteNote(Guid userId, Guid noteId)
     {
         var note = DataHandler.FindObjectById(noteId, DataHandler.Instance.AllNotes);

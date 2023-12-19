@@ -7,6 +7,10 @@
     --note-main-color: #4A4E69;
 }
 
+html, body {
+    height: 100%;
+}
+
 ::-webkit-scrollbar {
     width: 10px;
 }
@@ -26,6 +30,27 @@
 input[type=text] {
     border-radius: 8px;
     background-color: var(--bg-color);
+    border-style: solid;
+    border-color: var(--note-main-color);
+}
+
+input[type=search] {
+    margin-left: 1.5em;
+    width: 300px;
+    border-radius: 8px;
+    background-color: var(--bg-color);
+    border-style: solid;
+    border-color: var(--button-secondary-color);
+}
+
+h1 {
+    position: absolute;
+    top: 20%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    color: var(--bg-color);
+    text-shadow: 0.5px 0.5px 6px #000;
 }
 
 h2 {
@@ -44,12 +69,18 @@ h6 {
     margin-top: 14px;
 }
 
+hr {
+    margin-left:125px;
+    width: 90%;
+}
+
 body {
-    background-color: var(--bg-color);
+    background-color: #8e9aaf;
 }
 
 .main-container {
     background-color: #8e9aaf;
+    height: 100vh;
 }
 
 .top-nav {
@@ -59,4 +90,5 @@ body {
     box-shadow: 0 -4px 4px 7px var(--nav-secondary-color);
     height: 70px;
     overflow: auto;
+    z-index:1;
 }
