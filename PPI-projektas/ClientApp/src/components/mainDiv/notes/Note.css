@@ -1,6 +1,6 @@
 .note-card {
     position: relative;
-    min-width: fit-content;
+    min-width: 300px;
     width: 450px;
     height: 300px;
     border: 2px solid black;
@@ -15,6 +15,11 @@
     "misc buttons";
 }
 
+#tag-search-bar {
+    height: 20px;
+    font-size: 10px;
+}
+
 .unselected {
     cursor: pointer;
     transform: scale(0.8);
@@ -26,6 +31,7 @@
     transform: translate(-50%, -50%) scale(1.2);
     top: 50%;
     left: 50%;
+    box-shadow: 0px 0px 20px 8px;
 }
 
 .note-title,
@@ -33,6 +39,8 @@
 .note-text {
     border: 1px solid black;
     color: var(--bg-color);
+    overflow-wrap: break-word;
+    overflow-x: auto;
 }
 
 .note-title,
@@ -46,24 +54,29 @@
     padding-left: 10px;
     border-radius: 20px 0 0 0;
     display: flex;
+    overflow: hidden;
+   
 }
 
 .note-title p {
     margin: 0;
+    width: 300px;
+    overflow: hidden;
 }
 
 input.note-title-edit[type="text"],
-textarea.note-text-edit
-{
+textarea.note-text-edit {
     background: transparent;
     border: none;
     width: 100%;
+    height: 90%;
     margin: 0;
     padding: 0;
 }
 
 input.note-title-edit[type="text"] {
     color: var(--bg-color);
+    width: 300px;
 }
 
 textarea.note-text-edit {
@@ -86,14 +99,14 @@ textarea.note-text-edit:focus{
     align-items: flex-start;
 }
 
-.note-text {
+.note-text, .note-text0 {
     background-color: var(--bg-color);
     color: var(--note-main-color);
     grid-area: text;
     padding: 5px;
     align-items: center;
+    /*overflow: hidden;*/
     /*   border-radius: 0 0 20px 20px; */
-    overflow: auto;
 }
 
 .note-tags span,
@@ -127,7 +140,7 @@ textarea.note-text-edit:focus{
     margin: 2px;
     border-radius: 50%;
     border: none;
-    font-weight: 600;
+    font-weight: 500;
     display: flex;
     align-items: center;
     justify-content: left;
@@ -157,6 +170,19 @@ textarea.note-text-edit:focus{
     font-size: 13px;
     opacity: 1;
     transition-duration: 0.3s;
+}
+
+.privileges-button {
+    background-color: #ADD8E6;
+}
+.privileges-button-hover:hover::before {
+    width: 60px;
+    font-size:10px;
+    right:-5px;
+}
+
+.privileges-button-hover:before {
+    content: "Privileges";
 }
 
 .edit-button {
@@ -242,4 +268,9 @@ textarea.note-text-edit:focus{
 .tags span,
 .cursor-pointer{
     cursor: pointer;
+}
+
+.fav-button {
+    width: 40px;
+    transform: scale(0.8);
 }

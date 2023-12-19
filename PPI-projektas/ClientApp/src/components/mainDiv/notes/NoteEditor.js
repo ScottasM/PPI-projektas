@@ -2,7 +2,9 @@ import React, { Component }  from 'react';
 import './NoteHub.css';
 import {TagList} from "../../TagList";
 import {MdDelete, MdEditDocument, MdSave} from "react-icons/md";
-import {Tag} from "reactstrap";
+import { Tag } from "reactstrap";
+import { AiFillStar } from "react-icons/ai";
+import { PiAddressBook } from "react-icons/pi";
 
 export class NoteEditor extends Component {
     constructor (props) {
@@ -17,6 +19,7 @@ export class NoteEditor extends Component {
             showTagSearch: false,
             tagSearch: '',
             tagResults: [],
+            favorited: false
         }
     }
 
@@ -181,6 +184,14 @@ export class NoteEditor extends Component {
         }
     }
 
+    handleFavoriteNote = () => {
+
+    }
+
+    openPrivilegesDisplay = () => {
+
+    }
+
     render() {
         const {name, text, tags, showTagSearch, tagSearch, tagResults} = this.state;
         const maxVisibleTags = 3;
@@ -195,6 +206,15 @@ export class NoteEditor extends Component {
                         placeholder="Enter title..."
                         onChange={(e) => this.handleTitleChange(e)} 
                     />
+                    <div className="fav-button">
+                        <AiFillStar
+                            className="star"
+                            color={this.state.favorited ? "#ffc107" : "#e4e5e9"} 
+                            size={25}
+                            onClick={() => this.handleFavoriteNote() & this.setState({ favorited: (this.state.favorited ? false : true)})}
+                        />
+                    </div>
+
                 </div>
                 <div className="note-tags">
                     {tags != null && tags.slice(0, maxVisibleTags).map(tag => (
@@ -209,6 +229,7 @@ export class NoteEditor extends Component {
                         <div className="tag-select">
                             <div className="tag-search">
                                 <input 
+                                    id="tag-search-bar"
                                     type="text" 
                                     value={tagSearch}
                                     placeholder="Search tags..."
@@ -244,6 +265,9 @@ export class NoteEditor extends Component {
                     </button>
                     <button className="button button-hover edit-button edit-button-hover" onClick={() => this.props.changeDisplay(2, '')}>
                         <MdEditDocument />
+                    </button>
+                    <button className="button button-hover privileges-button privileges-button-hover" onClick={() => this.openPrivilegesDisplay()}>
+                        <PiAddressBook />
                     </button>
                 </div>
             </div>
