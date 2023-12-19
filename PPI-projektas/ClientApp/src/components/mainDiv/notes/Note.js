@@ -29,15 +29,21 @@ export class Note extends Component {
                     {noteData.text}
                 </div>
                 <div className="note-buttons">
-                    <button className="button delete-button">
-                        <MdDelete />
-                    </button>
-                    <button className="button edit-button">
-                        <MdEditDocument />
-                    </button>
-                    <button className="button privileges-button">
-                        <PiAddressBook />
-                    </button>
+                    {noteData.canEditPrivileges &&
+                        <button className="button delete-button">
+                            <MdDelete />
+                        </button>
+                    }
+                    {noteData.canEditNote &&
+                        <button className="button edit-button">
+                            <MdEditDocument />
+                        </button>
+                    }
+                    {noteData.canEditPrivileges &&
+                        <button className="button privileges-button">
+                            <PiAddressBook />
+                        </button>
+                    }
                 </div>
             </div>
         )

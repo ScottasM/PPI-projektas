@@ -1,11 +1,10 @@
 ﻿import React, {Component} from "react";
-import '../../Group.css'
-import '../buttons.css'
+import '../../buttons.css'
 import {MdOutlinePersonRemove, MdPersonAddAlt} from "react-icons/md";
-import {ScrollContainer} from "../ScrollContainer";
+import {ScrollContainer} from "../../ScrollContainer.js";
 
 export class NoteUserSelection extends Component {
-    static displayName = GroupUserSelection.name;
+    static displayName = NoteUserSelection.name;
 
     constructor(props) {
         super(props);
@@ -37,7 +36,7 @@ export class NoteUserSelection extends Component {
             }));
 
             userData = userData.filter(el =>
-                !this.props.members.some(member => member.id === el.id) &&
+                !this.props.editors.some(editor => editor.id === el.id) &&
                 el.id !== this.props.currentUserId
             );
 
@@ -51,22 +50,22 @@ export class NoteUserSelection extends Component {
         const userToAdd = this.state.users.find(user => user.id === id)
 
         if(userToAdd) {
-            const newEditors = [...this.props.members, userToAdd];
+            const newEditors = [...this.props.editors, userToAdd];
             const newUsers = this.state.users.filter(user => user.id !== id);
 
             this.setState({
                 users: newUsers
             });
 
-            this.props.updateMembers(newEditors);
+            this.props.updateEditors(newEditors);
         }
     }
 
     removeEditor = (id) => {
-        const editorToRemove = this.props.members.find(member => member.id === id);
+        const editorToRemove = this.props.editors.find(editor => editor.id === id);
 
         if(editorToRemove) {
-            const newEditors = this.props.members.filter(member => member.id !== id);
+            const newEditors = this.props.editors.filter(editor => editor.id !== id);
 
             if(this.state.users.find(user => user.name.includes(this.state.userSearch))) {
 

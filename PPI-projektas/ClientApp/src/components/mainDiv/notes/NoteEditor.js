@@ -188,10 +188,6 @@ export class NoteEditor extends Component {
 
     }
 
-    openPrivilegesDisplay = () => {
-
-    }
-
     render() {
         const {name, text, tags, showTagSearch, tagSearch, tagResults} = this.state;
         const maxVisibleTags = 3;
@@ -257,17 +253,6 @@ export class NoteEditor extends Component {
                 <div className="note-misc">
                     <button className="button save-button" onClick={this.handleSave}>
                         <MdSave /> Save
-                    </button>
-                </div>
-                <div className="note-buttons">
-                    <button className="button button-hover delete-button delete-button-hover" onClick={this.props.deleteNote}>
-                        <MdDelete />
-                    </button>
-                    <button className="button button-hover edit-button edit-button-hover" onClick={() => this.props.changeDisplay(2, '')}>
-                        <MdEditDocument />
-                    </button>
-                    <button className="button button-hover privileges-button privileges-button-hover" onClick={() => this.openPrivilegesDisplay()}>
-                        <PiAddressBook />
                     </button>
                 </div>
             </div>

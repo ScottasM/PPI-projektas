@@ -44,7 +44,15 @@ public class NoteService : INoteService
             })
             .If(!string.IsNullOrEmpty(nameFilter), query =>
                 query.Where(note => note.Name.Contains(nameFilter)))
-            .Select(note => _noteDataFactory.Create(note.Id, note.Name, note.Tags.Select(tag => tag.Value).ToList(), note.Text));
+            .Select(note =>
+                {
+                    var canEditPrivileges = note.Author.Id == userId || note.Group.Owner.Id == userId ||
+                                            note.Group.Administrators.Select(administrator => administrator.Id).Contains(userId);
+                    var canEditNote = canEditPrivileges || note.Editors.Select(editor => editor.Id).Contains(userId);
+                    
+                    return _noteDataFactory.Create(note.Id, note.Name, note.Tags.Select(tag => tag.Value).ToList(), note.Text, canEditPrivileges, canEditNote);
+                }
+            );
     }
     
     public NoteData GetNote(Guid userId, Guid noteId)
@@ -59,8 +67,13 @@ public class NoteService : INoteService
         if (note == null) throw new ObjectDoesNotExistException(noteId);
 
         var tags = note.Tags?.Any() == null ? new List<Tag>() : note.Tags;
+
+        var canEditPrivileges = note.Author.Id == userId || note.Group.Owner.Id == userId ||
+                                note.Group.Administrators.Select(administrator => administrator.Id).Contains(userId);
         
-        return _noteDataFactory.Create(note.Id, note.Name, tags.Select(tag => tag.Value).ToList(), note.Text);
+        var canEditNote = canEditPrivileges || note.Editors.Select(editor => editor.Id).Contains(userId);
+        
+        return _noteDataFactory.Create(note.Id, note.Name, tags.Select(tag => tag.Value).ToList(), note.Text, canEditPrivileges, canEditNote);
     }
 
     public Guid CreateNote(Guid userId, Guid groupId)
@@ -104,37 +117,11 @@ public class NoteService : INoteService
         var note = DataHandler.FindObjectById(noteId, DataHandler.Instance.AllNotes);
         if (note == null) throw new ObjectDoesNotExistException(noteId);
 
-        return note.Editors
-            .Select(editor => _objectDataItemFactory.Create(editor.Id, editor.GetUsername()))
-            .ToList();
-    }
-
-    public void UpdatePrivileges(Guid userId, Guid noteId, List<Guid> newEditorIds)
-    {
-        var note = DataHandler.FindObjectById(noteId, DataHandler.Instance.AllNotes);
-        if (note == null) throw new ObjectDoesNotExistException(noteId);
-
-        if (note.Author.Id != userId
-            && note.Group.Owner.Id != userId
-            && note.Group.Administrators.Select(user => user.Id).Contains(userId))
-            throw new UnauthorizedAccessException();
-
-        note.Editors = newEditorIds
-            .Select(editorId => DataHandler.FindObjectById(editorId, DataHandler.Instance.AllUsers))
-            .ToList();
-        
-        DataHandler.Instance.SaveChanges();
-    }
-    
-
-    public List<ObjectDataItem> GetPrivileges(Guid noteId)
-    {
-        var note = DataHandler.FindObjectById(noteId, DataHandler.Instance.AllNotes);
-        if (note == null) throw new ObjectDoesNotExistException(noteId);
-
-        return note.Editors
-            .Select(editor => _objectDataItemFactory.Create(editor.Id, editor.GetUsername()))
-            .ToList();
+        return (note.Editors?.Any() ?? false) 
+            ? note.Editors
+                .Select(editor => _objectDataItemFactory.Create(editor.Id, editor.GetUsername()))
+                .ToList()
+            : new List<ObjectDataItem>();
     }
 
     public void UpdatePrivileges(Guid userId, Guid noteId, List<Guid> newEditorIds)

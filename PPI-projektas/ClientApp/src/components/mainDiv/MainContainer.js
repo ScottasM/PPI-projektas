@@ -153,6 +153,7 @@ export class MainContainer extends Component {
                                      currentUserId={this.props.currentUserId}
                                      createNote={this.state.createNote}
                                      noteCreated={() => this.handleCreateNote(false)}
+                                     toggleNotePrivilegeMenu={this.toggleNotePrivilegeMenu}
                         />
                     </>
                 )}

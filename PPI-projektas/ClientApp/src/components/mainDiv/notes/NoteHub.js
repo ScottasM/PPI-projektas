@@ -80,6 +80,7 @@ export class NoteHub extends Component {
                             noteData={this.props.noteData}
                             changeDisplay={this.changeDisplay}
                             deleteNote={this.handleDelete}
+                            toggleNotePrivilegeMenu={this.props.toggleNotePrivilegeMenu}
                         />
                     </div>
                 )

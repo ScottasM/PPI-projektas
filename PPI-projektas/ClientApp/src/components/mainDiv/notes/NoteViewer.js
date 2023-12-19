@@ -16,10 +16,6 @@ export class NoteViewer extends Component {
 
     }
 
-    openPrivilegesDisplay = () => {
-
-    }
-
     render() {
         const {noteData} = this.props;
         const maxVisibleTags = 3;
@@ -50,15 +46,21 @@ export class NoteViewer extends Component {
                     <p>{noteData.text}</p>
                 </div>
                 <div className="note-buttons">
-                    <button className="button button-hover delete-button delete-button-hover no-close-button" onClick={this.props.deleteNote}>
-                        <MdDelete />
-                    </button>
-                    <button className="button button-hover edit-button edit-button-hover no-close-button" onClick={() => this.props.changeDisplay(2, '')}>
-                        <MdEditDocument />
-                    </button>
-                    <button className="button button-hover privileges-button privileges-button-hover" onClick={() => this.openPrivilegesDisplay()}>
-                        <PiAddressBook />
-                    </button>
+                    {noteData.canEditPrivileges &&
+                        <button className="button button-hover delete-button delete-button-hover no-close-button" onClick={this.props.deleteNote}>
+                            <MdDelete />
+                        </button>
+                    }
+                    {noteData.canEditNote &&
+                        <button className="button button-hover edit-button edit-button-hover no-close-button" onClick={() => this.props.changeDisplay(2, '')}>
+                            <MdEditDocument />
+                        </button>
+                    }
+                    {noteData.canEditPrivileges &&
+                        <button className="button button-hover privileges-button privileges-button-hover" onClick={this.props.toggleNotePrivilegeMenu}>
+                            <PiAddressBook />
+                        </button>
+                    }
                 </div>
             </div>
         )

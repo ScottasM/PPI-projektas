@@ -1,6 +1,5 @@
 ﻿import React, { Component } from 'react';
-import '../../Group.css';
-import '../InputWindow.css';
+import '../../InputWindow.css';
 import {NoteUserSelection} from "./NoteUserSelection";
 
 export class NotePrivilegeMenu extends Component {
@@ -9,7 +8,11 @@ export class NotePrivilegeMenu extends Component {
     constructor(props) {
         super(props);
     }
-
+    
+    state = {
+        editors: []
+    }
+    
     componentDidMount() {
         this.handleEditorGet();
     }
@@ -42,25 +45,17 @@ export class NotePrivilegeMenu extends Component {
     handleSubmit = (event) => {
         event.preventDefault();
 
-        if(this.state.groupName)
-        {
-            const { groupName } = this.state;
-            this.handlePost(groupName);
-        }
-        else
-        {
-            alert('Group name must not be empty');
-        }
+        this.handlePost();
     };
 
-    async handlePost(groupName) {
+    handlePost = async () => {
 
         let privilegeData = {
             Id: this.props.currentUserId,
-            EditorIds : this.state.members.map(member => member.id)
+            EditorIds : this.state.editors.map(member => member.id)
         };
 
-        await fetch(`http://localhost:5268/api/note/updatePrivilege/${this.props.noteId}`, { // temporary localhost api url
+        await fetch(`http://localhost:5268/api/note/updatePrivileges/${this.props.noteId}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
@@ -80,8 +75,6 @@ export class NotePrivilegeMenu extends Component {
     }
 
     render() {
-        const { groupName } = this.state;
-
         return (
             <div className="note-privilege-menu position-fixed translate-middle text-white">
                 <div className="title">

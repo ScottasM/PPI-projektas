@@ -62,7 +62,9 @@ export class NoteDisplay extends Component {
                     id: note.id,
                     name: note.name,
                     tags: note.tags === null ? [] : note.tags,
-                    text: note.text,
+                    text: note.text, 
+                    canEditPrivileges: note.canEditPrivileges,
+                    canEditNote: note.canEditNote
                 }));
                 this.setState({
                     notes: notes,
@@ -80,9 +82,14 @@ export class NoteDisplay extends Component {
     handleGlobalClick = (event) => {
         const noteCard = document.querySelector('.note-card.selected');
         const isNoteHubClick = event.target.closest('.note-hub');
+        const isNotePrivilegeMenuClick = event.target.closest('.note-privilege-menu')
+            || event.target.closest('.user-selection')
+            || event.target.closest('.scroll-container')
+            || event.target.closest('.scroll-item')
+            || event.target.closest('.item-content')
         const isNoCloseButtonClick = event.target.classList.contains('no-close-button');
         
-        if (noteCard && !noteCard.contains(event.target) && !isNoteHubClick && !isNoCloseButtonClick) {
+        if (noteCard && !noteCard.contains(event.target) && !isNoteHubClick && !isNotePrivilegeMenuClick && !isNoCloseButtonClick) {
             this.props.resetSelectedNote();
         }
     };
@@ -123,7 +130,6 @@ export class NoteDisplay extends Component {
     
     render() {
         const {notes} = this.state;
-        const {selectedNote} = this.props.selectedNote;
         
         return (
             <div className='content-display'>
@@ -163,11 +169,11 @@ export class NoteDisplay extends Component {
                         )
                     }
                 </div>
-                {(selectedNote !== 0 || this.props.createNote) &&
+                {(this.props.selectedNote !== 0 || this.props.createNote) &&
                     <NoteHub
-                        display={selectedNote !== 0 ? 1 : 2}
+                        display={this.props.selectedNote !== 0 ? 1 : 2}
                         ref={this.noteHubRef}
-                        noteData={notes.find(note => note.id === selectedNote)}
+                        noteData={notes.find(note => note.id === this.props.selectedNote)}
                         currentGroupId={this.props.currentGroupId}
                         currentUserId={this.props.currentUserId}
                         fetchNotes={this.fetchNotes}
@@ -175,7 +181,7 @@ export class NoteDisplay extends Component {
                             this.props.resetSelectedNote();
                             this.fetchNotes();
                         }}
-                        
+                        toggleNotePrivilegeMenu={this.props.toggleNotePrivilegeMenu}
                     />
                 }
                 <hr />
