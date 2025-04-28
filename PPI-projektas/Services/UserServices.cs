@@ -37,9 +37,9 @@ public class UserService : IUserService
     public List<ObjectDataItem> GetUsersByName(string name)
     {
         var users = DataHandler.Instance.AllUsers
-            .Where(user => user.GetUsername().ContainsCaseInsensitive(name))
-            .OrderByDescending(user => user.GetUsername().ToCharArray().Intersect(name.ToCharArray()).ToList().Count)
-            .Select(user => new ObjectDataItem(user.Id, user.GetUsername()))
+            .Where(user => user.Value.GetUsername().ContainsCaseInsensitive(name))
+            .OrderByDescending(user => user.Value.GetUsername().ToCharArray().Intersect(name.ToCharArray()).ToList().Count)
+            .Select(user => new ObjectDataItem(user.Value.Id, user.Value.GetUsername()))
             .ToList();
 
         return users;
